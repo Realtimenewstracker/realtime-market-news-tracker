@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       { title: "TrackIndia — Live market news for Indian traders" },
       { name: "description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
       { property: "og:title", content: "TrackIndia — Live market news for Indian traders" },
-      { property: "og:description", content: "AI-tagged real-time news feed for Indian markets." },
+      { property: "og:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
     ],
   }),
   loader: async ({ context }) => {
