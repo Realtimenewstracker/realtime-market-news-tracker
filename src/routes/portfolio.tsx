@@ -1,0 +1,149 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Trash2, Plus } from "lucide-react";
+import { useSession } from "@/hooks/use-session";
+import { listPortfolio, upsertPosition, deletePosition, listTickers } from "@/lib/data.functions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export const Route = createFileRoute("/portfolio")({
+  head: () => ({
+    meta: [
+      { title: "Portfolio — TrackIndia" },
+      { name: "description", content: "Track your Indian stock portfolio and P&L against live market data." },
+    ],
+  }),
+  component: PortfolioPage,
+});
+
+function PortfolioPage() {
+  const { user, loading } = useSession();
+  const listFn = useServerFn(listPortfolio);
+  const upsertFn = useServerFn(upsertPosition);
+  const deleteFn = useServerFn(deletePosition);
+  const tickersFn = useServerFn(listTickers);
+  const qc = useQueryClient();
+
+  const { data: tickers } = useQuery({ queryKey: ["tickers"], queryFn: () => tickersFn(), enabled: !!user });
+  const { data: positions } = useQuery({
+    queryKey: ["portfolio"], queryFn: () => listFn(), enabled: !!user,
+  });
+
+  const upsert = useMutation({
+    mutationFn: (v: { symbol: string; quantity: number; avg_price: number; label?: string }) =>
+      upsertFn({ data: v }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["portfolio"] }); toast.success("Position saved"); },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Failed"),
+  });
+  const remove = useMutation({
+    mutationFn: (id: string) => deleteFn({ data: { id } }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["portfolio"] }); toast.success("Removed"); },
+  });
+
+  const [symbol, setSymbol] = useState("");
+  const [qty, setQty] = useState("");
+  const [price, setPrice] = useState("");
+
+  if (loading) return <PageBox>Loading…</PageBox>;
+  if (!user) return (
+    <PageBox>
+      <h1 className="font-display text-2xl">Sign in to build your book</h1>
+      <p className="text-muted-foreground text-sm mt-1">Positions are saved to your account.</p>
+      <Link to="/auth" className="inline-block mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold">Sign in</Link>
+    </PageBox>
+  );
+
+  const tMap = new Map((tickers ?? []).map((t) => [t.alias, t]));
+  let totalMv = 0, totalCost = 0;
+  const rows = (positions ?? []).map((p) => {
+    const t = tMap.get(p.symbol);
+    const last = t?.last ?? null;
+    const mv = last ? last * Number(p.quantity) : 0;
+    const cost = Number(p.avg_price) * Number(p.quantity);
+    totalMv += mv; totalCost += cost;
+    const pnl = mv - cost;
+    return { ...p, last, mv, cost, pnl };
+  });
+  const pnl = totalMv - totalCost;
+
+  return (
+    <section className="max-w-5xl mx-auto px-4 md:px-8 pt-8">
+      <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Portfolio</h1>
+      <p className="text-sm text-muted-foreground mt-1">Live P&amp;L against the latest quotes.</p>
+
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <StatCard label="Market value" value={inr(totalMv)} />
+        <StatCard label="Cost basis" value={inr(totalCost)} />
+        <StatCard label="Unrealized P&amp;L" value={inr(pnl)} tone={pnl >= 0 ? "bull" : "bear"} />
+      </div>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!symbol || !qty || !price) return;
+          upsert.mutate({ symbol: symbol.trim().toUpperCase(), quantity: Number(qty), avg_price: Number(price) });
+          setSymbol(""); setQty(""); setPrice("");
+        }}
+        className="mt-6 glass rounded-3xl p-4 flex flex-col md:flex-row gap-2 items-stretch md:items-end"
+      >
+        <div className="flex-1"><label className="text-xs text-muted-foreground">Symbol (e.g. RELIANCE)</label>
+          <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} className="bg-white/70" />
+        </div>
+        <div className="w-32"><label className="text-xs text-muted-foreground">Quantity</label>
+          <Input type="number" step="any" value={qty} onChange={(e) => setQty(e.target.value)} className="bg-white/70" />
+        </div>
+        <div className="w-32"><label className="text-xs text-muted-foreground">Avg price</label>
+          <Input type="number" step="any" value={price} onChange={(e) => setPrice(e.target.value)} className="bg-white/70" />
+        </div>
+        <Button type="submit" className="rounded-full"><Plus size={14} /> Add / update</Button>
+      </form>
+
+      <div className="mt-6 glass rounded-3xl overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-white/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+            <tr><Th>Symbol</Th><Th>Qty</Th><Th>Avg</Th><Th>Last</Th><Th>MV</Th><Th>P&amp;L</Th><Th /></tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 && (
+              <tr><td colSpan={7} className="text-center text-muted-foreground py-8">No positions yet.</td></tr>
+            )}
+            {rows.map((r) => (
+              <tr key={r.id} className="border-t border-white/60">
+                <Td className="font-mono font-semibold">{r.symbol}</Td>
+                <Td>{Number(r.quantity)}</Td>
+                <Td>{Number(r.avg_price).toFixed(2)}</Td>
+                <Td>{r.last?.toFixed(2) ?? "—"}</Td>
+                <Td>{inr(r.mv)}</Td>
+                <Td className={r.pnl >= 0 ? "text-bull" : "text-bear"}>{inr(r.pnl)}</Td>
+                <Td className="text-right">
+                  <button onClick={() => remove.mutate(r.id)} className="text-muted-foreground hover:text-bear"><Trash2 size={14} /></button>
+                </Td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Th({ children }: { children?: React.ReactNode }) { return <th className="text-left px-4 py-2.5 font-semibold">{children}</th>; }
+function Td({ children, className = "" }: { children?: React.ReactNode; className?: string }) { return <td className={`px-4 py-2.5 ${className}`}>{children}</td>; }
+function StatCard({ label, value, tone }: { label: string; value: string; tone?: "bull" | "bear" }) {
+  return (
+    <div className="glass rounded-3xl p-5">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{label}</div>
+      <div className={`mt-1 font-mono text-2xl font-semibold ${tone === "bull" ? "text-bull" : tone === "bear" ? "text-bear" : "text-foreground"}`}>{value}</div>
+    </div>
+  );
+}
+function PageBox({ children }: { children: React.ReactNode }) {
+  return <section className="max-w-md mx-auto px-4 mt-16 text-center glass-strong rounded-3xl p-8">{children}</section>;
+}
+function inr(n: number) {
+  if (!Number.isFinite(n)) return "—";
+  return "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+}

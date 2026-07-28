@@ -9,38 +9,181 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
+import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
+import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 
+const WatchlistRoute = WatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeopoliticsRoute = GeopoliticsRouteImport.update({
+  id: '/geopolitics',
+  path: '/geopolitics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
+  id: '/api/public/refresh-tickers',
+  path: '/api/public/refresh-tickers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
+  id: '/api/public/ingest-rss',
+  path: '/api/public/ingest-rss',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
+  id: '/api/public/ask-ai',
+  path: '/api/public/ask-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
+  id:
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AuthRoute: typeof AuthRoute
+  GeopoliticsRoute: typeof GeopoliticsRoute
+  PortfolioRoute: typeof PortfolioRoute
+  WatchlistRoute: typeof WatchlistRoute
+  ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
+  ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
+  ApiPublicRefreshTickersRoute: typeof ApiPublicRefreshTickersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/watchlist': {
+      id: '/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/geopolitics': {
+      id: '/geopolitics'
+      path: '/geopolitics'
+      fullPath: '/geopolitics'
+      preLoaderRoute: typeof GeopoliticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +191,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/refresh-tickers': {
+      id: '/api/public/refresh-tickers'
+      path: '/api/public/refresh-tickers'
+      fullPath: '/api/public/refresh-tickers'
+      preLoaderRoute: typeof ApiPublicRefreshTickersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest-rss': {
+      id: '/api/public/ingest-rss'
+      path: '/api/public/ingest-rss'
+      fullPath: '/api/public/ingest-rss'
+      preLoaderRoute: typeof ApiPublicIngestRssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ask-ai': {
+      id: '/api/public/ask-ai'
+      path: '/api/public/ask-ai'
+      fullPath: '/api/public/ask-ai'
+      preLoaderRoute: typeof ApiPublicAskAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AuthRoute: AuthRoute,
+  GeopoliticsRoute: GeopoliticsRoute,
+  PortfolioRoute: PortfolioRoute,
+  WatchlistRoute: WatchlistRoute,
+  ApiPublicAskAiRoute: ApiPublicAskAiRoute,
+  ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,
+  ApiPublicRefreshTickersRoute: ApiPublicRefreshTickersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
