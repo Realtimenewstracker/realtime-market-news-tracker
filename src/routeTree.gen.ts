@@ -9,11 +9,41 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
 import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
 import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 
+const WatchlistRoute = WatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeopoliticsRoute = GeopoliticsRouteImport.update({
+  id: '/geopolitics',
+  path: '/geopolitics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +67,22 @@ const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
@@ -50,6 +90,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth': typeof AuthRoute
+  '/geopolitics': typeof GeopoliticsRoute
+  '/portfolio': typeof PortfolioRoute
+  '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
@@ -58,18 +103,33 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
   id:
     | '__root__'
     | '/'
+    | '/account'
+    | '/auth'
+    | '/geopolitics'
+    | '/portfolio'
+    | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
@@ -77,6 +137,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AuthRoute: typeof AuthRoute
+  GeopoliticsRoute: typeof GeopoliticsRoute
+  PortfolioRoute: typeof PortfolioRoute
+  WatchlistRoute: typeof WatchlistRoute
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
   ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
   ApiPublicRefreshTickersRoute: typeof ApiPublicRefreshTickersRoute
@@ -84,6 +149,41 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/watchlist': {
+      id: '/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/geopolitics': {
+      id: '/geopolitics'
+      path: '/geopolitics'
+      fullPath: '/geopolitics'
+      preLoaderRoute: typeof GeopoliticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -117,6 +217,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
+  AuthRoute: AuthRoute,
+  GeopoliticsRoute: GeopoliticsRoute,
+  PortfolioRoute: PortfolioRoute,
+  WatchlistRoute: WatchlistRoute,
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
   ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,
   ApiPublicRefreshTickersRoute: ApiPublicRefreshTickersRoute,
