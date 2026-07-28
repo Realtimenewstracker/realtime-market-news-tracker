@@ -10,33 +10,76 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
+import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
+import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
+  id: '/api/public/refresh-tickers',
+  path: '/api/public/refresh-tickers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
+  id: '/api/public/ingest-rss',
+  path: '/api/public/ingest-rss',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
+  id: '/api/public/ask-ai',
+  path: '/api/public/ask-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/ask-ai'
+    | '/api/public/ingest-rss'
+    | '/api/public/refresh-tickers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
+  ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
+  ApiPublicRefreshTickersRoute: typeof ApiPublicRefreshTickersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +91,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/refresh-tickers': {
+      id: '/api/public/refresh-tickers'
+      path: '/api/public/refresh-tickers'
+      fullPath: '/api/public/refresh-tickers'
+      preLoaderRoute: typeof ApiPublicRefreshTickersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest-rss': {
+      id: '/api/public/ingest-rss'
+      path: '/api/public/ingest-rss'
+      fullPath: '/api/public/ingest-rss'
+      preLoaderRoute: typeof ApiPublicIngestRssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ask-ai': {
+      id: '/api/public/ask-ai'
+      path: '/api/public/ask-ai'
+      fullPath: '/api/public/ask-ai'
+      preLoaderRoute: typeof ApiPublicAskAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicAskAiRoute: ApiPublicAskAiRoute,
+  ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,
+  ApiPublicRefreshTickersRoute: ApiPublicRefreshTickersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
