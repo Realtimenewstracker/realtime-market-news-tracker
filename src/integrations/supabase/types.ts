@@ -14,7 +14,201 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      hotspots: {
+        Row: {
+          id: string
+          lat: number
+          lng: number
+          market_impact: string | null
+          name: string
+          region: string
+          severity: number
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          lat: number
+          lng: number
+          market_impact?: string | null
+          name: string
+          region: string
+          severity?: number
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          lat?: number
+          lng?: number
+          market_impact?: string | null
+          name?: string
+          region?: string
+          severity?: number
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      news_articles: {
+        Row: {
+          ai_summary: string | null
+          category: string
+          created_at: string
+          hash: string
+          id: string
+          impact: number | null
+          published_at: string
+          regions: string[]
+          sentiment: string | null
+          source: string
+          summary: string | null
+          tickers: string[]
+          title: string
+          url: string
+        }
+        Insert: {
+          ai_summary?: string | null
+          category: string
+          created_at?: string
+          hash: string
+          id?: string
+          impact?: number | null
+          published_at?: string
+          regions?: string[]
+          sentiment?: string | null
+          source: string
+          summary?: string | null
+          tickers?: string[]
+          title: string
+          url: string
+        }
+        Update: {
+          ai_summary?: string | null
+          category?: string
+          created_at?: string
+          hash?: string
+          id?: string
+          impact?: number | null
+          published_at?: string
+          regions?: string[]
+          sentiment?: string | null
+          source?: string
+          summary?: string | null
+          tickers?: string[]
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      portfolio_positions: {
+        Row: {
+          avg_price: number
+          created_at: string
+          id: string
+          label: string | null
+          quantity: number
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          avg_price?: number
+          created_at?: string
+          id?: string
+          label?: string | null
+          quantity?: number
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          avg_price?: number
+          created_at?: string
+          id?: string
+          label?: string | null
+          quantity?: number
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tickers: {
+        Row: {
+          alias: string
+          change: number | null
+          change_pct: number | null
+          kind: string
+          label: string
+          last: number | null
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          alias: string
+          change?: number | null
+          change_pct?: number | null
+          kind?: string
+          label: string
+          last?: number | null
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          alias?: string
+          change?: number | null
+          change_pct?: number | null
+          kind?: string
+          label?: string
+          last?: number | null
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      watchlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
