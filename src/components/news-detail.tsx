@@ -1,0 +1,121 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Sparkles, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { SentimentBadge, ImpactBadge, type NewsItem } from "./news-card";
+
+export function NewsDetail({
+  item, open, onOpenChange,
+}: {
+  item: NewsItem | null;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [asking, setAsking] = useState(false);
+
+  const ask = async () => {
+    if (!item || !question.trim()) return;
+    setAsking(true);
+    setAnswer("");
+    try {
+      const res = await fetch("/api/public/ask-ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId: item.id, question: question.trim() }),
+      });
+      if (!res.ok || !res.body) throw new Error("failed");
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+      while (!done) {
+        const chunk = await reader.read();
+        done = chunk.done;
+        if (chunk.value) setAnswer((prev) => prev + decoder.decode(chunk.value));
+      }
+    } catch {
+      setAnswer("Sorry — AI could not answer right now.");
+    } finally {
+      setAsking(false);
+    }
+  };
+
+  if (!item) return null;
+  const timeAgo = (() => { try { return formatDistanceToNow(parseISO(item.published_at), { addSuffix: true }); } catch { return ""; } })();
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl glass-strong border-white/80">
+        <DialogHeader>
+          <div className="flex items-center gap-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
+            <span>{item.category}</span>
+            <span>·</span>
+            <span>{item.source}</span>
+            <span>·</span>
+            <span>{timeAgo}</span>
+          </div>
+          <DialogTitle className="font-display text-xl leading-snug">{item.title}</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-wrap items-center gap-2">
+          <SentimentBadge sentiment={item.sentiment} />
+          <ImpactBadge impact={item.impact ?? 0} />
+          {item.tickers?.map((t) => (
+            <span key={t} className="px-2 py-0.5 rounded-full bg-white/70 border font-mono text-[10px]">
+              {t}
+            </span>
+          ))}
+          {item.regions?.map((r) => (
+            <span key={r} className="px-2 py-0.5 rounded-full bg-accent-tint font-mono text-[10px]">
+              {r}
+            </span>
+          ))}
+        </div>
+        {item.ai_summary && (
+          <div className="mt-3 p-4 rounded-2xl bg-white/60 border border-white/70">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-1 flex items-center gap-1">
+              <Sparkles size={12} /> AI summary
+            </div>
+            <p className="text-sm leading-relaxed text-foreground">{item.ai_summary}</p>
+          </div>
+        )}
+        {item.summary && (
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-6">
+            {item.summary.replace(/<[^>]+>/g, "").trim()}
+          </p>
+        )}
+        <a
+          href={item.url} target="_blank" rel="noreferrer"
+          className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+        >
+          Read the full story <ExternalLink size={13} />
+        </a>
+
+        <div className="mt-4 pt-4 border-t border-white/60">
+          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-2 flex items-center gap-1">
+            <Sparkles size={12} /> Ask AI about this story
+          </div>
+          <Textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="e.g. Which Indian stocks are most affected?"
+            className="bg-white/70 border-white/70 min-h-[70px]"
+          />
+          <Button
+            onClick={ask} disabled={asking || !question.trim()}
+            className="mt-2 rounded-full"
+          >
+            {asking ? "Thinking…" : "Ask"}
+          </Button>
+          {answer && (
+            <div className="mt-3 p-3 rounded-xl bg-white/70 border border-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+              {answer}
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
