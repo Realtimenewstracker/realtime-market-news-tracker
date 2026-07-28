@@ -81,7 +81,8 @@ Body: ${it.summary}`,
               const parsed = extractJson(text);
               if (parsed) {
                 base.ai_summary = String(parsed.summary ?? "").slice(0, 240);
-                base.sentiment = ["bullish", "bearish", "neutral"].includes(parsed.sentiment) ? parsed.sentiment : "neutral";
+                const sent = String(parsed.sentiment ?? "");
+                base.sentiment = sent === "bullish" || sent === "bearish" ? sent : "neutral";
                 base.impact = Math.max(0, Math.min(3, Number(parsed.impact) || 1));
                 base.tickers = Array.isArray(parsed.tickers) ? parsed.tickers.filter((t: unknown): t is string => typeof t === "string").slice(0, 6) : [];
                 base.regions = Array.isArray(parsed.regions) ? parsed.regions.filter((t: unknown): t is string => typeof t === "string").slice(0, 4) : [];
