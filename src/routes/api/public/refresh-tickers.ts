@@ -55,7 +55,7 @@ export const Route = createFileRoute("/api/public/refresh-tickers")({
           }
         } catch (e) { console.warn("[tickers] coingecko failed", e); }
 
-        if (rows.length === 0) return Response.json({ ok: false, updated: 0 });
+        if (rows.length === 0) return Response.json({ ok: false, updated: 0, v: 2 });
 
         const { error } = await supabaseAdmin.from("tickers").upsert(rows, { onConflict: "symbol" });
         if (error) {
