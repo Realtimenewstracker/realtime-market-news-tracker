@@ -17,7 +17,7 @@ export const Route = createFileRoute("/api/public/refresh-tickers")({
                 `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}`,
                 { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(6000) },
               );
-              if (!res.ok) { console.warn(`[tickers] yahoo ${t.symbol} ${res.status}`); return; }
+              if (!res.ok) { console.warn(`[tickers] yahoo ${t.symbol} status=${res.status} body=${(await res.text()).slice(0,150)}`); return; }
               const data = (await res.json()) as { chart?: { result?: Array<{ meta?: { regularMarketPrice?: number; chartPreviousClose?: number; previousClose?: number } }> } };
               const meta = data.chart?.result?.[0]?.meta;
               const last = meta?.regularMarketPrice ?? null;
