@@ -9,28 +9,28 @@ export const Route = createFileRoute("/api/public/refresh-tickers")({
         const rows: Array<{ symbol: string; alias: string; label: string; kind: string; last: number | null; change: number | null; change_pct: number | null; updated_at: string }> = [];
         const now = new Date().toISOString();
 
-        // Yahoo Finance batch
-        try {
-          const symbols = TICKER_SYMBOLS.yahoo.map((t) => t.symbol).join(",");
-          const res = await fetch(
-            `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbols)}`,
-            { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(8000) },
-          );
-          if (res.ok) {
-            const data = (await res.json()) as { quoteResponse?: { result?: Array<{ symbol: string; regularMarketPrice?: number; regularMarketChange?: number; regularMarketChangePercent?: number }> } };
-            const map = new Map((data.quoteResponse?.result ?? []).map((q) => [q.symbol, q]));
-            for (const t of TICKER_SYMBOLS.yahoo) {
-              const q = map.get(t.symbol);
+        // Yahoo Finance chart API (per-symbol, v8 works without auth)
+        await Promise.all(
+          TICKER_SYMBOLS.yahoo.map(async (t) => {
+            try {
+              const res = await fetch(
+                `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}`,
+                { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(6000) },
+              );
+              if (!res.ok) { console.warn(`[tickers] yahoo ${t.symbol} status=${res.status} body=${(await res.text()).slice(0,150)}`); return; }
+              const data = (await res.json()) as { chart?: { result?: Array<{ meta?: { regularMarketPrice?: number; chartPreviousClose?: number; previousClose?: number } }> } };
+              const meta = data.chart?.result?.[0]?.meta;
+              const last = meta?.regularMarketPrice ?? null;
+              const prev = meta?.chartPreviousClose ?? meta?.previousClose ?? null;
+              const change = last != null && prev != null ? last - prev : null;
+              const pct = last != null && prev ? (change! / prev) * 100 : null;
               rows.push({
                 symbol: t.symbol, alias: t.alias, label: t.label, kind: t.kind,
-                last: q?.regularMarketPrice ?? null,
-                change: q?.regularMarketChange ?? null,
-                change_pct: q?.regularMarketChangePercent ?? null,
-                updated_at: now,
+                last, change, change_pct: pct, updated_at: now,
               });
-            }
-          }
-        } catch (e) { console.warn("[tickers] yahoo failed", e); }
+            } catch (e) { console.warn(`[tickers] yahoo ${t.symbol} failed`, e); }
+          }),
+        );
 
         // CoinGecko
         try {
@@ -55,7 +55,7 @@ export const Route = createFileRoute("/api/public/refresh-tickers")({
           }
         } catch (e) { console.warn("[tickers] coingecko failed", e); }
 
-        if (rows.length === 0) return Response.json({ ok: false, updated: 0 });
+        if (rows.length === 0) return Response.json({ ok: false, updated: 0, v: 2 });
 
         const { error } = await supabaseAdmin.from("tickers").upsert(rows, { onConflict: "symbol" });
         if (error) {
