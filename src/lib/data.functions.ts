@@ -23,6 +23,7 @@ function serverPublicClient() {
 const listSchema = z.object({
   category: z.string().nullable().optional(),
   sentiment: z.string().nullable().optional(),
+  region: z.string().nullable().optional(),
   impact: z.number().int().nullable().optional(),
   q: z.string().nullable().optional(),
   tickers: z.array(z.string()).nullable().optional(),
@@ -34,10 +35,11 @@ export const listNews = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => listSchema.parse(input ?? {}))
   .handler(async ({ data }) => {
     const supabase = serverPublicClient();
+    const needsRegion = !!data.region && data.region !== "all";
     let query = supabase.from("news_articles")
       .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
       .order("published_at", { ascending: false })
-      .limit(data.limit);
+      .limit(needsRegion ? Math.min(200, data.limit * 4) : data.limit);
     if (data.category && data.category !== "all") query = query.eq("category", data.category);
     if (data.sentiment && data.sentiment !== "all") query = query.eq("sentiment", data.sentiment);
     if (typeof data.impact === "number") query = query.gte("impact", data.impact);
@@ -50,8 +52,13 @@ export const listNews = createServerFn({ method: "POST" })
       const kws = data.keywords.map((k) => k.toLowerCase());
       list = list.filter((r) => kws.some((k) => (r.title + " " + (r.ai_summary ?? r.summary ?? "")).toLowerCase().includes(k)));
     }
+    if (needsRegion) {
+      const { matchesRegion } = await import("@/lib/regions");
+      list = list.filter((r) => matchesRegion(r, data.region!)).slice(0, data.limit);
+    }
     return list;
   });
+
 
 export const listTickers = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = serverPublicClient();
