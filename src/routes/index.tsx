@@ -45,12 +45,13 @@ function FeedPage() {
   });
 
   const { data: news, isLoading } = useQuery({
-    queryKey: ["news", filters.category, filters.sentiment, filters.impact, filters.q],
+    queryKey: ["news", filters.category, filters.sentiment, filters.impact, filters.q, filters.region],
     queryFn: () =>
       listNewsFn({
         data: {
           category: filters.category === "all" ? null : filters.category,
           sentiment: filters.sentiment === "all" ? null : filters.sentiment,
+          region: filters.region === "all" ? null : filters.region,
           impact: filters.impact || null,
           q: filters.q || null,
           limit: 60,
@@ -58,6 +59,7 @@ function FeedPage() {
       }),
     refetchInterval: 90_000,
   });
+
 
   // Auto-ingest if empty on first load
   useEffect(() => {
