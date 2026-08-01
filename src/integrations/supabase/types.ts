@@ -14,6 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_settings: {
+        Row: {
+          created_at: string
+          min_impact: number
+          news_enabled: boolean
+          price_enabled: boolean
+          price_threshold_pct: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          min_impact?: number
+          news_enabled?: boolean
+          price_enabled?: boolean
+          price_threshold_pct?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          min_impact?: number
+          news_enabled?: boolean
+          price_enabled?: boolean
+          price_threshold_pct?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      alerts: {
+        Row: {
+          article_id: string | null
+          body: string | null
+          change_pct: number | null
+          created_at: string
+          dedupe_key: string
+          direction: string | null
+          id: string
+          is_read: boolean
+          kind: string
+          subject: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          article_id?: string | null
+          body?: string | null
+          change_pct?: number | null
+          created_at?: string
+          dedupe_key: string
+          direction?: string | null
+          id?: string
+          is_read?: boolean
+          kind: string
+          subject: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          article_id?: string | null
+          body?: string | null
+          change_pct?: number | null
+          created_at?: string
+          dedupe_key?: string
+          direction?: string | null
+          id?: string
+          is_read?: boolean
+          kind?: string
+          subject?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "news_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hotspots: {
         Row: {
           id: string
