@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
 import { NewsDetail } from "@/components/news-detail";
-import { FilterBar, type Filters } from "@/components/filter-bar";
+import { FilterBar, DEFAULT_FILTERS, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers } from "@/lib/data.functions";
 
 export const Route = createFileRoute("/")({
