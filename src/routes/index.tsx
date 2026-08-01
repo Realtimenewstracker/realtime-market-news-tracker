@@ -165,13 +165,26 @@ function SkeletonGrid() {
     </div>
   );
 }
-function EmptyState() {
+function EmptyState({ filtered, onReset }: { filtered?: boolean; onReset?: () => void }) {
   return (
     <div className="glass rounded-3xl p-12 text-center">
-      <p className="font-display text-xl text-foreground">Loading the tape…</p>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Pulling the first batch of stories. Refresh in a few seconds.
+      <p className="font-display text-xl text-foreground">
+        {filtered ? "No stories match these filters" : "Loading the tape…"}
       </p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {filtered
+          ? "Try a broader geography or a lower impact threshold."
+          : "Pulling the first batch of stories. Refresh in a few seconds."}
+      </p>
+      {filtered && onReset && (
+        <button
+          onClick={onReset}
+          className="mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold"
+        >
+          Reset filters
+        </button>
+      )}
     </div>
   );
+
 }
