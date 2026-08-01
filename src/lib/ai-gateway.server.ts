@@ -6,11 +6,12 @@ export function createLovableAI() {
   return createOpenAICompatible({
     name: "lovable",
     baseURL: "https://ai.gateway.lovable.dev/v1",
+    apiKey: key,
     headers: {
-      "Lovable-API-Key": key,
       "X-Lovable-AIG-SDK": "vercel-ai-sdk",
     },
   });
+
 }
 
 export const DEFAULT_MODEL = "google/gemini-3.6-flash";
