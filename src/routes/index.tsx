@@ -35,7 +35,7 @@ function FeedPage() {
   const router = useRouter();
   const listNewsFn = useServerFn(listNews);
   const listTickersFn = useServerFn(listTickers);
-  const [filters, setFilters] = useState<Filters>({ q: "", category: "all", sentiment: "all", impact: 0 });
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
 
   const { data: tickers } = useQuery({
