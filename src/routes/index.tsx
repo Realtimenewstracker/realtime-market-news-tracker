@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
     await Promise.all([
       context.queryClient.prefetchQuery({ queryKey: ["tickers"], queryFn: () => listTickers() }),
       context.queryClient.prefetchQuery({
-        queryKey: ["news", "all", "all", 0, ""],
+        queryKey: ["news", "all", "all", 0, "", "all"],
         queryFn: () => listNews({ data: { limit: 60 } }),
       }),
     ]);
