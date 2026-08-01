@@ -62,7 +62,13 @@ export const Route = createFileRoute("/api/public/refresh-tickers")({
           console.error("[tickers] upsert failed", error);
           return Response.json({ ok: false, error: error.message }, { status: 500 });
         }
-        return Response.json({ ok: true, updated: rows.length });
+
+        const { scanPriceAlerts } = await import("@/lib/alert-scan.server");
+        const alerts = await scanPriceAlerts(
+          rows.map((r) => ({ alias: r.alias, label: r.label, kind: r.kind, last: r.last, change_pct: r.change_pct })),
+        );
+
+        return Response.json({ ok: true, updated: rows.length, alerts });
       },
     },
   },

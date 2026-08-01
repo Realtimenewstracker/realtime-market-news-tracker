@@ -94,12 +94,19 @@ Body: ${it.summary}`,
           }),
         );
 
-        const { error } = await supabaseAdmin.from("news_articles").insert(enriched);
+        const { data: insertedRows, error } = await supabaseAdmin
+          .from("news_articles")
+          .insert(enriched)
+          .select("id,title,summary,ai_summary,impact,tickers");
         if (error) {
           console.error("[ingest] insert failed", error);
           return Response.json({ ok: false, error: error.message }, { status: 500 });
         }
-        return Response.json({ ok: true, fetched: items.length, inserted: enriched.length });
+
+        const { scanNewsAlerts } = await import("@/lib/alert-scan.server");
+        const alerts = await scanNewsAlerts(insertedRows ?? []);
+
+        return Response.json({ ok: true, fetched: items.length, inserted: enriched.length, alerts });
       },
     },
   },
