@@ -111,6 +111,79 @@ function WatchlistPage() {
   );
 }
 
+function AlertSettingsCard() {
+  const getFn = useServerFn(getAlertSettings);
+  const saveFn = useServerFn(saveAlertSettings);
+  const qc = useQueryClient();
+  const { data } = useQuery({ queryKey: ["alert-settings"], queryFn: () => getFn() });
+
+  const save = useMutation({
+    mutationFn: (s: AlertSettings) => saveFn({ data: s }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["alert-settings"] });
+      toast.success("Alert preferences saved");
+    },
+  });
+
+  if (!data) return null;
+  const patch = (p: Partial<AlertSettings>) => save.mutate({ ...data, ...p });
+
+  return (
+    <div className="mt-6 glass rounded-3xl p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <Bell size={14} className="text-primary" />
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
+          Real-time alerts
+        </span>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-3">
+          <label className="flex items-center justify-between gap-3 text-sm">
+            <span>Price move alerts</span>
+            <Switch checked={data.price_enabled} onCheckedChange={(v) => patch({ price_enabled: v })} />
+          </label>
+          <div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+              <span>Notify on moves over</span>
+              <span className="font-mono text-foreground">{data.price_threshold_pct.toFixed(1)}%</span>
+            </div>
+            <Slider
+              value={[data.price_threshold_pct]}
+              min={0.5}
+              max={10}
+              step={0.5}
+              onValueChange={(v) => patch({ price_threshold_pct: v[0] })}
+            />
+          </div>
+        </div>
+        <div className="space-y-3">
+          <label className="flex items-center justify-between gap-3 text-sm">
+            <span>News alerts</span>
+            <Switch checked={data.news_enabled} onCheckedChange={(v) => patch({ news_enabled: v })} />
+          </label>
+          <div>
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
+              <span>Minimum story impact</span>
+              <span className="font-mono text-foreground">{data.min_impact}/3</span>
+            </div>
+            <Slider
+              value={[data.min_impact]}
+              min={0}
+              max={3}
+              step={1}
+              onValueChange={(v) => patch({ min_impact: v[0] })}
+            />
+          </div>
+        </div>
+      </div>
+      <p className="text-[11px] text-muted-foreground mt-3">
+        Prices are checked every 2 minutes and the news tape every 5 minutes. Alerts land in the bell
+        in the header the moment they fire.
+      </p>
+    </div>
+  );
+}
+
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="glass rounded-3xl p-5">
@@ -119,6 +192,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
     </div>
   );
 }
+
 function ChipList({ items, onRemove }: { items: { id: string; value: string }[]; onRemove: (id: string) => void }) {
   if (items.length === 0) return <div className="text-xs text-muted-foreground">None yet.</div>;
   return (
