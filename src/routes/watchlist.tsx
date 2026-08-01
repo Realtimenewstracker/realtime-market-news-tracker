@@ -88,6 +88,9 @@ function WatchlistPage() {
         </Card>
       </div>
 
+      <AlertSettingsCard />
+
+
       <div className="mt-8">
         <h2 className="font-display text-xl font-semibold mb-3">Matching stories</h2>
         {symbols.length + keywords.length === 0 ? (
