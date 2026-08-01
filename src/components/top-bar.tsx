@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
+import { AlertsBell } from "@/components/alerts-bell";
 
 async function refreshFeeds() {
   const res = await fetch("/api/public/ingest-rss", { method: "POST" });
