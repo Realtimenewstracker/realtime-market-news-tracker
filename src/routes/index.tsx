@@ -118,7 +118,8 @@ function FeedPage() {
         {isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
-          <EmptyState />
+          <EmptyState filtered={filters !== DEFAULT_FILTERS} onReset={() => setFilters(DEFAULT_FILTERS)} />
+
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
