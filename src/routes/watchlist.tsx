@@ -3,11 +3,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Bell } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { listWatchlist, addWatch, removeWatch, listNews } from "@/lib/data.functions";
+import { getAlertSettings, saveAlertSettings, type AlertSettings } from "@/lib/alerts.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import { NewsCard, type NewsItem } from "@/components/news-card";
 import { NewsDetail } from "@/components/news-detail";
 
