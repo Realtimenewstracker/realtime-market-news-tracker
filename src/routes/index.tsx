@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
 import { NewsDetail } from "@/components/news-detail";
-import { FilterBar, type Filters } from "@/components/filter-bar";
+import { FilterBar, DEFAULT_FILTERS, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers } from "@/lib/data.functions";
 
 export const Route = createFileRoute("/")({
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
     await Promise.all([
       context.queryClient.prefetchQuery({ queryKey: ["tickers"], queryFn: () => listTickers() }),
       context.queryClient.prefetchQuery({
-        queryKey: ["news", "all", "all", 0, ""],
+        queryKey: ["news", "all", "all", 0, "", "all"],
         queryFn: () => listNews({ data: { limit: 60 } }),
       }),
     ]);
@@ -35,7 +35,7 @@ function FeedPage() {
   const router = useRouter();
   const listNewsFn = useServerFn(listNews);
   const listTickersFn = useServerFn(listTickers);
-  const [filters, setFilters] = useState<Filters>({ q: "", category: "all", sentiment: "all", impact: 0 });
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
 
   const { data: tickers } = useQuery({
@@ -45,12 +45,13 @@ function FeedPage() {
   });
 
   const { data: news, isLoading } = useQuery({
-    queryKey: ["news", filters.category, filters.sentiment, filters.impact, filters.q],
+    queryKey: ["news", filters.category, filters.sentiment, filters.impact, filters.q, filters.region],
     queryFn: () =>
       listNewsFn({
         data: {
           category: filters.category === "all" ? null : filters.category,
           sentiment: filters.sentiment === "all" ? null : filters.sentiment,
+          region: filters.region === "all" ? null : filters.region,
           impact: filters.impact || null,
           q: filters.q || null,
           limit: 60,
@@ -58,6 +59,7 @@ function FeedPage() {
       }),
     refetchInterval: 90_000,
   });
+
 
   // Auto-ingest if empty on first load
   useEffect(() => {
@@ -116,7 +118,8 @@ function FeedPage() {
         {isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
-          <EmptyState />
+          <EmptyState filtered={filters !== DEFAULT_FILTERS} onReset={() => setFilters(DEFAULT_FILTERS)} />
+
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
@@ -162,13 +165,26 @@ function SkeletonGrid() {
     </div>
   );
 }
-function EmptyState() {
+function EmptyState({ filtered, onReset }: { filtered?: boolean; onReset?: () => void }) {
   return (
     <div className="glass rounded-3xl p-12 text-center">
-      <p className="font-display text-xl text-foreground">Loading the tape…</p>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Pulling the first batch of stories. Refresh in a few seconds.
+      <p className="font-display text-xl text-foreground">
+        {filtered ? "No stories match these filters" : "Loading the tape…"}
       </p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {filtered
+          ? "Try a broader geography or a lower impact threshold."
+          : "Pulling the first batch of stories. Refresh in a few seconds."}
+      </p>
+      {filtered && onReset && (
+        <button
+          onClick={onReset}
+          className="mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold"
+        >
+          Reset filters
+        </button>
+      )}
     </div>
   );
+
 }
