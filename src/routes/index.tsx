@@ -118,7 +118,7 @@ function FeedPage() {
         {isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
-          <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />న
+          <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
 
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
