@@ -39,7 +39,9 @@ export const listNews = createServerFn({ method: "POST" })
     let query = supabase.from("news_articles")
       .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
       .order("published_at", { ascending: false })
-      .limit(needsRegion ? Math.min(200, data.limit * 4) : data.limit);
+      .limit(data.limit);
+    // Region tags are stored on every row (indexed), so filter in the database.
+    if (needsRegion) query = query.contains("regions", [data.region!]);
     if (data.category && data.category !== "all") query = query.eq("category", data.category);
     if (data.sentiment && data.sentiment !== "all") query = query.eq("sentiment", data.sentiment);
     if (typeof data.impact === "number") query = query.gte("impact", data.impact);
