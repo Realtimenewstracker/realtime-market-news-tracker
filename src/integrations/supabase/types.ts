@@ -300,7 +300,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      derive_regions: {
+        Args: {
+          _ai_summary: string
+          _summary: string
+          _tickers: string[]
+          _title: string
+        }
+        Returns: string[]
+      }
     }
     Enums: {
       [_ in never]: never
