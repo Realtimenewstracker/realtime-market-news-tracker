@@ -15,10 +15,6 @@ export function isFiltered(f: Filters) {
   return f.q !== "" || f.category !== "all" || f.sentiment !== "all" || f.impact !== 0 || f.region !== "all";
 }
 
-export function isFiltered(f: Filters) {
-  return f.q !== "" || f.category !== "all" || f.sentiment !== "all" || f.impact !== 0 || f.region !== "all";
-}
-
 const CATEGORIES = [
   { id: "all", label: "All" },
   { id: "stocks", label: "Stocks" },
