@@ -3,6 +3,7 @@ import { XMLParser } from "fast-xml-parser";
 import { generateText } from "ai";
 import { createLovableAI, DEFAULT_MODEL } from "@/lib/ai-gateway.server";
 import { RSS_SOURCES } from "@/lib/rss-sources";
+import { REGIONS, articleRegions } from "@/lib/regions";
 
 export const Route = createFileRoute("/api/public/ingest-rss")({
   server: {
@@ -90,6 +91,17 @@ Body: ${it.summary}`,
             } catch (e) {
               console.warn("[ingest] AI enrich failed", e);
             }
+            // Always persist geography tags at ingest time (indexed DB field).
+            const valid = new Set<string>(REGIONS);
+            const aiRegions = base.regions.filter((r) => valid.has(r));
+            base.regions = aiRegions.length
+              ? aiRegions
+              : articleRegions({
+                  title: base.title,
+                  summary: base.summary,
+                  ai_summary: base.ai_summary,
+                  tickers: base.tickers,
+                });
             return base;
           }),
         );
