@@ -11,6 +11,10 @@ export type Filters = {
 
 export const DEFAULT_FILTERS: Filters = { q: "", category: "all", sentiment: "all", impact: 0, region: "all" };
 
+export function isFiltered(f: Filters) {
+  return f.q !== "" || f.category !== "all" || f.sentiment !== "all" || f.impact !== 0 || f.region !== "all";
+}
+
 const CATEGORIES = [
   { id: "all", label: "All" },
   { id: "stocks", label: "Stocks" },
@@ -34,8 +38,7 @@ const GEOS = [{ id: "all", label: "Worldwide" }, ...REGIONS.map((r) => ({ id: r,
 
 export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: Filters) => void }) {
   const update = (patch: Partial<Filters>) => onChange({ ...value, ...patch });
-  const dirty =
-    value.q !== "" || value.category !== "all" || value.sentiment !== "all" || value.impact !== 0 || value.region !== "all";
+  const dirty = isFiltered(value);
 
   return (
     <div className="glass rounded-3xl p-3 md:p-4 flex flex-col gap-3">
