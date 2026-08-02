@@ -64,5 +64,5 @@ function TickerPill({ t }: { t: Ticker }) {
 function fmt(p: number | null, kind: string) {
   if (p == null || Number.isNaN(p)) return "—";
   if (kind === "crypto" && p < 5) return p.toFixed(4);
-  return p.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return p.toLocaleString("en-IN", { maximumFractionDigits: 2 });
 }
