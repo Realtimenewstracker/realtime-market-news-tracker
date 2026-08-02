@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
 import { NewsDetail } from "@/components/news-detail";
-import { FilterBar, DEFAULT_FILTERS, type Filters } from "@/components/filter-bar";
+import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers } from "@/lib/data.functions";
 
 export const Route = createFileRoute("/")({
@@ -118,7 +118,7 @@ function FeedPage() {
         {isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
-          <EmptyState filtered={filters !== DEFAULT_FILTERS} onReset={() => setFilters(DEFAULT_FILTERS)} />
+          <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />న
 
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
