@@ -57,10 +57,6 @@ export const listNews = createServerFn({ method: "POST" })
       const kws = data.keywords.map((k) => k.toLowerCase());
       list = list.filter((r) => kws.some((k) => (r.title + " " + (r.ai_summary ?? r.summary ?? "")).toLowerCase().includes(k)));
     }
-    if (needsRegion) {
-      const { matchesRegion } = await import("@/lib/regions");
-      list = list.filter((r) => matchesRegion(r, data.region!)).slice(0, data.limit);
-    }
     return list;
   });
 
