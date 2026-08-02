@@ -43,7 +43,10 @@ export const listNews = createServerFn({ method: "POST" })
     if (data.category && data.category !== "all") query = query.eq("category", data.category);
     if (data.sentiment && data.sentiment !== "all") query = query.eq("sentiment", data.sentiment);
     if (typeof data.impact === "number") query = query.gte("impact", data.impact);
-    if (data.q) query = query.ilike("title", `%${data.q}%`);
+    if (data.q) {
+      const term = data.q.replace(/[%_,()]/g, " ").trim();
+      if (term) query = query.or(`title.ilike.%${term}%,summary.ilike.%${term}%,ai_summary.ilike.%${term}%`);
+    }
     if (data.tickers?.length) query = query.overlaps("tickers", data.tickers);
     const { data: rows, error } = await query;
     if (error) throw new Error(error.message);
@@ -64,7 +67,8 @@ export const listTickers = createServerFn({ method: "GET" }).handler(async () =>
   const supabase = serverPublicClient();
   const { data, error } = await supabase.from("tickers")
     .select("symbol,alias,label,kind,last,change,change_pct,updated_at")
-    .order("kind");
+    .order("kind")
+    .order("symbol");
   if (error) throw new Error(error.message);
   return data ?? [];
 });
