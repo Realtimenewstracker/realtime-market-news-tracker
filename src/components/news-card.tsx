@@ -15,7 +15,10 @@ export type NewsItem = {
   tickers: string[] | null;
   regions: string[] | null;
   published_at: string;
+  duplicate_count?: number;
+  duplicate_sources?: string[];
 };
+
 
 const CAT_LABEL: Record<string, string> = {
   stocks: "Stocks", crypto: "Crypto", macro: "Macro",
