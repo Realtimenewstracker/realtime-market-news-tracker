@@ -59,6 +59,9 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
             </span>
           )}
         </div>
+        <span className="font-mono text-[11px] text-muted-foreground">{timeAgo}</span>
+      </div>
+
 
       <h3 className="font-display text-lg font-semibold leading-snug tracking-tight text-foreground line-clamp-3">
         {item.title}
