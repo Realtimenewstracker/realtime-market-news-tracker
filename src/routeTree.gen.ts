@@ -17,6 +17,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
 import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
+import { Route as ApiPublicBackfillAiRouteImport } from './routes/api/public/backfill-ai'
 import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 
 const WatchlistRoute = WatchlistRouteImport.update({
@@ -59,6 +60,11 @@ const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
   path: '/api/public/ingest-rss',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBackfillAiRoute = ApiPublicBackfillAiRouteImport.update({
+  id: '/api/public/backfill-ai',
+  path: '/api/public/backfill-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
   id: '/api/public/ask-ai',
   path: '/api/public/ask-ai',
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
+  '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
+    | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
+    | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
+    | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
     | '/api/public/refresh-tickers'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   WatchlistRoute: typeof WatchlistRoute
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
+  ApiPublicBackfillAiRoute: typeof ApiPublicBackfillAiRoute
   ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
   ApiPublicRefreshTickersRoute: typeof ApiPublicRefreshTickersRoute
 }
@@ -205,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicIngestRssRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/backfill-ai': {
+      id: '/api/public/backfill-ai'
+      path: '/api/public/backfill-ai'
+      fullPath: '/api/public/backfill-ai'
+      preLoaderRoute: typeof ApiPublicBackfillAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ask-ai': {
       id: '/api/public/ask-ai'
       path: '/api/public/ask-ai'
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   WatchlistRoute: WatchlistRoute,
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
+  ApiPublicBackfillAiRoute: ApiPublicBackfillAiRoute,
   ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,
   ApiPublicRefreshTickersRoute: ApiPublicRefreshTickersRoute,
 }
