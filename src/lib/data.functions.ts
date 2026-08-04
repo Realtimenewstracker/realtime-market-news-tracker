@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { dedupeByTitle } from "@/lib/dedupe";
+
 
 function serverPublicClient() {
   const url = process.env.SUPABASE_URL!;
