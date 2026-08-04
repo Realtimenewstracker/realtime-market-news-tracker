@@ -36,10 +36,12 @@ export const listNews = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const supabase = serverPublicClient();
     const needsRegion = !!data.region && data.region !== "all";
+    // Over-fetch so collapsing wire duplicates still fills the requested page.
+    const fetchLimit = Math.min(200, data.limit * 3);
     let query = supabase.from("news_articles")
       .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
       .order("published_at", { ascending: false })
-      .limit(data.limit);
+      .limit(fetchLimit);
     // Region tags are stored on every row (indexed), so filter in the database.
     if (needsRegion) query = query.contains("regions", [data.region!]);
     if (data.category && data.category !== "all") query = query.eq("category", data.category);
@@ -57,8 +59,9 @@ export const listNews = createServerFn({ method: "POST" })
       const kws = data.keywords.map((k) => k.toLowerCase());
       list = list.filter((r) => kws.some((k) => (r.title + " " + (r.ai_summary ?? r.summary ?? "")).toLowerCase().includes(k)));
     }
-    return list;
+    return dedupeByTitle(list).slice(0, data.limit);
   });
+
 
 
 export const listTickers = createServerFn({ method: "GET" }).handler(async () => {
