@@ -15,7 +15,10 @@ export type NewsItem = {
   tickers: string[] | null;
   regions: string[] | null;
   published_at: string;
+  duplicate_count?: number;
+  duplicate_sources?: string[];
 };
+
 
 const CAT_LABEL: Record<string, string> = {
   stocks: "Stocks", crypto: "Crypto", macro: "Macro",
@@ -47,9 +50,19 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
           <span className="text-[11px] text-muted-foreground font-medium truncate max-w-[160px]">
             {item.source}
           </span>
+          {!!item.duplicate_count && (
+            <span
+              title={(item.duplicate_sources ?? []).join(", ")}
+              className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-white/60 border border-white/70 text-muted-foreground shrink-0"
+            >
+              +{item.duplicate_count} {item.duplicate_count === 1 ? "wire" : "wires"}
+            </span>
+          )}
         </div>
         <span className="font-mono text-[11px] text-muted-foreground">{timeAgo}</span>
       </div>
+
+
       <h3 className="font-display text-lg font-semibold leading-snug tracking-tight text-foreground line-clamp-3">
         {item.title}
       </h3>
