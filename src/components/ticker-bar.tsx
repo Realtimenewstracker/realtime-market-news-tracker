@@ -18,11 +18,16 @@ const PLACEHOLDER: Ticker[] = [
   { symbol: "BTC", alias: "BTC", label: "BITCOIN", kind: "crypto", last: 96420, change: null, change_pct: 1.84 },
 ];
 
+const byOrder = (a: Ticker, b: Ticker) =>
+  a.kind === b.kind ? a.symbol.localeCompare(b.symbol) : a.kind.localeCompare(b.kind);
+
 export function TickerBar({ tickers }: { tickers: Ticker[] }) {
   // Client-side auto refresh every 60s
-  const [items, setItems] = useState<Ticker[]>(tickers?.length ? tickers : PLACEHOLDER);
+  const [items, setItems] = useState<Ticker[]>(
+    tickers?.length ? [...tickers].sort(byOrder) : PLACEHOLDER,
+  );
   useEffect(() => {
-    if (tickers?.length) setItems(tickers);
+    if (tickers?.length) setItems([...tickers].sort(byOrder));
   }, [tickers]);
   useEffect(() => {
     const int = setInterval(() => {
@@ -32,6 +37,7 @@ export function TickerBar({ tickers }: { tickers: Ticker[] }) {
   }, []);
 
   const doubled = [...items, ...items];
+
   return (
     <div className="glass-strong border-b border-white/70 py-2.5 marquee-mask overflow-hidden sticky top-0 z-40">
       <div className="marquee-track">
