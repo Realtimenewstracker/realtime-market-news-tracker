@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { createLovableAI, DEFAULT_MODEL } from "@/lib/ai-gateway.server";
 import { RSS_SOURCES } from "@/lib/rss-sources";
 import { REGIONS, articleRegions } from "@/lib/regions";
+import { classifyText } from "@/lib/classify";
 
 export const Route = createFileRoute("/api/public/ingest-rss")({
   server: {
