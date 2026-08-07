@@ -105,18 +105,7 @@ Body: ${it.summary}`,
           }),
         );
 
-            const aiRegions = base.regions.filter((r) => valid.has(r));
-            base.regions = aiRegions.length
-              ? aiRegions
-              : articleRegions({
-                  title: base.title,
-                  summary: base.summary,
-                  ai_summary: base.ai_summary,
-                  tickers: base.tickers,
-                });
-            return base;
-          }),
-        );
+
 
         const { data: insertedRows, error } = await supabaseAdmin
           .from("news_articles")
@@ -136,8 +125,23 @@ Body: ${it.summary}`,
   },
 });
 
+function finalizeRegions<T extends { title: string; summary: string; ai_summary: string | null; tickers: string[]; regions: string[] }>(base: T): T {
+  const valid = new Set<string>(REGIONS);
+  const aiRegions = base.regions.filter((r) => valid.has(r));
+  base.regions = aiRegions.length
+    ? aiRegions
+    : articleRegions({
+        title: base.title,
+        summary: base.summary,
+        ai_summary: base.ai_summary,
+        tickers: base.tickers,
+      });
+  return base;
+}
+
 function safeCreateAI() {
   try { return createLovableAI(); } catch { return null; }
+
 }
 function stripTags(s: string) { return s.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim(); }
 function safeDate(s: string) {
