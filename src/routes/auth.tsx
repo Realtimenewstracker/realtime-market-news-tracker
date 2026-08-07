@@ -25,27 +25,46 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email, password,
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
+        if (!data.session) {
+          toast.success("Account created. Check your email to confirm, then sign in.");
+          setMode("signin");
+          return;
+        }
         toast.success("Account created. You're signed in.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
         if (error) throw error;
+        if (!data.session) throw new Error("Sign in failed — please try again.");
         toast.success("Welcome back.");
       }
       router.navigate({ to: "/" });
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Auth failed");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Auth failed";
+      toast.error(
+        /invalid login credentials/i.test(msg)
+          ? "Wrong email or password."
+          : /already registered/i.test(msg)
+            ? "That email already has an account — sign in instead."
+            : msg,
+      );
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <section className="max-w-md mx-auto mt-16 px-4">

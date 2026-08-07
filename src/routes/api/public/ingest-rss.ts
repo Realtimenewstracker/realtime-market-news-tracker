@@ -4,6 +4,7 @@ import { generateText } from "ai";
 import { createLovableAI, DEFAULT_MODEL } from "@/lib/ai-gateway.server";
 import { RSS_SOURCES } from "@/lib/rss-sources";
 import { REGIONS, articleRegions } from "@/lib/regions";
+import { classifyText } from "@/lib/classify";
 
 export const Route = createFileRoute("/api/public/ingest-rss")({
   server: {
@@ -66,8 +67,16 @@ export const Route = createFileRoute("/api/public/ingest-rss")({
         const provider = safeCreateAI();
         const enriched = await Promise.all(
           fresh.map(async (it) => {
-            const base = { ...it, ai_summary: null as string | null, impact: 1, sentiment: "neutral", tickers: [] as string[], regions: [] as string[] };
-            if (!provider) return base;
+            const guess = classifyText(it.title, it.summary);
+            const base = {
+              ...it,
+              ai_summary: null as string | null,
+              impact: guess.impact,
+              sentiment: guess.sentiment as string,
+              tickers: [] as string[],
+              regions: [] as string[],
+            };
+            if (!provider) return finalizeRegions(base);
             try {
               const { text } = await generateText({
                 model: provider(DEFAULT_MODEL),
@@ -83,28 +92,20 @@ Body: ${it.summary}`,
               if (parsed) {
                 base.ai_summary = String(parsed.summary ?? "").slice(0, 240);
                 const sent = String(parsed.sentiment ?? "");
-                base.sentiment = sent === "bullish" || sent === "bearish" ? sent : "neutral";
-                base.impact = Math.max(0, Math.min(3, Number(parsed.impact) || 1));
+                if (sent === "bullish" || sent === "bearish" || sent === "neutral") base.sentiment = sent;
+                const imp = Number(parsed.impact);
+                if (Number.isFinite(imp)) base.impact = Math.max(0, Math.min(3, imp));
                 base.tickers = Array.isArray(parsed.tickers) ? parsed.tickers.filter((t: unknown): t is string => typeof t === "string").slice(0, 6) : [];
                 base.regions = Array.isArray(parsed.regions) ? parsed.regions.filter((t: unknown): t is string => typeof t === "string").slice(0, 4) : [];
               }
             } catch (e) {
               console.warn("[ingest] AI enrich failed", e);
             }
-            // Always persist geography tags at ingest time (indexed DB field).
-            const valid = new Set<string>(REGIONS);
-            const aiRegions = base.regions.filter((r) => valid.has(r));
-            base.regions = aiRegions.length
-              ? aiRegions
-              : articleRegions({
-                  title: base.title,
-                  summary: base.summary,
-                  ai_summary: base.ai_summary,
-                  tickers: base.tickers,
-                });
-            return base;
+            return finalizeRegions(base);
           }),
         );
+
+
 
         const { data: insertedRows, error } = await supabaseAdmin
           .from("news_articles")
@@ -124,8 +125,23 @@ Body: ${it.summary}`,
   },
 });
 
+function finalizeRegions<T extends { title: string; summary: string; ai_summary: string | null; tickers: string[]; regions: string[] }>(base: T): T {
+  const valid = new Set<string>(REGIONS);
+  const aiRegions = base.regions.filter((r) => valid.has(r));
+  base.regions = aiRegions.length
+    ? aiRegions
+    : articleRegions({
+        title: base.title,
+        summary: base.summary,
+        ai_summary: base.ai_summary,
+        tickers: base.tickers,
+      });
+  return base;
+}
+
 function safeCreateAI() {
   try { return createLovableAI(); } catch { return null; }
+
 }
 function stripTags(s: string) { return s.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").trim(); }
 function safeDate(s: string) {

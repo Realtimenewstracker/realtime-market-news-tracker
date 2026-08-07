@@ -300,6 +300,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      derive_impact: { Args: { txt: string }; Returns: number }
       derive_regions: {
         Args: {
           _ai_summary: string
@@ -309,6 +310,7 @@ export type Database = {
         }
         Returns: string[]
       }
+      derive_sentiment: { Args: { txt: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
