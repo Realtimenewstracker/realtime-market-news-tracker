@@ -67,8 +67,16 @@ export const Route = createFileRoute("/api/public/ingest-rss")({
         const provider = safeCreateAI();
         const enriched = await Promise.all(
           fresh.map(async (it) => {
-            const base = { ...it, ai_summary: null as string | null, impact: 1, sentiment: "neutral", tickers: [] as string[], regions: [] as string[] };
-            if (!provider) return base;
+            const guess = classifyText(it.title, it.summary);
+            const base = {
+              ...it,
+              ai_summary: null as string | null,
+              impact: guess.impact,
+              sentiment: guess.sentiment as string,
+              tickers: [] as string[],
+              regions: [] as string[],
+            };
+            if (!provider) return finalizeRegions(base);
             try {
               const { text } = await generateText({
                 model: provider(DEFAULT_MODEL),
@@ -84,16 +92,19 @@ Body: ${it.summary}`,
               if (parsed) {
                 base.ai_summary = String(parsed.summary ?? "").slice(0, 240);
                 const sent = String(parsed.sentiment ?? "");
-                base.sentiment = sent === "bullish" || sent === "bearish" ? sent : "neutral";
-                base.impact = Math.max(0, Math.min(3, Number(parsed.impact) || 1));
+                if (sent === "bullish" || sent === "bearish" || sent === "neutral") base.sentiment = sent;
+                const imp = Number(parsed.impact);
+                if (Number.isFinite(imp)) base.impact = Math.max(0, Math.min(3, imp));
                 base.tickers = Array.isArray(parsed.tickers) ? parsed.tickers.filter((t: unknown): t is string => typeof t === "string").slice(0, 6) : [];
                 base.regions = Array.isArray(parsed.regions) ? parsed.regions.filter((t: unknown): t is string => typeof t === "string").slice(0, 4) : [];
               }
             } catch (e) {
               console.warn("[ingest] AI enrich failed", e);
             }
-            // Always persist geography tags at ingest time (indexed DB field).
-            const valid = new Set<string>(REGIONS);
+            return finalizeRegions(base);
+          }),
+        );
+
             const aiRegions = base.regions.filter((r) => valid.has(r));
             base.regions = aiRegions.length
               ? aiRegions
