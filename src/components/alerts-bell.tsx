@@ -65,7 +65,7 @@ export function AlertsBell() {
     >
       <PopoverTrigger asChild>
         <button
-          className="glass glass-hover rounded-full w-10 h-10 flex items-center justify-center text-foreground relative"
+          className="glass glass-hover rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-foreground relative"
           title="Watchlist alerts"
           aria-label={unread ? `${unread} unread alerts` : "Alerts"}
         >
@@ -77,7 +77,7 @@ export function AlertsBell() {
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[340px] p-0 glass-strong border-white/70 rounded-3xl overflow-hidden">
+      <PopoverContent align="end" className="w-[min(340px,calc(100vw-1.5rem))] p-0 glass-strong border-white/70 rounded-3xl overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/60">
           <span className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground">
             Watchlist alerts

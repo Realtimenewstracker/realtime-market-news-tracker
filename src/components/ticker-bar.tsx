@@ -19,7 +19,7 @@ const PLACEHOLDER: Ticker[] = [
 ];
 
 const byOrder = (a: Ticker, b: Ticker) =>
-  a.kind === b.kind ? a.symbol.localeCompare(b.symbol) : a.kind.localeCompare(b.kind);
+  a.kind === b.kind ? (a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0) : a.kind < b.kind ? -1 : 1;
 
 export function TickerBar({ tickers }: { tickers: Ticker[] }) {
   // Client-side auto refresh every 60s
