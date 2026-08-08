@@ -85,10 +85,10 @@ function FeedPage() {
   return (
     <>
       <TickerBar tickers={tickers ?? []} />
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pt-8 pb-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
+      <section className="max-w-7xl mx-auto px-3 md:px-8 pt-6 md:pt-8 pb-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 min-w-0">
+          <div className="min-w-0">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground">
               The live tape,{" "}
               <span
                 className="text-transparent bg-clip-text"
@@ -101,7 +101,7 @@ function FeedPage() {
               AI-tagged headlines from India and the world, ranked by potential impact on NSE, BSE and the rupee.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto -mx-3 px-3 pb-1 md:mx-0 md:px-0 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Stat label="Stories" value={stats.total} />
             <Stat label="Bull" value={stats.bull} tone="bull" />
             <Stat label="Bear" value={stats.bear} tone="bear" />
@@ -110,11 +110,11 @@ function FeedPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8">
+      <section className="max-w-7xl mx-auto px-3 md:px-8">
         <FilterBar value={filters} onChange={setFilters} />
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-8 pt-6">
+      <section className="max-w-7xl mx-auto px-3 md:px-8 pt-5 md:pt-6">
         {isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
@@ -149,7 +149,7 @@ function Stat({ label, value, tone }: { label: string; value: number; tone?: "bu
   const color =
     tone === "bull" ? "text-bull" : tone === "bear" ? "text-bear" : tone === "accent" ? "text-accent" : "text-foreground";
   return (
-    <div className="glass rounded-2xl px-3 py-2 min-w-[70px] text-center">
+    <div className="glass rounded-2xl px-3 py-2 min-w-[68px] shrink-0 text-center">
       <div className={`font-mono text-lg font-semibold ${color}`}>{value}</div>
       <div className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">{label}</div>
     </div>
@@ -167,7 +167,7 @@ function SkeletonGrid() {
 }
 function EmptyState({ filtered, onReset }: { filtered?: boolean; onReset?: () => void }) {
   return (
-    <div className="glass rounded-3xl p-12 text-center">
+    <div className="glass rounded-3xl p-8 md:p-12 text-center">
       <p className="font-display text-xl text-foreground">
         {filtered ? "No stories match these filters" : "Loading the tape…"}
       </p>

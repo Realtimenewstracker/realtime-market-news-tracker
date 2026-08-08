@@ -29,19 +29,19 @@ function GeoPage() {
   });
 
   return (
-    <section className="max-w-6xl mx-auto px-4 md:px-8 pt-8">
+    <section className="max-w-6xl mx-auto px-3 md:px-8 pt-6 md:pt-8">
       <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Geopolitics</h1>
       <p className="text-sm text-muted-foreground mt-1">Flashpoints and macro events. Ranked by severity.</p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {(hotspots ?? []).map((h) => (
-          <div key={h.id} className="glass rounded-3xl p-5">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-display text-lg font-semibold">{h.name}</div>
+          <div key={h.id} className="glass rounded-3xl p-4 md:p-5 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <div className="font-display text-lg font-semibold truncate">{h.name}</div>
                 <div className="text-[11px] text-muted-foreground uppercase tracking-widest font-semibold">{h.region}</div>
               </div>
-              <SeverityBadge sev={h.severity ?? 1} />
+              <div className="shrink-0"><SeverityBadge sev={h.severity ?? 1} /></div>
             </div>
             {h.summary && <p className="mt-2 text-sm text-muted-foreground line-clamp-4">{h.summary}</p>}
             {h.market_impact && (
