@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
 type Ticker = {
@@ -23,12 +23,10 @@ const byOrder = (a: Ticker, b: Ticker) =>
 
 export function TickerBar({ tickers }: { tickers: Ticker[] }) {
   // Client-side auto refresh every 60s
-  const [items, setItems] = useState<Ticker[]>(
-    tickers?.length ? [...tickers].sort(byOrder) : PLACEHOLDER,
+  const items = useMemo(
+    () => (tickers?.length ? [...tickers].sort(byOrder) : PLACEHOLDER),
+    [tickers],
   );
-  useEffect(() => {
-    if (tickers?.length) setItems([...tickers].sort(byOrder));
-  }, [tickers]);
   useEffect(() => {
     const int = setInterval(() => {
       fetch("/api/public/refresh-tickers", { method: "POST" }).catch(() => {});
@@ -53,7 +51,7 @@ function TickerPill({ t }: { t: Ticker }) {
   const pct = t.change_pct ?? 0;
   const up = pct >= 0;
   return (
-    <div className="mx-3 flex items-center gap-2.5 px-4 py-1.5 rounded-full glass shrink-0">
+    <div className="mx-1.5 md:mx-3 flex items-center gap-2 md:gap-2.5 px-3 md:px-4 py-1.5 rounded-full glass shrink-0 whitespace-nowrap">
       <span className="font-display font-semibold tracking-tight text-foreground text-sm">
         {t.label || t.alias}
       </span>
