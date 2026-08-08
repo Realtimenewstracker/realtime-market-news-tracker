@@ -68,25 +68,25 @@ function WatchlistPage() {
     );
 
   return (
-    <section className="max-w-6xl mx-auto px-4 md:px-8 pt-8">
+    <section className="max-w-6xl mx-auto px-3 md:px-8 pt-6 md:pt-8">
       <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Watchlist</h1>
       <p className="text-sm text-muted-foreground mt-1">
         Filter the tape to the symbols and themes that move your book.
       </p>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-6 grid gap-3 md:gap-4 md:grid-cols-2">
         <Card title="Symbols">
           <ChipList items={items?.filter((i) => i.kind === "symbol") ?? []} onRemove={(id) => remove.mutate(id)} />
-          <form onSubmit={(e) => { e.preventDefault(); if (sym) { add.mutate({ kind: "symbol", value: sym }); setSym(""); } }} className="mt-3 flex gap-2">
-            <Input value={sym} onChange={(e) => setSym(e.target.value)} placeholder="e.g. RELIANCE" className="bg-white/70" />
-            <Button type="submit" className="rounded-full"><Plus size={14} /></Button>
+          <form onSubmit={(e) => { e.preventDefault(); if (sym) { add.mutate({ kind: "symbol", value: sym }); setSym(""); } }} className="mt-3 flex gap-2 min-w-0">
+            <Input value={sym} onChange={(e) => setSym(e.target.value)} placeholder="e.g. RELIANCE" className="bg-white/70 min-w-0" />
+            <Button type="submit" className="rounded-full shrink-0"><Plus size={14} /></Button>
           </form>
         </Card>
         <Card title="Keywords">
           <ChipList items={items?.filter((i) => i.kind === "keyword") ?? []} onRemove={(id) => remove.mutate(id)} />
-          <form onSubmit={(e) => { e.preventDefault(); if (kw) { add.mutate({ kind: "keyword", value: kw }); setKw(""); } }} className="mt-3 flex gap-2">
-            <Input value={kw} onChange={(e) => setKw(e.target.value)} placeholder="e.g. RBI, crude oil" className="bg-white/70" />
-            <Button type="submit" className="rounded-full"><Plus size={14} /></Button>
+          <form onSubmit={(e) => { e.preventDefault(); if (kw) { add.mutate({ kind: "keyword", value: kw }); setKw(""); } }} className="mt-3 flex gap-2 min-w-0">
+            <Input value={kw} onChange={(e) => setKw(e.target.value)} placeholder="e.g. RBI, crude oil" className="bg-white/70 min-w-0" />
+            <Button type="submit" className="rounded-full shrink-0"><Plus size={14} /></Button>
           </form>
         </Card>
       </div>
@@ -132,7 +132,7 @@ function AlertSettingsCard() {
   const patch = (p: Partial<AlertSettings>) => save.mutate({ ...data, ...p });
 
   return (
-    <div className="mt-6 glass rounded-3xl p-5">
+    <div className="mt-6 glass rounded-3xl p-4 md:p-5">
       <div className="flex items-center gap-2 mb-3">
         <Bell size={14} className="text-primary" />
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
@@ -189,7 +189,7 @@ function AlertSettingsCard() {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="glass rounded-3xl p-5">
+    <div className="glass rounded-3xl p-4 md:p-5 min-w-0">
       <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-2">{title}</div>
       {children}
     </div>
@@ -201,9 +201,9 @@ function ChipList({ items, onRemove }: { items: { id: string; value: string }[];
   return (
     <div className="flex flex-wrap gap-1.5">
       {items.map((i) => (
-        <span key={i.id} className="glass rounded-full pl-3 pr-1.5 py-1 flex items-center gap-1 text-xs font-medium">
-          {i.value}
-          <button onClick={() => onRemove(i.id)} className="text-muted-foreground hover:text-bear"><X size={12} /></button>
+        <span key={i.id} className="glass rounded-full pl-3 pr-1.5 py-1 flex max-w-full items-center gap-1 text-xs font-medium">
+          <span className="truncate">{i.value}</span>
+          <button onClick={() => onRemove(i.id)} className="shrink-0 text-muted-foreground hover:text-bear"><X size={12} /></button>
         </span>
       ))}
     </div>

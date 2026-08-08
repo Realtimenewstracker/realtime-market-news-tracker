@@ -41,9 +41,9 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
   const dirty = isFiltered(value);
 
   return (
-    <div className="glass rounded-3xl p-3 md:p-4 flex flex-col gap-3">
-      <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <div className="relative flex-1">
+    <div className="glass rounded-3xl p-3 md:p-4 flex flex-col gap-3 overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center gap-2.5 md:gap-3 min-w-0">
+        <div className="relative min-w-0 flex-1">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
             value={value.q}
@@ -61,6 +61,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
             </button>
           )}
         </div>
+        <div className="flex items-center gap-2 min-w-0">
         <button
           onClick={() => update({ region: "India", impact: 2 })}
           className={`px-3 py-1.5 rounded-full text-xs font-semibold border shrink-0 ${
@@ -69,7 +70,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
               : "bg-white/60 border-white/70 text-foreground/80 hover:text-foreground"
           }`}
         >
-          India high-impact
+          <span className="truncate">India high-impact</span>
         </button>
         {dirty && (
           <button
@@ -79,9 +80,10 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
             <RotateCcw size={12} /> Reset
           </button>
         )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+      <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-x-4 md:gap-y-2 min-w-0">
         <ChipGroup label="Category" options={CATEGORIES} value={value.category} onChange={(v) => update({ category: String(v) })} />
         <ChipGroup label="Geography" options={GEOS} value={value.region} onChange={(v) => update({ region: String(v) })} />
         <ChipGroup label="Impact" options={IMPACTS} value={value.impact} onChange={(v) => update({ impact: Number(v) })} />
@@ -101,13 +103,13 @@ function ChipGroup<T extends string | number>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex items-center gap-1">
-      <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mr-1">{label}</span>
+    <div className="flex items-center gap-1 min-w-0 overflow-x-auto -mx-1 px-1 py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mr-1 shrink-0">{label}</span>
       {options.map((o) => (
         <button
           key={String(o.id)}
           onClick={() => onChange(o.id)}
-          className={`px-2.5 py-1 rounded-full text-xs font-medium border ${
+          className={`px-2.5 py-1 rounded-full text-xs font-medium border shrink-0 whitespace-nowrap ${
             value === o.id
               ? "bg-primary text-primary-foreground border-primary"
               : "bg-white/60 border-white/70 text-foreground/70 hover:text-foreground"

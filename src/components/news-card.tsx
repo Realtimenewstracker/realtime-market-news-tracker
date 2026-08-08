@@ -38,16 +38,16 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
       onClick={onClick}
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.985 }}
-      className="text-left w-full h-full glass glass-hover rounded-3xl p-6 flex flex-col gap-4 relative overflow-hidden"
+      className="text-left w-full h-full glass glass-hover rounded-3xl p-5 md:p-6 flex flex-col gap-3.5 md:gap-4 relative overflow-hidden"
     >
       <div className={`absolute inset-x-0 top-0 h-[3px] rounded-t-3xl ${strip}`} />
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground font-semibold">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground font-semibold shrink-0">
             {CAT_LABEL[item.category] ?? item.category}
           </span>
           <span className="text-muted-foreground/50">·</span>
-          <span className="text-[11px] text-muted-foreground font-medium truncate max-w-[160px]">
+          <span className="text-[11px] text-muted-foreground font-medium truncate">
             {item.source}
           </span>
           {!!item.duplicate_count && (
@@ -59,11 +59,11 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
             </span>
           )}
         </div>
-        <span className="font-mono text-[11px] text-muted-foreground">{timeAgo}</span>
+        <span className="font-mono text-[11px] text-muted-foreground shrink-0 whitespace-nowrap">{timeAgo}</span>
       </div>
 
 
-      <h3 className="font-display text-lg font-semibold leading-snug tracking-tight text-foreground line-clamp-3">
+      <h3 className="font-display text-base md:text-lg font-semibold leading-snug break-words tracking-tight text-foreground line-clamp-3">
         {item.title}
       </h3>
       {(item.ai_summary || item.summary) && (
@@ -71,8 +71,8 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
           {item.ai_summary || strip_html(item.summary ?? "")}
         </p>
       )}
-      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-        <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="mt-auto flex items-center justify-between gap-2 pt-2 min-w-0">
+        <div className="flex min-w-0 items-center gap-1.5 flex-wrap">
           <SentimentBadge sentiment={item.sentiment} />
           <ImpactBadge impact={impact} />
           {item.tickers?.slice(0, 3).map((t) => (
@@ -81,7 +81,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
             </span>
           ))}
         </div>
-        <ArrowUpRight size={16} className="text-muted-foreground" />
+        <ArrowUpRight size={16} className="text-muted-foreground shrink-0" />
       </div>
     </motion.button>
   );

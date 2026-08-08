@@ -70,11 +70,11 @@ function PortfolioPage() {
   const pnl = totalMv - totalCost;
 
   return (
-    <section className="max-w-5xl mx-auto px-4 md:px-8 pt-8">
+    <section className="max-w-5xl mx-auto px-3 md:px-8 pt-6 md:pt-8">
       <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Portfolio</h1>
       <p className="text-sm text-muted-foreground mt-1">Live P&amp;L against the latest quotes.</p>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <div className="mt-6 grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-3">
         <StatCard label="Market value" value={inr(totalMv)} />
         <StatCard label="Cost basis" value={inr(totalCost)} />
         <StatCard label="Unrealized P&amp;L" value={inr(pnl)} tone={pnl >= 0 ? "bull" : "bear"} />
@@ -87,22 +87,23 @@ function PortfolioPage() {
           upsert.mutate({ symbol: symbol.trim().toUpperCase(), quantity: Number(qty), avg_price: Number(price) });
           setSymbol(""); setQty(""); setPrice("");
         }}
-        className="mt-6 glass rounded-3xl p-4 flex flex-col md:flex-row gap-2 items-stretch md:items-end"
+        className="mt-6 glass rounded-3xl p-3 md:p-4 grid grid-cols-2 md:flex md:flex-row gap-2 items-stretch md:items-end"
       >
-        <div className="flex-1"><label className="text-xs text-muted-foreground">Symbol (e.g. RELIANCE)</label>
+        <div className="col-span-2 md:flex-1 min-w-0"><label className="text-xs text-muted-foreground">Symbol (e.g. RELIANCE)</label>
           <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} className="bg-white/70" />
         </div>
-        <div className="w-32"><label className="text-xs text-muted-foreground">Quantity</label>
+        <div className="min-w-0 md:w-32"><label className="text-xs text-muted-foreground">Quantity</label>
           <Input type="number" step="any" value={qty} onChange={(e) => setQty(e.target.value)} className="bg-white/70" />
         </div>
-        <div className="w-32"><label className="text-xs text-muted-foreground">Avg price</label>
+        <div className="min-w-0 md:w-32"><label className="text-xs text-muted-foreground">Avg price</label>
           <Input type="number" step="any" value={price} onChange={(e) => setPrice(e.target.value)} className="bg-white/70" />
         </div>
-        <Button type="submit" className="rounded-full"><Plus size={14} /> Add / update</Button>
+        <Button type="submit" className="col-span-2 rounded-full"><Plus size={14} /> Add / update</Button>
       </form>
 
       <div className="mt-6 glass rounded-3xl overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[560px] text-sm">
           <thead className="bg-white/50 text-[10px] uppercase tracking-widest text-muted-foreground">
             <tr><Th>Symbol</Th><Th>Qty</Th><Th>Avg</Th><Th>Last</Th><Th>MV</Th><Th>P&amp;L</Th><Th /></tr>
           </thead>
@@ -125,18 +126,19 @@ function PortfolioPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </section>
   );
 }
 
-function Th({ children }: { children?: React.ReactNode }) { return <th className="text-left px-4 py-2.5 font-semibold">{children}</th>; }
-function Td({ children, className = "" }: { children?: React.ReactNode; className?: string }) { return <td className={`px-4 py-2.5 ${className}`}>{children}</td>; }
+function Th({ children }: { children?: React.ReactNode }) { return <th className="text-left px-3 md:px-4 py-2.5 font-semibold whitespace-nowrap">{children}</th>; }
+function Td({ children, className = "" }: { children?: React.ReactNode; className?: string }) { return <td className={`px-3 md:px-4 py-2.5 whitespace-nowrap ${className}`}>{children}</td>; }
 function StatCard({ label, value, tone }: { label: string; value: string; tone?: "bull" | "bear" }) {
   return (
-    <div className="glass rounded-3xl p-5">
+    <div className="glass rounded-3xl p-4 md:p-5 min-w-0">
       <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">{label}</div>
-      <div className={`mt-1 font-mono text-2xl font-semibold ${tone === "bull" ? "text-bull" : tone === "bear" ? "text-bear" : "text-foreground"}`}>{value}</div>
+      <div className={`mt-1 font-mono text-xl md:text-2xl font-semibold truncate ${tone === "bull" ? "text-bull" : tone === "bear" ? "text-bear" : "text-foreground"}`}>{value}</div>
     </div>
   );
 }

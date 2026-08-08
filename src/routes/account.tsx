@@ -51,8 +51,8 @@ function AccountPage() {
 
 function Row({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-white/60 pb-2">
-      <span className="text-muted-foreground text-xs uppercase tracking-widest font-semibold">{label}</span>
+    <div className="flex min-w-0 items-center justify-between gap-3 border-b border-white/60 pb-2">
+      <span className="shrink-0 text-muted-foreground text-xs uppercase tracking-widest font-semibold">{label}</span>
       <span className={`text-foreground text-xs ${mono ? "font-mono" : ""} truncate`}>{value}</span>
     </div>
   );
