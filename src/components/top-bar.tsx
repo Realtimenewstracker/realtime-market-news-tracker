@@ -37,12 +37,12 @@ export function TopBar() {
   };
 
   return (
-    <header className="px-4 md:px-8 pt-4 flex items-center justify-between gap-3">
-      <Link to="/" className="flex items-center gap-2.5 group">
-        <div className="w-9 h-9 rounded-2xl glass flex items-center justify-center">
-          <Waves size={16} className="text-primary" />
+    <header className="px-3 md:px-8 pt-3 md:pt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between md:gap-3">
+      <Link to="/" className="flex min-w-0 items-center gap-2 group">
+        <div className="w-8 h-8 md:w-9 md:h-9 shrink-0 rounded-2xl glass flex items-center justify-center">
+          <Waves size={15} className="text-primary" />
         </div>
-        <span className="font-display font-semibold text-foreground text-lg tracking-tight">
+        <span className="font-display font-semibold text-foreground text-base md:text-lg tracking-tight truncate">
           Track{" "}
           <span
             className="text-transparent bg-clip-text"
@@ -61,20 +61,20 @@ export function TopBar() {
         {user && <NavLink to="/account">Account</NavLink>}
       </nav>
 
-      <div className="flex items-center gap-2">
+      <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
         <AlertsBell />
         <button
           onClick={handleRefresh}
           disabled={refreshing}
-          className="glass glass-hover rounded-full w-10 h-10 flex items-center justify-center text-foreground disabled:opacity-60"
+          className="glass glass-hover rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-foreground disabled:opacity-60"
           title="Refresh feed"
         >
           <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} />
         </button>
 
         {user ? (
-          <div className="flex items-center gap-1">
-            <div className="glass rounded-full pl-1.5 pr-3 py-1 flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <div className="glass rounded-full p-1 md:pl-1.5 md:pr-3 md:py-1 flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[11px] font-semibold">
                 {(user.email ?? "?").slice(0, 1).toUpperCase()}
               </div>
@@ -84,7 +84,7 @@ export function TopBar() {
             </div>
             <button
               onClick={signOut}
-              className="glass glass-hover rounded-full w-10 h-10 flex items-center justify-center text-foreground"
+              className="glass glass-hover rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center text-foreground"
               title="Sign out"
             >
               <LogOut size={14} />
@@ -93,12 +93,13 @@ export function TopBar() {
         ) : (
           <Link
             to="/auth"
-            className="rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm font-semibold flex items-center gap-1.5 hover:opacity-90"
+            className="glass glass-hover rounded-full h-9 md:h-10 px-3 md:px-4 text-foreground text-sm font-semibold flex items-center gap-1.5"
           >
-            <LogIn size={14} /> Sign in
+            <LogIn size={14} /> <span className="hidden sm:inline">Sign in</span>
           </Link>
         )}
       </div>
+
     </header>
   );
 }
