@@ -49,7 +49,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
             value={value.q}
             onChange={(e) => update({ q: e.target.value })}
             placeholder="Search headlines…"
-            className="w-full bg-white/70 border border-white/70 rounded-full pl-9 pr-8 py-2 text-sm outline-none focus:border-accent"
+            className="glass-input w-full rounded-full pl-9 pr-8 py-2 text-sm outline-none"
           />
           {value.q && (
             <button
@@ -67,7 +67,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
           className={`px-3 py-1.5 rounded-full text-xs font-semibold border shrink-0 ${
             value.region === "India" && value.impact >= 2
               ? "bg-accent text-accent-foreground border-accent"
-              : "bg-white/60 border-white/70 text-foreground/80 hover:text-foreground"
+              : "glass-chip text-foreground/80 hover:text-foreground"
           }`}
         >
           <span className="truncate">India high-impact</span>
@@ -75,7 +75,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
         {dirty && (
           <button
             onClick={() => onChange(DEFAULT_FILTERS)}
-            className="px-3 py-1.5 rounded-full text-xs font-medium border bg-white/60 border-white/70 text-muted-foreground hover:text-foreground shrink-0 flex items-center gap-1"
+            className="px-3 py-1.5 rounded-full text-xs font-medium glass-chip text-muted-foreground hover:text-foreground shrink-0 flex items-center gap-1"
           >
             <RotateCcw size={12} /> Reset
           </button>
@@ -111,8 +111,8 @@ function ChipGroup<T extends string | number>({
           onClick={() => onChange(o.id)}
           className={`px-2.5 py-1 rounded-full text-xs font-medium border shrink-0 whitespace-nowrap ${
             value === o.id
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-white/60 border-white/70 text-foreground/70 hover:text-foreground"
+              ? "glass-btn-primary border-transparent"
+              : "glass-chip text-foreground/70 hover:text-foreground"
           }`}
         >
           {o.label}

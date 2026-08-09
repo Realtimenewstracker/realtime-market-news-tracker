@@ -53,7 +53,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
           {!!item.duplicate_count && (
             <span
               title={(item.duplicate_sources ?? []).join(", ")}
-              className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-white/60 border border-white/70 text-muted-foreground shrink-0"
+              className="text-[10px] font-semibold px-1.5 py-0.5 glass-chip text-muted-foreground shrink-0"
             >
               +{item.duplicate_count} {item.duplicate_count === 1 ? "wire" : "wires"}
             </span>
@@ -76,7 +76,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
           <SentimentBadge sentiment={item.sentiment} />
           <ImpactBadge impact={impact} />
           {item.tickers?.slice(0, 3).map((t) => (
-            <span key={t} className="px-2 py-0.5 rounded-full bg-white/70 border border-white/80 font-mono text-[10px] text-foreground">
+            <span key={t} className="px-2 py-0.5 glass-chip font-mono text-[10px] text-foreground">
               {t}
             </span>
           ))}
@@ -109,7 +109,7 @@ export function SentimentBadge({ sentiment }: { sentiment: string | null }) {
 
 export function ImpactBadge({ impact }: { impact: number }) {
   const label = impact >= 3 ? "HIGH" : impact === 2 ? "MED" : impact === 1 ? "LOW" : "OBS";
-  const tone = impact >= 3 ? "bg-accent-tint" : "bg-white/70 text-foreground border border-white/80";
+  const tone = impact >= 3 ? "bg-accent-tint" : "glass-chip text-foreground";
   return (
     <span className={`${tone} rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono`}>
       {label}
