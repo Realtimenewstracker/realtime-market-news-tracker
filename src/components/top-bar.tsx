@@ -122,21 +122,28 @@ export function BottomDock() {
   const { user } = useSession();
   return (
     <nav className="md:hidden fixed bottom-3 inset-x-3 z-50 glass-strong rounded-full px-2 py-1.5 flex items-center justify-around">
-      <DockItem to="/" label="Feed" />
-      <DockItem to="/portfolio" label="Book" />
-      <DockItem to="/watchlist" label="Watch" />
-      <DockItem to="/geopolitics" label="Geo" />
-      <DockItem to={user ? "/account" : "/auth"} label={user ? "Me" : "In"} />
+      <DockItem to="/" label="Feed" icon={<Newspaper size={13} />} />
+      <DockItem to="/watchlist" label="Watch" icon={<Star size={13} />} />
+      <MobileAlertsDockItem />
+      <DockItem
+        to={user ? "/account" : "/auth"}
+        label={user ? "Settings" : "Sign in"}
+        icon={user ? <Settings size={13} /> : <LogIn size={13} />}
+      />
     </nav>
   );
 }
-function DockItem({ to, label }: { to: string; label: string }) {
+function DockItem({ to, label, icon }: { to: string; label: string; icon?: React.ReactNode }) {
   return (
     <Link
       to={to}
-      className="px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70"
-      activeProps={{ className: "px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-foreground" }}
+      className="px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
+      activeProps={{
+        className:
+          "px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-foreground flex items-center gap-1",
+      }}
     >
+      {icon}
       {label}
     </Link>
   );
