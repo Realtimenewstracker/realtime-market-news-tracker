@@ -63,7 +63,7 @@ export function NewsDetail({
           <SentimentBadge sentiment={item.sentiment} />
           <ImpactBadge impact={item.impact ?? 0} />
           {item.tickers?.map((t) => (
-            <span key={t} className="px-2 py-0.5 rounded-full bg-white/70 border font-mono text-[10px]">
+            <span key={t} className="px-2 py-0.5 glass-chip font-mono text-[10px]">
               {t}
             </span>
           ))}
@@ -74,7 +74,7 @@ export function NewsDetail({
           ))}
         </div>
         {item.ai_summary && (
-          <div className="mt-3 p-4 rounded-2xl bg-white/60 border border-white/70">
+          <div className="mt-3 p-4 glass-card rounded-2xl">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-1 flex items-center gap-1">
               <Sparkles size={12} /> AI summary
             </div>
@@ -101,7 +101,7 @@ export function NewsDetail({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="e.g. Which Indian stocks are most affected?"
-            className="bg-white/70 border-white/70 min-h-[70px]"
+            className="min-h-[70px]"
           />
           <Button
             onClick={ask} disabled={asking || !question.trim()}
@@ -110,7 +110,7 @@ export function NewsDetail({
             {asking ? "Thinking…" : "Ask"}
           </Button>
           {answer && (
-            <div className="mt-3 p-3 rounded-xl bg-white/70 border border-white/70 text-sm leading-relaxed whitespace-pre-wrap">
+            <div className="mt-3 p-3 glass-card rounded-2xl text-sm leading-relaxed whitespace-pre-wrap">
               {answer}
             </div>
           )}

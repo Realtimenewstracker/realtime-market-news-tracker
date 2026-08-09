@@ -113,7 +113,6 @@
 @utility glass {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.9),
@@ -123,7 +122,6 @@
 @utility glass-strong {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,1),
@@ -138,6 +136,61 @@
   border-color: rgba(120, 160, 240, 0.55);
   box-shadow: 0 16px 48px -18px rgba(120, 140, 200, 0.35);
 }
+/* Shared frosted-glass primitives (match the header) */
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-3xl);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(120,140,180,0.10),
+    0 12px 36px -14px rgba(80, 100, 160, 0.22);
+}
+@utility glass-btn {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.9),
+    0 10px 26px -16px rgba(80, 100, 160, 0.35);
+  transition: background-color 240ms, border-color 240ms, box-shadow 240ms;
+  &:hover {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(120, 160, 240, 0.55);
+    box-shadow: 0 14px 36px -18px rgba(120, 140, 200, 0.4);
+  }
+}
+@utility glass-btn-primary {
+  background: color-mix(in oklab, var(--primary) 82%, transparent);
+  color: var(--primary-foreground);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.28),
+    0 14px 34px -18px rgba(30, 40, 80, 0.6);
+  transition: background-color 240ms, box-shadow 240ms;
+  &:hover { background: color-mix(in oklab, var(--primary) 92%, transparent); }
+}
+@utility glass-chip {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.85);
+}
+@utility glass-input {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 1px 2px rgba(120,140,180,0.10);
+  transition: border-color 200ms, background-color 200ms;
+  &:focus, &:focus-visible {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+}
+
 @utility text-bull { color: var(--bull); }
 @utility text-bear { color: var(--bear); }
 @utility text-neu  { color: var(--neu); }

@@ -63,7 +63,7 @@ function WatchlistPage() {
     return (
       <section className="max-w-md mx-auto mt-16 px-4 text-center glass-strong rounded-3xl p-8">
         <h1 className="font-display text-2xl">Sign in to build a watchlist</h1>
-        <Link to="/auth" className="inline-block mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold">Sign in</Link>
+        <Link to="/auth" className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
       </section>
     );
 
@@ -78,14 +78,14 @@ function WatchlistPage() {
         <Card title="Symbols">
           <ChipList items={items?.filter((i) => i.kind === "symbol") ?? []} onRemove={(id) => remove.mutate(id)} />
           <form onSubmit={(e) => { e.preventDefault(); if (sym) { add.mutate({ kind: "symbol", value: sym }); setSym(""); } }} className="mt-3 flex gap-2 min-w-0">
-            <Input value={sym} onChange={(e) => setSym(e.target.value)} placeholder="e.g. RELIANCE" className="bg-white/70 min-w-0" />
+            <Input value={sym} onChange={(e) => setSym(e.target.value)} placeholder="e.g. RELIANCE" className="min-w-0" />
             <Button type="submit" className="rounded-full shrink-0"><Plus size={14} /></Button>
           </form>
         </Card>
         <Card title="Keywords">
           <ChipList items={items?.filter((i) => i.kind === "keyword") ?? []} onRemove={(id) => remove.mutate(id)} />
           <form onSubmit={(e) => { e.preventDefault(); if (kw) { add.mutate({ kind: "keyword", value: kw }); setKw(""); } }} className="mt-3 flex gap-2 min-w-0">
-            <Input value={kw} onChange={(e) => setKw(e.target.value)} placeholder="e.g. RBI, crude oil" className="bg-white/70 min-w-0" />
+            <Input value={kw} onChange={(e) => setKw(e.target.value)} placeholder="e.g. RBI, crude oil" className="min-w-0" />
             <Button type="submit" className="rounded-full shrink-0"><Plus size={14} /></Button>
           </form>
         </Card>

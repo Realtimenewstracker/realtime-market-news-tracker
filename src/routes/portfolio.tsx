@@ -52,7 +52,7 @@ function PortfolioPage() {
     <PageBox>
       <h1 className="font-display text-2xl">Sign in to build your book</h1>
       <p className="text-muted-foreground text-sm mt-1">Positions are saved to your account.</p>
-      <Link to="/auth" className="inline-block mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold">Sign in</Link>
+      <Link to="/auth" className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
     </PageBox>
   );
 
@@ -90,13 +90,13 @@ function PortfolioPage() {
         className="mt-6 glass rounded-3xl p-3 md:p-4 grid grid-cols-2 md:flex md:flex-row gap-2 items-stretch md:items-end"
       >
         <div className="col-span-2 md:flex-1 min-w-0"><label className="text-xs text-muted-foreground">Symbol (e.g. RELIANCE)</label>
-          <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} className="bg-white/70" />
+          <Input value={symbol} onChange={(e) => setSymbol(e.target.value)} />
         </div>
         <div className="min-w-0 md:w-32"><label className="text-xs text-muted-foreground">Quantity</label>
-          <Input type="number" step="any" value={qty} onChange={(e) => setQty(e.target.value)} className="bg-white/70" />
+          <Input type="number" step="any" value={qty} onChange={(e) => setQty(e.target.value)} />
         </div>
         <div className="min-w-0 md:w-32"><label className="text-xs text-muted-foreground">Avg price</label>
-          <Input type="number" step="any" value={price} onChange={(e) => setPrice(e.target.value)} className="bg-white/70" />
+          <Input type="number" step="any" value={price} onChange={(e) => setPrice(e.target.value)} />
         </div>
         <Button type="submit" className="col-span-2 rounded-full"><Plus size={14} /> Add / update</Button>
       </form>
@@ -104,7 +104,7 @@ function PortfolioPage() {
       <div className="mt-6 glass rounded-3xl overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-sm">
-          <thead className="bg-white/50 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <thead className="bg-white/40 backdrop-blur-md text-[10px] uppercase tracking-widest text-muted-foreground">
             <tr><Th>Symbol</Th><Th>Qty</Th><Th>Avg</Th><Th>Last</Th><Th>MV</Th><Th>P&amp;L</Th><Th /></tr>
           </thead>
           <tbody>
