@@ -48,16 +48,16 @@ export function NewsDetail({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl glass-strong border-white/80">
-        <DialogHeader>
-          <div className="flex items-center gap-2 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
+      <DialogContent className="max-w-2xl glass-strong border-white/80 max-h-[80dvh] pb-[max(1rem,env(safe-area-inset-bottom))] md:pb-6">
+        <DialogHeader className="pr-10 text-left">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2 text-[11px] uppercase tracking-widest text-muted-foreground font-semibold">
             <span>{item.category}</span>
             <span>·</span>
             <span>{item.source}</span>
             <span>·</span>
             <span>{timeAgo}</span>
           </div>
-          <DialogTitle className="font-display text-xl leading-snug">{item.title}</DialogTitle>
+          <DialogTitle className="font-display text-lg md:text-xl leading-snug text-left break-words">{item.title}</DialogTitle>
         </DialogHeader>
         <div className="flex flex-wrap items-center gap-2">
           <SentimentBadge sentiment={item.sentiment} />

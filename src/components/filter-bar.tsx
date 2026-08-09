@@ -64,7 +64,7 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
         <div className="flex items-center gap-2 min-w-0">
         <button
           onClick={() => update({ region: "India", impact: 2 })}
-          className={`px-3 py-1.5 rounded-full text-xs font-semibold border shrink-0 ${
+          className={`min-h-9 px-3 py-1.5 rounded-full text-xs font-semibold border shrink-0 ${
             value.region === "India" && value.impact >= 2
               ? "bg-accent text-accent-foreground border-accent"
               : "glass-chip text-foreground/80 hover:text-foreground"
@@ -109,7 +109,7 @@ function ChipGroup<T extends string | number>({
         <button
           key={String(o.id)}
           onClick={() => onChange(o.id)}
-          className={`px-2.5 py-1 rounded-full text-xs font-medium border shrink-0 whitespace-nowrap ${
+          className={`min-h-8 px-2.5 py-1 rounded-full text-xs font-medium border shrink-0 whitespace-nowrap ${
             value === o.id
               ? "glass-btn-primary border-transparent"
               : "glass-chip text-foreground/70 hover:text-foreground"
