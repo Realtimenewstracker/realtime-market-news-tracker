@@ -80,13 +80,13 @@ function AuthPage() {
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" required value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-white/70 border-white/80" />
+              />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" required minLength={6} value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-white/70 border-white/80" />
+              />
           </div>
           <Button type="submit" className="w-full rounded-full" disabled={loading}>
             {loading ? "…" : mode === "signin" ? "Sign in" : "Create account"}

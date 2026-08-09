@@ -179,7 +179,7 @@ function EmptyState({ filtered, onReset }: { filtered?: boolean; onReset?: () =>
       {filtered && onReset && (
         <button
           onClick={onReset}
-          className="mt-4 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-semibold"
+          className="mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold"
         >
           Reset filters
         </button>
