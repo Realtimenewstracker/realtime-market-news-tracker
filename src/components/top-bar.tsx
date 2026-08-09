@@ -62,7 +62,9 @@ export function TopBar() {
       </nav>
 
       <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
-        <AlertsBell />
+        <div className="hidden md:block">
+          <AlertsBell />
+        </div>
         <button
           onClick={handleRefresh}
           disabled={refreshing}
