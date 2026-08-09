@@ -118,7 +118,7 @@ type Alert = {
   created_at: string;
 };
 
-function AlertRow({ a }: { a: Alert }) {
+export function AlertRow({ a }: { a: Alert }) {
   const up = a.direction === "up";
   return (
     <div className={`px-4 py-3 border-b border-white/40 last:border-0 ${a.is_read ? "opacity-70" : ""}`}>
