@@ -43,7 +43,7 @@ export function MobileAlertsDockItem() {
     >
       <SheetTrigger asChild>
         <button
-          className="relative px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
+          className="relative min-h-9 px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
           aria-label={unread ? `${unread} unread alerts` : "Alerts"}
         >
           <Bell size={13} />
@@ -55,7 +55,7 @@ export function MobileAlertsDockItem() {
           )}
         </button>
       </SheetTrigger>
-      <SheetContent side="bottom" className="glass-strong border-white/70 rounded-t-3xl p-0 max-h-[75vh]">
+      <SheetContent side="bottom" className="glass-strong border-white/70 rounded-t-3xl p-0 max-h-[80dvh]">
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/60">
           <span className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground">
             Watchlist alerts
@@ -69,7 +69,7 @@ export function MobileAlertsDockItem() {
             </button>
           )}
         </div>
-        <div className="overflow-y-auto max-h-[60vh] pb-6">
+        <div className="overflow-y-auto max-h-[62dvh] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           {!user ? (
             <div className="px-4 py-8 text-center text-xs text-muted-foreground">
               Sign in to get price and news alerts for your watchlist.

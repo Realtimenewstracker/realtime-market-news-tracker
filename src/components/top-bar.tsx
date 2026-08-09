@@ -138,10 +138,10 @@ function DockItem({ to, label, icon }: { to: string; label: string; icon?: React
   return (
     <Link
       to={to}
-      className="px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
+      className="min-h-9 px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
       activeProps={{
         className:
-          "px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-foreground flex items-center gap-1",
+          "min-h-9 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-foreground flex items-center gap-1",
       }}
     >
       {icon}
