@@ -112,6 +112,20 @@ function FeedPage() {
 
       <section className="max-w-7xl mx-auto px-3 md:px-8">
         <FilterBar value={filters} onChange={setFilters} />
+        <div className="mt-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
+          <button
+            onClick={() => setView("grid")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "grid" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+          >
+            <LayoutGrid size={13} /> Grid
+          </button>
+          <button
+            onClick={() => setView("swipe")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "swipe" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+          >
+            <Layers size={13} /> Swipe
+          </button>
+        </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-5 md:pt-6">
@@ -119,7 +133,8 @@ function FeedPage() {
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
           <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
-
+        ) : view === "swipe" ? (
+          <NewsSwipe items={(news ?? []) as NewsItem[]} onOpen={(n) => setSelected(n)} />
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
