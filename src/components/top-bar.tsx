@@ -122,30 +122,32 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 export function BottomDock() {
   const { user } = useSession();
   return (
-    <nav className="md:hidden fixed bottom-3 inset-x-3 z-50 glass-strong rounded-full px-2 py-1.5 flex items-center justify-around">
-      <DockItem to="/" label="Feed" icon={<Newspaper size={13} />} />
-      <DockItem to="/watchlist" label="Watch" icon={<Star size={13} />} />
+    <nav
+      className="md:hidden fixed inset-x-2 z-50 glass-strong rounded-[28px] px-1.5 py-1.5 grid grid-cols-4 items-stretch gap-1"
+      style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+    >
+      <DockItem to="/" label="Feed" icon={<Newspaper size={16} />} />
+      <DockItem to="/watchlist" label="Watch" icon={<Star size={16} />} />
       <MobileAlertsDockItem />
       <DockItem
         to={user ? "/account" : "/auth"}
         label={user ? "Settings" : "Sign in"}
-        icon={user ? <Settings size={13} /> : <LogIn size={13} />}
+        icon={user ? <Settings size={16} /> : <LogIn size={16} />}
       />
     </nav>
   );
 }
 function DockItem({ to, label, icon }: { to: string; label: string; icon?: React.ReactNode }) {
+  const base =
+    "min-h-12 w-full px-1 py-1 rounded-3xl text-[10px] font-medium text-foreground/70 flex flex-col items-center justify-center gap-0.5 leading-none";
   return (
     <Link
       to={to}
-      className="min-h-9 px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
-      activeProps={{
-        className:
-          "min-h-9 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-foreground flex items-center gap-1",
-      }}
+      className={base}
+      activeProps={{ className: `${base} bg-white/80 text-foreground font-semibold` }}
     >
       {icon}
-      {label}
+      <span className="truncate max-w-full">{label}</span>
     </Link>
   );
 }
