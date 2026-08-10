@@ -43,13 +43,13 @@ export function MobileAlertsDockItem() {
     >
       <SheetTrigger asChild>
         <button
-          className="relative min-h-9 px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 flex items-center gap-1"
+          className="relative min-h-12 w-full px-1 py-1 rounded-3xl text-[10px] font-medium text-foreground/70 flex flex-col items-center justify-center gap-0.5 leading-none"
           aria-label={unread ? `${unread} unread alerts` : "Alerts"}
         >
-          <Bell size={13} />
-          Alerts
+          <Bell size={16} />
+          <span>Alerts</span>
           {unread > 0 && (
-            <span className="absolute -top-0.5 right-0 min-w-[16px] h-[16px] px-1 rounded-full bg-bear text-white text-[9px] font-bold flex items-center justify-center">
+            <span className="absolute top-1 right-2 min-w-[16px] h-[16px] px-1 rounded-full bg-bear text-white text-[9px] font-bold flex items-center justify-center">
               {unread > 9 ? "9+" : unread}
             </span>
           )}
