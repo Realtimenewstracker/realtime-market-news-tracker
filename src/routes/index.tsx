@@ -39,6 +39,7 @@ function FeedPage() {
   const listTickersFn = useServerFn(listTickers);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
+  const [view, setView] = useState<"grid" | "swipe">("grid");
 
   const { data: tickers } = useQuery({
     queryKey: ["tickers"],
