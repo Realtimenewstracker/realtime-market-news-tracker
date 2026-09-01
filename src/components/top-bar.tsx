@@ -79,7 +79,14 @@ export function TopBar() {
 
         {user ? (
           <div className="flex items-center gap-1.5">
-            <div className="glass rounded-full p-1 md:pl-1.5 md:pr-3 md:py-1 flex items-center gap-2">
+            <Link
+              to="/account"
+              className="md:hidden glass glass-hover rounded-full w-9 h-9 flex items-center justify-center text-foreground"
+              title="Settings"
+            >
+              <Settings size={15} />
+            </Link>
+            <div className="hidden md:flex glass rounded-full p-1 md:pl-1.5 md:pr-3 md:py-1 items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[11px] font-semibold">
                 {(user.email ?? "?").slice(0, 1).toUpperCase()}
               </div>
@@ -95,6 +102,7 @@ export function TopBar() {
               <LogOut size={14} />
             </button>
           </div>
+
         ) : (
           <Link
             to="/auth"
