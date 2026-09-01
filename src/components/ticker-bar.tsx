@@ -38,11 +38,12 @@ export function TickerBar({ tickers }: { tickers: Ticker[] }) {
 
   return (
     <div className="glass-strong border-b border-white/70 py-2.5 marquee-mask overflow-hidden sticky top-0 z-40">
-      <div className="marquee-track">
+      <div className="marquee-track" suppressHydrationWarning>
         {doubled.map((t, i) => (
           <TickerPill key={`${t.symbol}-${i}`} t={t} />
         ))}
       </div>
+
     </div>
   );
 }
