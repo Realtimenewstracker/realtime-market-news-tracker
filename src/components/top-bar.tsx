@@ -56,11 +56,13 @@ export function TopBar() {
 
       <nav className="hidden md:flex items-center gap-1 text-sm">
         <NavLink to="/">Feed</NavLink>
+        <NavLink to="/ipo">IPO</NavLink>
         <NavLink to="/portfolio">Portfolio</NavLink>
         <NavLink to="/watchlist">Watchlist</NavLink>
         <NavLink to="/geopolitics">Geopolitics</NavLink>
         {user && <NavLink to="/account">Account</NavLink>}
       </nav>
+
 
       <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
         <div className="hidden md:block">
