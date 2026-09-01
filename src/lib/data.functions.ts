@@ -160,3 +160,15 @@ export const removeWatch = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const listIpos = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = serverPublicClient();
+  const { data, error } = await supabase
+    .from("ipos")
+    .select(
+      "id,name,symbol,board,status,price_min,price_max,lot_size,issue_size,open_date,close_date,listing_date,gmp,subscription_x,listing_gain_pct,detail_url",
+    )
+    .order("open_date", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
