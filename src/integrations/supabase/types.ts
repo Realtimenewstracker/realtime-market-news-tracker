@@ -136,6 +136,69 @@ export type Database = {
         }
         Relationships: []
       }
+      ipos: {
+        Row: {
+          board: string
+          close_date: string | null
+          created_at: string
+          detail_url: string | null
+          gmp: number | null
+          id: string
+          issue_size: string | null
+          listing_date: string | null
+          listing_gain_pct: number | null
+          lot_size: number | null
+          name: string
+          open_date: string | null
+          price_max: number | null
+          price_min: number | null
+          status: string
+          subscription_x: number | null
+          symbol: string | null
+          updated_at: string
+        }
+        Insert: {
+          board?: string
+          close_date?: string | null
+          created_at?: string
+          detail_url?: string | null
+          gmp?: number | null
+          id?: string
+          issue_size?: string | null
+          listing_date?: string | null
+          listing_gain_pct?: number | null
+          lot_size?: number | null
+          name: string
+          open_date?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          status?: string
+          subscription_x?: number | null
+          symbol?: string | null
+          updated_at?: string
+        }
+        Update: {
+          board?: string
+          close_date?: string | null
+          created_at?: string
+          detail_url?: string | null
+          gmp?: number | null
+          id?: string
+          issue_size?: string | null
+          listing_date?: string | null
+          listing_gain_pct?: number | null
+          lot_size?: number | null
+          name?: string
+          open_date?: string | null
+          price_max?: number | null
+          price_min?: number | null
+          status?: string
+          subscription_x?: number | null
+          symbol?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       news_articles: {
         Row: {
           ai_summary: string | null

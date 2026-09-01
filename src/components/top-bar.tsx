@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings } from "lucide-react";
+import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings, Rocket } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,11 +56,13 @@ export function TopBar() {
 
       <nav className="hidden md:flex items-center gap-1 text-sm">
         <NavLink to="/">Feed</NavLink>
+        <NavLink to="/ipo">IPO</NavLink>
         <NavLink to="/portfolio">Portfolio</NavLink>
         <NavLink to="/watchlist">Watchlist</NavLink>
         <NavLink to="/geopolitics">Geopolitics</NavLink>
         {user && <NavLink to="/account">Account</NavLink>}
       </nav>
+
 
       <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
         <div className="hidden md:block">
@@ -77,7 +79,14 @@ export function TopBar() {
 
         {user ? (
           <div className="flex items-center gap-1.5">
-            <div className="glass rounded-full p-1 md:pl-1.5 md:pr-3 md:py-1 flex items-center gap-2">
+            <Link
+              to="/account"
+              className="md:hidden glass glass-hover rounded-full w-9 h-9 flex items-center justify-center text-foreground"
+              title="Settings"
+            >
+              <Settings size={15} />
+            </Link>
+            <div className="hidden md:flex glass rounded-full p-1 md:pl-1.5 md:pr-3 md:py-1 items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[11px] font-semibold">
                 {(user.email ?? "?").slice(0, 1).toUpperCase()}
               </div>
@@ -93,6 +102,7 @@ export function TopBar() {
               <LogOut size={14} />
             </button>
           </div>
+
         ) : (
           <Link
             to="/auth"
@@ -120,23 +130,19 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 }
 
 export function BottomDock() {
-  const { user } = useSession();
   return (
     <nav
       className="md:hidden fixed inset-x-2 z-50 glass-strong rounded-[28px] px-1.5 py-1.5 grid grid-cols-4 items-stretch gap-1"
       style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
       <DockItem to="/" label="Feed" icon={<Newspaper size={16} />} />
+      <DockItem to="/ipo" label="IPO" icon={<Rocket size={16} />} />
       <DockItem to="/watchlist" label="Watch" icon={<Star size={16} />} />
       <MobileAlertsDockItem />
-      <DockItem
-        to={user ? "/account" : "/auth"}
-        label={user ? "Settings" : "Sign in"}
-        icon={user ? <Settings size={16} /> : <LogIn size={16} />}
-      />
     </nav>
   );
 }
+
 function DockItem({ to, label, icon }: { to: string; label: string; icon?: React.ReactNode }) {
   const base =
     "min-h-12 w-full px-1 py-1 rounded-3xl text-[10px] font-medium text-foreground/70 flex flex-col items-center justify-center gap-0.5 leading-none";

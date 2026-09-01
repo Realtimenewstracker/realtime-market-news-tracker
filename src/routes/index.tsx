@@ -3,13 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LayoutGrid, Layers } from "lucide-react";
+import { Newspaper, Rocket } from "lucide-react";
 import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
-import { NewsSwipe } from "@/components/news-swipe";
 import { NewsDetail } from "@/components/news-detail";
+import { IpoTracker } from "@/components/ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers } from "@/lib/data.functions";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,7 +40,7 @@ function FeedPage() {
   const listTickersFn = useServerFn(listTickers);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
-  const [view, setView] = useState<"grid" | "swipe">("grid");
+  const [view, setView] = useState<"news" | "ipo">("news");
 
   const { data: tickers } = useQuery({
     queryKey: ["tickers"],
@@ -114,30 +115,30 @@ function FeedPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8">
-        <FilterBar value={filters} onChange={setFilters} />
-        <div className="mt-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
+        <div className="mb-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
           <button
-            onClick={() => setView("grid")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "grid" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            onClick={() => setView("news")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "news" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
-            <LayoutGrid size={13} /> Grid
+            <Newspaper size={13} /> News
           </button>
           <button
-            onClick={() => setView("swipe")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "swipe" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            onClick={() => setView("ipo")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "ipo" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
-            <Layers size={13} /> Swipe
+            <Rocket size={13} /> IPO Tracker
           </button>
         </div>
+        {view === "news" && <FilterBar value={filters} onChange={setFilters} />}
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-5 md:pt-6">
-        {isLoading ? (
+        {view === "ipo" ? (
+          <IpoTracker />
+        ) : isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
           <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
-        ) : view === "swipe" ? (
-          <NewsSwipe items={(news ?? []) as NewsItem[]} onOpen={(n) => setSelected(n)} />
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
@@ -157,6 +158,7 @@ function FeedPage() {
           </motion.div>
         )}
       </section>
+
 
       <NewsDetail item={selected} open={!!selected} onOpenChange={(v) => !v && setSelected(null)} />
     </>
