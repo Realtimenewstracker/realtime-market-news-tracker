@@ -115,30 +115,30 @@ function FeedPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8">
-        <FilterBar value={filters} onChange={setFilters} />
-        <div className="mt-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
+        <div className="mb-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
           <button
-            onClick={() => setView("grid")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "grid" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            onClick={() => setView("news")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "news" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
-            <LayoutGrid size={13} /> Grid
+            <Newspaper size={13} /> News
           </button>
           <button
-            onClick={() => setView("swipe")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "swipe" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            onClick={() => setView("ipo")}
+            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "ipo" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
-            <Layers size={13} /> Swipe
+            <Rocket size={13} /> IPO Tracker
           </button>
         </div>
+        {view === "news" && <FilterBar value={filters} onChange={setFilters} />}
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-5 md:pt-6">
-        {isLoading ? (
+        {view === "ipo" ? (
+          <IpoTracker />
+        ) : isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
           <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
-        ) : view === "swipe" ? (
-          <NewsSwipe items={(news ?? []) as NewsItem[]} onOpen={(n) => setSelected(n)} />
         ) : (
           <motion.div layout className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <AnimatePresence mode="popLayout">
@@ -158,6 +158,7 @@ function FeedPage() {
           </motion.div>
         )}
       </section>
+
 
       <NewsDetail item={selected} open={!!selected} onOpenChange={(v) => !v && setSelected(null)} />
     </>
