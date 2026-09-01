@@ -3,13 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LayoutGrid, Layers } from "lucide-react";
+import { Newspaper, Rocket } from "lucide-react";
 import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
-import { NewsSwipe } from "@/components/news-swipe";
 import { NewsDetail } from "@/components/news-detail";
+import { IpoTracker } from "@/components/ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers } from "@/lib/data.functions";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
