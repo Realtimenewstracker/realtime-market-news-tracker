@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
+import { Route as ApiPublicIpoAlertsRouteImport } from './routes/api/public/ipo-alerts'
 import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
 import { Route as ApiPublicBackfillAiRouteImport } from './routes/api/public/backfill-ai'
 import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
@@ -61,6 +62,11 @@ const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
   path: '/api/public/refresh-tickers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicIpoAlertsRoute = ApiPublicIpoAlertsRouteImport.update({
+  id: '/api/public/ipo-alerts',
+  path: '/api/public/ipo-alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
   id: '/api/public/ingest-rss',
   path: '/api/public/ingest-rss',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/ipo-alerts': typeof ApiPublicIpoAlertsRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/ipo-alerts': typeof ApiPublicIpoAlertsRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
+  '/api/public/ipo-alerts': typeof ApiPublicIpoAlertsRoute
   '/api/public/refresh-tickers': typeof ApiPublicRefreshTickersRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
+    | '/api/public/ipo-alerts'
     | '/api/public/refresh-tickers'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
+    | '/api/public/ipo-alerts'
     | '/api/public/refresh-tickers'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
+    | '/api/public/ipo-alerts'
     | '/api/public/refresh-tickers'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
   ApiPublicBackfillAiRoute: typeof ApiPublicBackfillAiRoute
   ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
+  ApiPublicIpoAlertsRoute: typeof ApiPublicIpoAlertsRoute
   ApiPublicRefreshTickersRoute: typeof ApiPublicRefreshTickersRoute
 }
 
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicRefreshTickersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/ipo-alerts': {
+      id: '/api/public/ipo-alerts'
+      path: '/api/public/ipo-alerts'
+      fullPath: '/api/public/ipo-alerts'
+      preLoaderRoute: typeof ApiPublicIpoAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/ingest-rss': {
       id: '/api/public/ingest-rss'
       path: '/api/public/ingest-rss'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
   ApiPublicBackfillAiRoute: ApiPublicBackfillAiRoute,
   ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,
+  ApiPublicIpoAlertsRoute: ApiPublicIpoAlertsRoute,
   ApiPublicRefreshTickersRoute: ApiPublicRefreshTickersRoute,
 }
 export const routeTree = rootRouteImport

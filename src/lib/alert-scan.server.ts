@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 type AlertRow = {
   user_id: string;
-  kind: "price" | "news";
+  kind: "price" | "news" | "ipo";
   subject: string;
   title: string;
   body: string | null;
