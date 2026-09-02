@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Bell, TrendingUp, TrendingDown, Newspaper, Check, Trash2 } from "lucide-react";
+import { Bell, TrendingUp, TrendingDown, Newspaper, Check, Trash2, Rocket } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { listAlerts, markAlertsRead, clearAlerts } from "@/lib/alerts.functions";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { IpoAlertSwipe } from "@/components/ipo-alert-swipe";
 
 export function AlertsBell() {
   const { user } = useSession();
@@ -91,6 +92,10 @@ export function AlertsBell() {
             </button>
           )}
         </div>
+        <IpoAlertSwipe
+          alerts={(alerts ?? []).filter((a) => a.kind === "ipo")}
+          onOpen={() => setOpen(false)}
+        />
         <div className="max-h-[380px] overflow-y-auto">
           {(alerts?.length ?? 0) === 0 ? (
             <div className="px-4 py-8 text-center text-xs text-muted-foreground">
@@ -130,6 +135,8 @@ export function AlertRow({ a }: { a: Alert }) {
         >
           {a.kind === "price" ? (
             up ? <TrendingUp size={14} /> : <TrendingDown size={14} />
+          ) : a.kind === "ipo" ? (
+            <Rocket size={14} />
           ) : (
             <Newspaper size={14} />
           )}
