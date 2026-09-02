@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
-import { CalendarDays, IndianRupee, TrendingUp, ExternalLink } from "lucide-react";
-import { listIpos } from "@/lib/data.functions";
+import { CalendarDays, IndianRupee, TrendingUp, ExternalLink, Flame, Star } from "lucide-react";
+import { toast } from "sonner";
+import { listIpos, listIpoWatchlist, toggleIpoWatch } from "@/lib/data.functions";
+import { useSession } from "@/hooks/use-session";
 import { FilterMenu } from "@/components/filter-bar";
 
 type Ipo = Awaited<ReturnType<typeof listIpos>>[number];
@@ -20,11 +22,21 @@ const BOARDS = [
   { id: "mainboard", label: "Mainboard" },
   { id: "sme", label: "SME" },
 ];
+const SORTS = [
+  { id: "date", label: "By date" },
+  { id: "heat", label: "By heat" },
+];
 
 export function IpoTracker() {
+  const { user } = useSession();
+  const qc = useQueryClient();
   const listIposFn = useServerFn(listIpos);
+  const listWatchFn = useServerFn(listIpoWatchlist);
+  const toggleFn = useServerFn(toggleIpoWatch);
   const [status, setStatus] = useState("open");
   const [board, setBoard] = useState("all");
+  const [sort, setSort] = useState("date");
+  const [onlyWatched, setOnlyWatched] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["ipos"],
@@ -32,18 +44,46 @@ export function IpoTracker() {
     refetchInterval: 300_000,
   });
 
+  const { data: watched } = useQuery({
+    queryKey: ["ipo-watchlist"],
+    queryFn: () => listWatchFn(),
+    enabled: !!user,
+  });
+  const watchedSet = useMemo(() => new Set(watched ?? []), [watched]);
+
+  const toggle = useMutation({
+    mutationFn: (v: { ipo_id: string; on: boolean }) => toggleFn({ data: v }),
+    onSuccess: (_r, v) => {
+      qc.invalidateQueries({ queryKey: ["ipo-watchlist"] });
+      toast(v.on ? "Added to IPO watchlist" : "Removed from IPO watchlist", {
+        description: v.on ? "We'll alert you when it opens." : undefined,
+      });
+    },
+  });
+
   const rows = useMemo(() => {
     let list = (data ?? []) as Ipo[];
     if (status !== "all") list = list.filter((i) => i.status === status);
     if (board !== "all") list = list.filter((i) => i.board === board);
+    if (onlyWatched) list = list.filter((i) => watchedSet.has(i.id));
+    if (sort === "heat") list = [...list].sort((a, b) => b.heat.score - a.heat.score);
     return list;
-  }, [data, status, board]);
+  }, [data, status, board, sort, onlyWatched, watchedSet]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="glass rounded-full p-1.5 flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <FilterMenu label="Status" options={STATUSES} value={status} onChange={(v) => setStatus(String(v))} />
         <FilterMenu label="Board" options={BOARDS} value={board} onChange={(v) => setBoard(String(v))} />
+        <FilterMenu label="Sort" options={SORTS} value={sort} onChange={(v) => setSort(String(v))} />
+        <button
+          onClick={() => setOnlyWatched((v) => !v)}
+          className={`shrink-0 min-h-8 rounded-full px-3 text-xs font-medium flex items-center gap-1.5 ${
+            onlyWatched ? "bg-accent-tint" : "glass-chip text-foreground"
+          }`}
+        >
+          <Star size={12} className={onlyWatched ? "fill-current" : ""} /> Watchlist
+        </button>
       </div>
 
       {isLoading ? (
@@ -55,12 +95,20 @@ export function IpoTracker() {
       ) : rows.length === 0 ? (
         <div className="glass rounded-3xl p-8 md:p-12 text-center">
           <p className="font-display text-xl text-foreground">No IPOs in this bucket</p>
-          <p className="mt-1 text-sm text-muted-foreground">Try another status or board.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {onlyWatched ? "Star an IPO to track it here." : "Try another status or board."}
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map((ipo) => (
-            <IpoCard key={ipo.id} ipo={ipo} />
+            <IpoCard
+              key={ipo.id}
+              ipo={ipo}
+              watched={watchedSet.has(ipo.id)}
+              canWatch={!!user}
+              onToggle={(on) => toggle.mutate({ ipo_id: ipo.id, on })}
+            />
           ))}
         </div>
       )}
@@ -68,7 +116,17 @@ export function IpoTracker() {
   );
 }
 
-function IpoCard({ ipo }: { ipo: Ipo }) {
+function IpoCard({
+  ipo,
+  watched,
+  canWatch,
+  onToggle,
+}: {
+  ipo: Ipo;
+  watched: boolean;
+  canWatch: boolean;
+  onToggle: (on: boolean) => void;
+}) {
   const gain = ipo.listing_gain_pct;
   return (
     <motion.div
@@ -92,8 +150,25 @@ function IpoCard({ ipo }: { ipo: Ipo }) {
             )}
           </div>
         </div>
-        <StatusBadge status={ipo.status} />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() =>
+              canWatch
+                ? onToggle(!watched)
+                : toast("Sign in to track IPOs", { description: "Watchlisted IPOs trigger alerts on open." })
+            }
+            aria-label={watched ? "Remove from IPO watchlist" : "Add to IPO watchlist"}
+            className={`glass-chip rounded-full w-8 h-8 flex items-center justify-center ${
+              watched ? "text-amber-500" : "text-muted-foreground"
+            }`}
+          >
+            <Star size={14} className={watched ? "fill-current" : ""} />
+          </button>
+          <StatusBadge status={ipo.status} />
+        </div>
       </div>
+
+      <HeatMeter heat={ipo.heat} analyst={ipo.analyst_score} />
 
       <div className="grid grid-cols-2 gap-2">
         <Cell icon={<IndianRupee size={12} />} label="Price band" value={band(ipo.price_min, ipo.price_max)} />
@@ -106,11 +181,16 @@ function IpoCard({ ipo }: { ipo: Ipo }) {
         />
       </div>
 
+      {ipo.analyst_note && (
+        <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">{ipo.analyst_note}</p>
+      )}
+
       <div className="mt-auto flex items-center justify-between gap-2 pt-1 min-w-0 flex-wrap">
         <div className="flex items-center gap-1.5 flex-wrap">
           {ipo.gmp != null && (
             <span className="glass-chip rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono text-foreground">
               GMP ₹{ipo.gmp}
+              {ipo.heat.gmp_pct != null ? ` (${ipo.heat.gmp_pct > 0 ? "+" : ""}${ipo.heat.gmp_pct}%)` : ""}
             </span>
           )}
           {ipo.subscription_x != null && (
@@ -142,6 +222,31 @@ function IpoCard({ ipo }: { ipo: Ipo }) {
         )}
       </div>
     </motion.div>
+  );
+}
+
+function HeatMeter({ heat, analyst }: { heat: Ipo["heat"]; analyst: number | null }) {
+  const tone =
+    heat.label === "Hot" ? "bg-bear-tint" : heat.label === "Warm" ? "bg-accent-tint" : "bg-neu-tint";
+  const bar =
+    heat.label === "Hot" ? "bg-rose-500" : heat.label === "Warm" ? "bg-amber-500" : "bg-slate-400";
+  return (
+    <div className="glass-chip rounded-2xl px-3 py-2">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">
+          Heat score
+        </span>
+        <span className={`${tone} rounded-full px-2 py-0.5 text-[10px] font-semibold flex items-center gap-1`}>
+          <Flame size={10} /> {heat.label} · {heat.score}
+        </span>
+      </div>
+      <div className="mt-1.5 h-1.5 rounded-full bg-white/50 overflow-hidden">
+        <div className={`h-full rounded-full ${bar}`} style={{ width: `${heat.score}%` }} />
+      </div>
+      <div className="mt-1 text-[9px] text-muted-foreground">
+        Analyst {analyst ?? "—"} · market reaction from GMP & subscription
+      </div>
+    </div>
   );
 }
 

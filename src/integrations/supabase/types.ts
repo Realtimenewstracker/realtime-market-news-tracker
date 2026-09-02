@@ -136,8 +136,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ipo_watchlist: {
+        Row: {
+          created_at: string
+          id: string
+          ipo_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ipo_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ipo_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ipo_watchlist_ipo_id_fkey"
+            columns: ["ipo_id"]
+            isOneToOne: false
+            referencedRelation: "ipos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ipos: {
         Row: {
+          analyst_note: string | null
+          analyst_score: number | null
           board: string
           close_date: string | null
           created_at: string
@@ -158,6 +189,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          analyst_note?: string | null
+          analyst_score?: number | null
           board?: string
           close_date?: string | null
           created_at?: string
@@ -178,6 +211,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          analyst_note?: string | null
+          analyst_score?: number | null
           board?: string
           close_date?: string | null
           created_at?: string

@@ -161,14 +161,78 @@ export const removeWatch = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export type IpoHeat = { score: number; label: "Hot" | "Warm" | "Cool"; gmp_pct: number | null };
+
+function heatFor(row: {
+  analyst_score: number | null;
+  gmp: number | null;
+  price_max: number | null;
+  subscription_x: number | null;
+  listing_gain_pct: number | null;
+}): IpoHeat {
+  const gmpPct =
+    row.gmp != null && row.price_max != null && row.price_max > 0
+      ? Math.round((row.gmp / row.price_max) * 1000) / 10
+      : null;
+  // Analyst sentiment (0-100) blended with market reaction: GMP premium,
+  // subscription demand and (once listed) actual listing performance.
+  const analyst = row.analyst_score ?? 50;
+  const gmpPart = gmpPct == null ? 50 : clamp(50 + gmpPct * 1.4, 0, 100);
+  const subsPart = row.subscription_x == null ? 50 : clamp(30 + row.subscription_x * 6, 0, 100);
+  const listPart = row.listing_gain_pct == null ? null : clamp(50 + row.listing_gain_pct * 1.2, 0, 100);
+  const parts: Array<[number, number]> = [
+    [analyst, 0.35],
+    [gmpPart, 0.25],
+    [subsPart, 0.25],
+    [listPart ?? analyst, 0.15],
+  ];
+  const total = parts.reduce((s, [v, w]) => s + v * w, 0);
+  const score = Math.round(clamp(total, 0, 100));
+  return { score, label: score >= 72 ? "Hot" : score >= 55 ? "Warm" : "Cool", gmp_pct: gmpPct };
+}
+
+function clamp(n: number, lo: number, hi: number) {
+  return Math.min(hi, Math.max(lo, n));
+}
+
 export const listIpos = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = serverPublicClient();
   const { data, error } = await supabase
     .from("ipos")
     .select(
-      "id,name,symbol,board,status,price_min,price_max,lot_size,issue_size,open_date,close_date,listing_date,gmp,subscription_x,listing_gain_pct,detail_url",
+      "id,name,symbol,board,status,price_min,price_max,lot_size,issue_size,open_date,close_date,listing_date,gmp,subscription_x,listing_gain_pct,detail_url,analyst_score,analyst_note",
     )
     .order("open_date", { ascending: false });
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return (data ?? []).map((row) => ({ ...row, heat: heatFor(row) }));
 });
+
+export const listIpoWatchlist = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase.from("ipo_watchlist").select("ipo_id");
+    if (error) throw new Error(error.message);
+    return (data ?? []).map((r) => r.ipo_id);
+  });
+
+export const toggleIpoWatch = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({ ipo_id: z.string().uuid(), on: z.boolean() }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    if (data.on) {
+      const { error } = await context.supabase
+        .from("ipo_watchlist")
+        .upsert({ user_id: context.userId, ipo_id: data.ipo_id }, { onConflict: "user_id,ipo_id" });
+      if (error) throw new Error(error.message);
+    } else {
+      const { error } = await context.supabase
+        .from("ipo_watchlist")
+        .delete()
+        .eq("ipo_id", data.ipo_id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+

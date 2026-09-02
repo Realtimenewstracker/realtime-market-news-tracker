@@ -5,6 +5,7 @@ import { Bell, Trash2 } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { listAlerts, markAlertsRead, clearAlerts } from "@/lib/alerts.functions";
 import { AlertRow } from "@/components/alerts-bell";
+import { IpoAlertSwipe } from "@/components/ipo-alert-swipe";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export function MobileAlertsDockItem() {
@@ -69,6 +70,10 @@ export function MobileAlertsDockItem() {
             </button>
           )}
         </div>
+        <IpoAlertSwipe
+          alerts={(alerts ?? []).filter((a) => a.kind === "ipo")}
+          onOpen={() => setOpen(false)}
+        />
         <div className="overflow-y-auto max-h-[62dvh] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           {!user ? (
             <div className="px-4 py-8 text-center text-xs text-muted-foreground">

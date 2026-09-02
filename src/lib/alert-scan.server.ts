@@ -2,7 +2,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 type AlertRow = {
   user_id: string;
-  kind: "price" | "news";
+  kind: "price" | "news" | "ipo";
   subject: string;
   title: string;
   body: string | null;
@@ -160,6 +160,53 @@ export async function scanNewsAlerts(articles: NewsHit[]) {
     return await insertAlerts(rows);
   } catch (e) {
     console.warn("[alerts] news scan failed", e);
+    return 0;
+  }
+}
+
+export async function scanIpoAlerts() {
+  try {
+    const [{ data: watch }, { data: ipos }] = await Promise.all([
+      supabaseAdmin.from("ipo_watchlist").select("user_id,ipo_id"),
+      supabaseAdmin
+        .from("ipos")
+        .select("id,name,symbol,status,open_date,close_date,price_min,price_max,gmp,subscription_x")
+        .eq("status", "open"),
+    ]);
+    if (!watch?.length || !ipos?.length) return 0;
+
+    const byId = new Map(ipos.map((i) => [i.id, i]));
+    const rows: AlertRow[] = [];
+    for (const w of watch) {
+      const ipo = byId.get(w.ipo_id);
+      if (!ipo) continue;
+      const band =
+        ipo.price_min != null && ipo.price_max != null
+          ? `Band Rs.${ipo.price_min}-${ipo.price_max}`
+          : null;
+      const extra = [
+        band,
+        ipo.gmp != null ? `GMP Rs.${ipo.gmp}` : null,
+        ipo.subscription_x != null ? `${ipo.subscription_x}x subscribed` : null,
+        ipo.close_date ? `Closes ${ipo.close_date}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      rows.push({
+        user_id: w.user_id,
+        kind: "ipo",
+        subject: (ipo.symbol ?? ipo.name).toUpperCase().slice(0, 24),
+        title: `${ipo.name} IPO is now open`,
+        body: extra || null,
+        direction: null,
+        change_pct: null,
+        article_id: null,
+        dedupe_key: `ipo:${ipo.id}:open`,
+      });
+    }
+    return await insertAlerts(rows);
+  } catch (e) {
+    console.warn("[alerts] ipo scan failed", e);
     return 0;
   }
 }
