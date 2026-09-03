@@ -236,3 +236,47 @@ export const toggleIpoWatch = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+
+// ---- Government policy tracker ----
+
+export type PolicyHeat = { score: number; label: "Hot" | "Warm" | "Cool" };
+
+function policyHeat(row: {
+  heat_score: number | null;
+  impact: number | null;
+  announced_at: string;
+  beneficiaries: { benefit_score: number | null }[];
+}): PolicyHeat {
+  const base = row.heat_score ?? 50;
+  const impactPart = clamp(((row.impact ?? 2) / 3) * 100, 0, 100);
+  const days = Math.max(0, (Date.now() - new Date(row.announced_at).getTime()) / 86_400_000);
+  const freshPart = clamp(100 - days * 1.6, 0, 100);
+  const scores = row.beneficiaries.map((b) => b.benefit_score ?? 50);
+  const benefitPart = scores.length ? scores.reduce((a, b) => a + b, 0) / scores.length : 50;
+  const score = Math.round(
+    clamp(base * 0.4 + impactPart * 0.25 + freshPart * 0.15 + benefitPart * 0.2, 0, 100),
+  );
+  return { score, label: score >= 72 ? "Hot" : score >= 55 ? "Warm" : "Cool" };
+}
+
+export const listPolicies = createServerFn({ method: "GET" }).handler(async () => {
+  const supabase = serverPublicClient();
+  const { data, error } = await supabase
+    .from("policies")
+    .select(
+      "id,title,authority,category,status,summary,detail,source_url,announced_at,effective_from,outlay_cr,impact,sentiment,heat_score,sectors,policy_beneficiaries(id,company,symbol,sector,rationale,benefit_score)",
+    )
+    .order("announced_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => {
+    const beneficiaries = [...(row.policy_beneficiaries ?? [])].sort(
+      (a, b) => (b.benefit_score ?? 0) - (a.benefit_score ?? 0),
+    );
+    return {
+      ...row,
+      policy_beneficiaries: undefined,
+      beneficiaries,
+      heat: policyHeat({ ...row, beneficiaries }),
+    };
+  });
+});
