@@ -285,6 +285,107 @@ export type Database = {
         }
         Relationships: []
       }
+      policies: {
+        Row: {
+          announced_at: string
+          authority: string
+          category: string
+          created_at: string
+          detail: string | null
+          effective_from: string | null
+          heat_score: number
+          id: string
+          impact: number
+          outlay_cr: number | null
+          sectors: string[]
+          sentiment: string
+          source_url: string | null
+          status: string
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          announced_at?: string
+          authority: string
+          category: string
+          created_at?: string
+          detail?: string | null
+          effective_from?: string | null
+          heat_score?: number
+          id?: string
+          impact?: number
+          outlay_cr?: number | null
+          sectors?: string[]
+          sentiment?: string
+          source_url?: string | null
+          status?: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          announced_at?: string
+          authority?: string
+          category?: string
+          created_at?: string
+          detail?: string | null
+          effective_from?: string | null
+          heat_score?: number
+          id?: string
+          impact?: number
+          outlay_cr?: number | null
+          sectors?: string[]
+          sentiment?: string
+          source_url?: string | null
+          status?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      policy_beneficiaries: {
+        Row: {
+          benefit_score: number
+          company: string
+          created_at: string
+          id: string
+          policy_id: string
+          rationale: string | null
+          sector: string | null
+          symbol: string | null
+        }
+        Insert: {
+          benefit_score?: number
+          company: string
+          created_at?: string
+          id?: string
+          policy_id: string
+          rationale?: string | null
+          sector?: string | null
+          symbol?: string | null
+        }
+        Update: {
+          benefit_score?: number
+          company?: string
+          created_at?: string
+          id?: string
+          policy_id?: string
+          rationale?: string | null
+          sector?: string | null
+          symbol?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_beneficiaries_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio_positions: {
         Row: {
           avg_price: number
@@ -321,18 +422,21 @@ export type Database = {
           display_name: string | null
           id: string
           updated_at: string
+          username: string | null
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           id: string
           updated_at?: string
+          username?: string | null
         }
         Update: {
           created_at?: string
           display_name?: string | null
           id?: string
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
