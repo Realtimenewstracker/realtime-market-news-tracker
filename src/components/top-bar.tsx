@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings, Rocket } from "lucide-react";
+import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings, Rocket, Landmark } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
