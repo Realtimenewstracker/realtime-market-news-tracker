@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings, Rocket } from "lucide-react";
+import { RefreshCw, LogIn, LogOut, Waves, Newspaper, Star, Settings, Rocket, Landmark } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -57,6 +57,7 @@ export function TopBar() {
       <nav className="hidden md:flex items-center gap-1 text-sm">
         <NavLink to="/">Feed</NavLink>
         <NavLink to="/ipo">IPO</NavLink>
+        <NavLink to="/policies">Policies</NavLink>
         <NavLink to="/portfolio">Portfolio</NavLink>
         <NavLink to="/watchlist">Watchlist</NavLink>
         <NavLink to="/geopolitics">Geopolitics</NavLink>
@@ -132,11 +133,12 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 export function BottomDock() {
   return (
     <nav
-      className="md:hidden fixed inset-x-2 z-50 glass-strong rounded-[28px] px-1.5 py-1.5 grid grid-cols-4 items-stretch gap-1"
+      className="md:hidden fixed inset-x-2 z-50 glass-strong rounded-[28px] px-1.5 py-1.5 grid grid-cols-5 items-stretch gap-1"
       style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
       <DockItem to="/" label="Feed" icon={<Newspaper size={16} />} />
       <DockItem to="/ipo" label="IPO" icon={<Rocket size={16} />} />
+      <DockItem to="/policies" label="Policy" icon={<Landmark size={16} />} />
       <DockItem to="/watchlist" label="Watch" icon={<Star size={16} />} />
       <MobileAlertsDockItem />
     </nav>

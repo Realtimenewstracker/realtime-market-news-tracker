@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as IpoRouteImport } from './routes/ipo'
 import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -30,6 +31,11 @@ const WatchlistRoute = WatchlistRouteImport.update({
 const PortfolioRoute = PortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliciesRoute = PoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IpoRoute = IpoRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
+  '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
+  '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
+  '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/geopolitics'
     | '/ipo'
+    | '/policies'
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/geopolitics'
     | '/ipo'
+    | '/policies'
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/geopolitics'
     | '/ipo'
+    | '/policies'
     | '/portfolio'
     | '/watchlist'
     | '/api/public/ask-ai'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   GeopoliticsRoute: typeof GeopoliticsRoute
   IpoRoute: typeof IpoRoute
+  PoliciesRoute: typeof PoliciesRoute
   PortfolioRoute: typeof PortfolioRoute
   WatchlistRoute: typeof WatchlistRoute
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
@@ -200,6 +213,13 @@ declare module '@tanstack/react-router' {
       path: '/portfolio'
       fullPath: '/portfolio'
       preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/policies': {
+      id: '/policies'
+      path: '/policies'
+      fullPath: '/policies'
+      preLoaderRoute: typeof PoliciesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ipo': {
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   GeopoliticsRoute: GeopoliticsRoute,
   IpoRoute: IpoRoute,
+  PoliciesRoute: PoliciesRoute,
   PortfolioRoute: PortfolioRoute,
   WatchlistRoute: WatchlistRoute,
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
