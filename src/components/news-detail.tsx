@@ -60,28 +60,6 @@ export function NewsDetail({
           Read the full story <ExternalLink size={13} />
         </a>
 
-        <div className="mt-4 pt-4 border-t border-white/60">
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-2 flex items-center gap-1">
-            <Sparkles size={12} /> Ask AI about this story
-          </div>
-          <Textarea
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="e.g. Which Indian stocks are most affected?"
-            className="min-h-[70px]"
-          />
-          <Button
-            onClick={ask} disabled={asking || !question.trim()}
-            className="mt-2 rounded-full"
-          >
-            {asking ? "Thinking…" : "Ask"}
-          </Button>
-          {answer && (
-            <div className="mt-3 p-3 glass-card rounded-2xl text-sm leading-relaxed whitespace-pre-wrap">
-              {answer}
-            </div>
-          )}
-        </div>
       </DialogContent>
     </Dialog>
   );
