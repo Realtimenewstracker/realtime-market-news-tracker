@@ -10,36 +10,6 @@ export function NewsDetail({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [asking, setAsking] = useState(false);
-
-  const ask = async () => {
-    if (!item || !question.trim()) return;
-    setAsking(true);
-    setAnswer("");
-    try {
-      const res = await fetch("/api/public/ask-ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ articleId: item.id, question: question.trim() }),
-      });
-      if (!res.ok || !res.body) throw new Error("failed");
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      while (!done) {
-        const chunk = await reader.read();
-        done = chunk.done;
-        if (chunk.value) setAnswer((prev) => prev + decoder.decode(chunk.value));
-      }
-    } catch {
-      setAnswer("Sorry — AI could not answer right now.");
-    } finally {
-      setAsking(false);
-    }
-  };
-
   if (!item) return null;
   const timeAgo = (() => { try { return formatDistanceToNow(parseISO(item.published_at), { addSuffix: true }); } catch { return ""; } })();
 
