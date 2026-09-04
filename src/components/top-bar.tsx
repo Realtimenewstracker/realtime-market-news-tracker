@@ -57,6 +57,7 @@ export function TopBar() {
       <nav className="hidden md:flex items-center gap-1 text-sm">
         <NavLink to="/">Feed</NavLink>
         <NavLink to="/ipo">IPO</NavLink>
+        <NavLink to="/policies">Policies</NavLink>
         <NavLink to="/portfolio">Portfolio</NavLink>
         <NavLink to="/watchlist">Watchlist</NavLink>
         <NavLink to="/geopolitics">Geopolitics</NavLink>
