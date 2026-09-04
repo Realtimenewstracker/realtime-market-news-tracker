@@ -1,8 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, ExternalLink } from "lucide-react";
-import { useState } from "react";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { SentimentBadge, ImpactBadge, type NewsItem } from "./news-card";
 
@@ -13,36 +10,6 @@ export function NewsDetail({
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }) {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [asking, setAsking] = useState(false);
-
-  const ask = async () => {
-    if (!item || !question.trim()) return;
-    setAsking(true);
-    setAnswer("");
-    try {
-      const res = await fetch("/api/public/ask-ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ articleId: item.id, question: question.trim() }),
-      });
-      if (!res.ok || !res.body) throw new Error("failed");
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      while (!done) {
-        const chunk = await reader.read();
-        done = chunk.done;
-        if (chunk.value) setAnswer((prev) => prev + decoder.decode(chunk.value));
-      }
-    } catch {
-      setAnswer("Sorry — AI could not answer right now.");
-    } finally {
-      setAsking(false);
-    }
-  };
-
   if (!item) return null;
   const timeAgo = (() => { try { return formatDistanceToNow(parseISO(item.published_at), { addSuffix: true }); } catch { return ""; } })();
 
@@ -93,28 +60,6 @@ export function NewsDetail({
           Read the full story <ExternalLink size={13} />
         </a>
 
-        <div className="mt-4 pt-4 border-t border-white/60">
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-2 flex items-center gap-1">
-            <Sparkles size={12} /> Ask AI about this story
-          </div>
-          <Textarea
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="e.g. Which Indian stocks are most affected?"
-            className="min-h-[70px]"
-          />
-          <Button
-            onClick={ask} disabled={asking || !question.trim()}
-            className="mt-2 rounded-full"
-          >
-            {asking ? "Thinking…" : "Ask"}
-          </Button>
-          {answer && (
-            <div className="mt-3 p-3 glass-card rounded-2xl text-sm leading-relaxed whitespace-pre-wrap">
-              {answer}
-            </div>
-          )}
-        </div>
       </DialogContent>
     </Dialog>
   );
