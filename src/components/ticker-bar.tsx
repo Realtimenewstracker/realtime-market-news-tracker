@@ -22,12 +22,15 @@ const byOrder = (a: Ticker, b: Ticker) =>
   a.kind === b.kind ? (a.symbol < b.symbol ? -1 : a.symbol > b.symbol ? 1 : 0) : a.kind < b.kind ? -1 : 1;
 
 export function TickerBar({ tickers }: { tickers: Ticker[] }) {
-  // Client-side auto refresh every 60s
+  // The live tape can change between the server render and hydration, so the
+  // pills are only mounted on the client to avoid a hydration mismatch.
+  const [hydrated, setHydrated] = useState(false);
   const items = useMemo(
     () => (tickers?.length ? [...tickers].sort(byOrder) : PLACEHOLDER),
     [tickers],
   );
   useEffect(() => {
+    setHydrated(true);
     const int = setInterval(() => {
       fetch("/api/public/refresh-tickers", { method: "POST" }).catch(() => {});
     }, 120_000);
@@ -38,10 +41,9 @@ export function TickerBar({ tickers }: { tickers: Ticker[] }) {
 
   return (
     <div className="glass-strong border-b border-white/70 py-2.5 marquee-mask overflow-hidden sticky top-0 z-40">
-      <div className="marquee-track" suppressHydrationWarning>
-        {doubled.map((t, i) => (
-          <TickerPill key={`${t.symbol}-${i}`} t={t} />
-        ))}
+      <div className="marquee-track min-h-8" suppressHydrationWarning>
+        {hydrated &&
+          doubled.map((t, i) => <TickerPill key={`${t.symbol}-${i}`} t={t} />)}
       </div>
 
     </div>
