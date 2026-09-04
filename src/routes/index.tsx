@@ -115,18 +115,24 @@ function FeedPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-3 md:px-8">
-        <div className="mb-3 flex items-center gap-1 glass rounded-full p-1 w-fit">
+        <div className="mb-3 flex items-center gap-1 glass rounded-full p-1 w-fit max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <button
             onClick={() => setView("news")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "news" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            className={`shrink-0 min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "news" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
             <Newspaper size={13} /> News
           </button>
           <button
             onClick={() => setView("ipo")}
-            className={`min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "ipo" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+            className={`shrink-0 min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "ipo" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
           >
             <Rocket size={13} /> IPO Tracker
+          </button>
+          <button
+            onClick={() => setView("policy")}
+            className={`shrink-0 min-h-9 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5 ${view === "policy" ? "bg-white/80 text-foreground" : "text-foreground/70"}`}
+          >
+            <Landmark size={13} /> Govt Policies
           </button>
         </div>
         {view === "news" && <FilterBar value={filters} onChange={setFilters} />}
@@ -135,6 +141,8 @@ function FeedPage() {
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-5 md:pt-6">
         {view === "ipo" ? (
           <IpoTracker />
+        ) : view === "policy" ? (
+          <PolicyTracker />
         ) : isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
