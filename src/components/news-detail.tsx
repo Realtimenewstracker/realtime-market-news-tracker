@@ -1,8 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, ExternalLink } from "lucide-react";
-import { useState } from "react";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { SentimentBadge, ImpactBadge, type NewsItem } from "./news-card";
 
