@@ -41,7 +41,7 @@ function FeedPage() {
   const listTickersFn = useServerFn(listTickers);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
-  const [view, setView] = useState<"news" | "ipo">("news");
+  const [view, setView] = useState<"news" | "ipo" | "policy">("news");
 
   const { data: tickers } = useQuery({
     queryKey: ["tickers"],
