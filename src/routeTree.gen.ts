@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as IpoRouteImport } from './routes/ipo'
@@ -26,6 +27,11 @@ import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 const WatchlistRoute = WatchlistRouteImport.update({
   id: '/watchlist',
   path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortfolioRoute = PortfolioRouteImport.update({
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
+  '/pricing': typeof PricingRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
+  '/pricing': typeof PricingRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
+  '/pricing': typeof PricingRoute
   '/watchlist': typeof WatchlistRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/ipo'
     | '/policies'
     | '/portfolio'
+    | '/pricing'
     | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/ipo'
     | '/policies'
     | '/portfolio'
+    | '/pricing'
     | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/ipo'
     | '/policies'
     | '/portfolio'
+    | '/pricing'
     | '/watchlist'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   IpoRoute: typeof IpoRoute
   PoliciesRoute: typeof PoliciesRoute
   PortfolioRoute: typeof PortfolioRoute
+  PricingRoute: typeof PricingRoute
   WatchlistRoute: typeof WatchlistRoute
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
   ApiPublicBackfillAiRoute: typeof ApiPublicBackfillAiRoute
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/watchlist'
       fullPath: '/watchlist'
       preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portfolio': {
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   IpoRoute: IpoRoute,
   PoliciesRoute: PoliciesRoute,
   PortfolioRoute: PortfolioRoute,
+  PricingRoute: PricingRoute,
   WatchlistRoute: WatchlistRoute,
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
   ApiPublicBackfillAiRoute: ApiPublicBackfillAiRoute,
