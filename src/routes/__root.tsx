@@ -13,6 +13,7 @@ import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar, BottomDock } from "@/components/top-bar";
+import { SubscriptionGate, TrialBanner } from "@/components/subscription-gate";
 
 
 function NotFoundComponent() {
@@ -127,8 +128,11 @@ function RootComponent() {
       <div className="grain" aria-hidden />
       <div className="relative min-h-screen flex flex-col">
         <TopBar />
+        <TrialBanner />
         <main className="flex-1 pb-24 md:pb-8">
-          <Outlet />
+          <SubscriptionGate>
+            <Outlet />
+          </SubscriptionGate>
         </main>
         <BottomDock />
       </div>

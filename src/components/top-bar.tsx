@@ -61,6 +61,7 @@ export function TopBar() {
         <NavLink to="/portfolio">Portfolio</NavLink>
         <NavLink to="/watchlist">Watchlist</NavLink>
         <NavLink to="/geopolitics">Geopolitics</NavLink>
+        <NavLink to="/pricing">Pricing</NavLink>
         {user && <NavLink to="/account">Account</NavLink>}
       </nav>
 
