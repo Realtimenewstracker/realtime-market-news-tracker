@@ -440,6 +440,45 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          amount_inr: number | null
+          created_at: string
+          current_period_end: string | null
+          plan: string
+          provider: string | null
+          provider_ref: string | null
+          status: string
+          trial_ends_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_inr?: number | null
+          created_at?: string
+          current_period_end?: string | null
+          plan?: string
+          provider?: string | null
+          provider_ref?: string | null
+          status?: string
+          trial_ends_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_inr?: number | null
+          created_at?: string
+          current_period_end?: string | null
+          plan?: string
+          provider?: string | null
+          provider_ref?: string | null
+          status?: string
+          trial_ends_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tickers: {
         Row: {
           alias: string
