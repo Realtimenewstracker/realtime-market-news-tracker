@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSubscription } from "@/hooks/use-subscription";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/account")({
 
 function AccountPage() {
   const { user, loading } = useSession();
+  const { subscription } = useSubscription();
   const router = useRouter();
 
   if (loading) return null;
@@ -33,7 +35,25 @@ function AccountPage() {
         <div className="mt-4 space-y-2 text-sm">
           <Row label="Email" value={user.email ?? "—"} />
           <Row label="User ID" value={user.id} mono />
+          <Row
+            label="Membership"
+            value={
+              !subscription
+                ? "—"
+                : subscription.in_trial
+                  ? `Free trial · ${subscription.days_left} day${subscription.days_left === 1 ? "" : "s"} left`
+                  : subscription.active
+                    ? `${subscription.plan} · active`
+                    : "Expired"
+            }
+          />
         </div>
+        <Link
+          to="/pricing"
+          className="mt-4 block w-full rounded-full glass-btn px-4 py-2 text-center text-sm font-semibold"
+        >
+          Manage plan
+        </Link>
         <button
           onClick={async () => {
             await supabase.auth.signOut();
