@@ -16,6 +16,7 @@ import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as IpoRouteImport } from './routes/ipo'
 import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CancellationRouteImport } from './routes/cancellation'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountRouteImport } from './routes/account'
@@ -60,6 +61,11 @@ const IpoRoute = IpoRouteImport.update({
 const GeopoliticsRoute = GeopoliticsRouteImport.update({
   id: '/geopolitics',
   path: '/geopolitics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CancellationRoute = CancellationRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/contact': typeof ContactRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/contact': typeof ContactRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/contact': typeof ContactRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/contact'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/contact'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/contact'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
   CancellationRoute: typeof CancellationRoute
+  ContactRoute: typeof ContactRoute
   GeopoliticsRoute: typeof GeopoliticsRoute
   IpoRoute: typeof IpoRoute
   PoliciesRoute: typeof PoliciesRoute
@@ -300,6 +313,13 @@ declare module '@tanstack/react-router' {
       path: '/geopolitics'
       fullPath: '/geopolitics'
       preLoaderRoute: typeof GeopoliticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cancellation': {
@@ -381,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
   CancellationRoute: CancellationRoute,
+  ContactRoute: ContactRoute,
   GeopoliticsRoute: GeopoliticsRoute,
   IpoRoute: IpoRoute,
   PoliciesRoute: PoliciesRoute,
