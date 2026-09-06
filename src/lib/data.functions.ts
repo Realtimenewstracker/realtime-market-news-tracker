@@ -204,8 +204,19 @@ export const listIpos = createServerFn({ method: "GET" }).handler(async () => {
     )
     .order("open_date", { ascending: false });
   if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => ({ ...row, heat: heatFor(row) }));
+  const today = new Date().toISOString().slice(0, 10);
+  return (data ?? []).map((row) => {
+    let status = row.status;
+    if (row.open_date && row.close_date) {
+      if (today < row.open_date) status = "upcoming";
+      else if (today <= row.close_date) status = "open";
+      else if (row.listing_date && today >= row.listing_date) status = "listed";
+      else status = "closed";
+    }
+    return { ...row, status, heat: heatFor(row) };
+  });
 });
+
 
 export const listIpoWatchlist = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
