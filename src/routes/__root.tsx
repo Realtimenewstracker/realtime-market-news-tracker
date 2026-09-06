@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar, BottomDock } from "@/components/top-bar";
 import { SubscriptionGate, TrialBanner } from "@/components/subscription-gate";
+import { SiteFooter } from "@/components/site-footer";
 
 
 function NotFoundComponent() {
