@@ -33,7 +33,7 @@ export function IpoTracker() {
   const listIposFn = useServerFn(listIpos);
   const listWatchFn = useServerFn(listIpoWatchlist);
   const toggleFn = useServerFn(toggleIpoWatch);
-  const [status, setStatus] = useState("open");
+  const [status, setStatus] = useState("all");
   const [board, setBoard] = useState("all");
   const [sort, setSort] = useState("date");
   const [onlyWatched, setOnlyWatched] = useState(false);
