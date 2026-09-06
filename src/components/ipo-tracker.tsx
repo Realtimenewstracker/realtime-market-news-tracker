@@ -11,11 +11,11 @@ import { FilterMenu } from "@/components/filter-bar";
 type Ipo = Awaited<ReturnType<typeof listIpos>>[number];
 
 const STATUSES = [
+  { id: "all", label: "All" },
   { id: "open", label: "Open" },
   { id: "upcoming", label: "Upcoming" },
   { id: "closed", label: "Closed" },
   { id: "listed", label: "Listed" },
-  { id: "all", label: "All" },
 ];
 const BOARDS = [
   { id: "all", label: "All boards" },
