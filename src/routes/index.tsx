@@ -179,7 +179,7 @@ function Stat({ label, value, tone }: { label: string; value: number; tone?: "bu
     tone === "bull" ? "text-bull" : tone === "bear" ? "text-bear" : tone === "accent" ? "text-accent" : "text-foreground";
   return (
     <div className="glass rounded-2xl px-3 py-2 min-w-[68px] shrink-0 text-center">
-      <div className={`font-mono text-lg font-semibold ${color}`}>{value}</div>
+      <div suppressHydrationWarning className={`font-mono text-lg font-semibold ${color}`}>{value}</div>
       <div className="text-[9px] uppercase tracking-widest text-muted-foreground font-semibold">{label}</div>
     </div>
   );

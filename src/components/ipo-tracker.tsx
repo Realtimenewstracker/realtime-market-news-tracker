@@ -11,11 +11,11 @@ import { FilterMenu } from "@/components/filter-bar";
 type Ipo = Awaited<ReturnType<typeof listIpos>>[number];
 
 const STATUSES = [
+  { id: "all", label: "All" },
   { id: "open", label: "Open" },
   { id: "upcoming", label: "Upcoming" },
   { id: "closed", label: "Closed" },
   { id: "listed", label: "Listed" },
-  { id: "all", label: "All" },
 ];
 const BOARDS = [
   { id: "all", label: "All boards" },
@@ -33,7 +33,7 @@ export function IpoTracker() {
   const listIposFn = useServerFn(listIpos);
   const listWatchFn = useServerFn(listIpoWatchlist);
   const toggleFn = useServerFn(toggleIpoWatch);
-  const [status, setStatus] = useState("open");
+  const [status, setStatus] = useState("all");
   const [board, setBoard] = useState("all");
   const [sort, setSort] = useState("date");
   const [onlyWatched, setOnlyWatched] = useState(false);
