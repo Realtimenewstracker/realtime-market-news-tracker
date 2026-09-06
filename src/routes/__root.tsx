@@ -129,11 +129,14 @@ function RootComponent() {
       <div className="relative min-h-screen flex flex-col">
         <TopBar />
         <TrialBanner />
-        <main className="flex-1 pb-24 md:pb-8">
+        <main className="flex-1">
           <SubscriptionGate>
             <Outlet />
           </SubscriptionGate>
         </main>
+        <div className="pb-24 md:pb-0">
+          <SiteFooter />
+        </div>
         <BottomDock />
       </div>
       <Toaster position="top-center" richColors />
