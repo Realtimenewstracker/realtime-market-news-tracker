@@ -8,7 +8,7 @@ import { NewsDetail } from "@/components/news-detail";
 export function MarketNewsSection({ title, category, keywords }: { title: string; category?: string; keywords?: string[] }) {
   const fn = useServerFn(listNews);
   const [selected, setSelected] = useState<NewsItem | null>(null);
-  const { data, isPending, isError } = useQuery({ queryKey: ["section-news", title], queryFn: () => fn({ data: { category, keywords, limit: 36 } }), refetchInterval: 60_000 });
+  const { data, isPending, isError } = useQuery({ queryKey: ["section-news", title], queryFn: () => fn({ data: { category, keywords, limit: 36 } }), refetchInterval: 60_000, refetchIntervalInBackground: false });
   return <section className="max-w-7xl mx-auto px-3 md:px-8 py-7">
     <h1 className="font-display text-3xl font-semibold text-foreground">{title}</h1>
     <p className="text-sm text-muted-foreground mt-1">Latest sourced headlines affecting Indian markets</p>

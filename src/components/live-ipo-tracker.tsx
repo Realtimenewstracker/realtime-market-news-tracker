@@ -11,14 +11,14 @@ export function LiveIpoTracker() {
   const removeFn = useServerFn(removeWatch);
   const [saving, setSaving] = useState<string | null>(null);
   const { data, isPending, isError } = useQuery({ queryKey: ["nse-live-ipos"], queryFn: () => fn(), refetchInterval: 300_000, staleTime: 120_000 });
-  const { data: watched, refetch: refetchWatched } = useQuery({ queryKey: ["watchlist"], queryFn: () => watchFn() });
+  const { data: watched, refetch: refetchWatched } = useQuery({ queryKey: ["watchlist"], queryFn: () => watchFn(), retry: false });
   const toggle = async (symbol: string) => {
     setSaving(symbol);
     try {
       const item = watched?.find((w) => w.kind === "symbol" && w.value === symbol);
       if (item) await removeFn({ data: { id: item.id } }); else await addFn({ data: { kind: "symbol", value: symbol } });
       await refetchWatched();
-    } finally { setSaving(null); }
+    } catch { /* The source link remains usable when the watchlist service is unavailable. */ } finally { setSaving(null); }
   };
   return <div>
     <p className="text-xs text-muted-foreground mb-4">Current issues directly from NSE · refreshes every 5 minutes. Unpublished prices and dates are not estimated.</p>

@@ -39,10 +39,11 @@ function FeedPage() {
   const { data: tickers } = useQuery({
     queryKey: ["tickers"],
     queryFn: () => listTickersFn(),
-    refetchInterval: 120_000,
+    refetchInterval: 300_000,
+    refetchIntervalInBackground: false,
   });
 
-  const { data: news, isLoading } = useQuery({
+  const { data: news, isLoading, isError } = useQuery({
     queryKey: ["news", filters.category, filters.sentiment, filters.impact, filters.q, filters.region],
     queryFn: () =>
       listNewsFn({
@@ -118,6 +119,8 @@ function FeedPage() {
           <LiveIpoTracker />
         ) : view === "policy" ? (
           <MarketNewsSection title="Policy updates" keywords={["government policy", "cabinet", "rbi", "sebi", "ministry", "budget", "regulation", "scheme"]} />
+        ) : isError ? (
+          <div role="alert" className="glass rounded-3xl p-8 text-center text-destructive">Market news is temporarily unavailable. Try again shortly.</div>
         ) : isLoading ? (
           <SkeletonGrid />
         ) : (news?.length ?? 0) === 0 ? (
