@@ -11,6 +11,10 @@ export const Route = createFileRoute("/geopolitics")({
     meta: [
       { title: "Geopolitics — TrackIndia" },
       { name: "description", content: "Global flashpoints and macro events that move Indian markets." },
+      { property: "og:title", content: "Geopolitics — TrackIndia" },
+      { property: "og:description", content: "Global developments and macro events affecting Indian markets." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: GeoPage,

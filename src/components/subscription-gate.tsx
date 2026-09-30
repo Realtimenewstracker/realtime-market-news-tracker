@@ -1,5 +1,6 @@
-import { useRouterState } from "@tanstack/react-router";
+import { useRouterState, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { useSubscription } from "@/hooks/use-subscription";
 import { Paywall } from "@/components/paywall";
 
@@ -7,10 +8,16 @@ const OPEN_PATHS = ["/auth", "/pricing", "/account"];
 
 export function SubscriptionGate({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const { subscription, loading, signedIn } = useSubscription();
 
   const open = OPEN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
-  if (open || !signedIn || loading || !subscription || subscription.active) return <>{children}</>;
+  useEffect(() => { if (!open && !loading && !signedIn) navigate({ to: "/auth", replace: true }); }, [open, loading, signedIn, navigate]);
+  if (open) return <>{children}</>;
+  if (loading) return <div className="min-h-[60vh] grid place-items-center text-muted-foreground">Loading account…</div>;
+  if (!signedIn) return null;
+  if (!subscription) return <div role="alert" className="p-8 text-center text-destructive">Membership status unavailable. Please try again.</div>;
+  if (subscription.active) return <>{children}</>;
   return <Paywall />;
 }
 

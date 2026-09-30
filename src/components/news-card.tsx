@@ -1,5 +1,4 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, Minus, ArrowUpRight } from "lucide-react";
 
 export type NewsItem = {
@@ -33,11 +32,8 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
     impact === 2 ? "bg-blue-500" :
     impact === 1 ? "bg-slate-400/70" : "bg-slate-300/50";
   return (
-    <motion.button
-      layout
+    <button
       onClick={onClick}
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.985 }}
       className="text-left w-full h-full glass glass-hover rounded-3xl p-5 md:p-6 flex flex-col gap-3.5 md:gap-4 relative overflow-hidden"
     >
       <div className={`absolute inset-x-0 top-0 h-[3px] rounded-t-3xl ${strip}`} />
@@ -83,7 +79,7 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
         </div>
         <ArrowUpRight size={16} className="text-muted-foreground shrink-0" />
       </div>
-    </motion.button>
+    </button>
   );
 }
 

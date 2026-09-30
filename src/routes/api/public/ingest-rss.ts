@@ -5,6 +5,7 @@ import { createLovableAI, DEFAULT_MODEL } from "@/lib/ai-gateway.server";
 import { RSS_SOURCES } from "@/lib/rss-sources";
 import { REGIONS, articleRegions } from "@/lib/regions";
 import { classifyText } from "@/lib/classify";
+import { isMarketRelevant } from "@/lib/news-relevance";
 
 export const Route = createFileRoute("/api/public/ingest-rss")({
   server: {
@@ -36,7 +37,7 @@ export const Route = createFileRoute("/api/public/ingest-rss")({
                 const link = String(it.link?.["@_href"] ?? it.link ?? it.guid ?? "").trim();
                 const desc = stripTags(String(it.description ?? it.summary ?? it["content:encoded"] ?? ""));
                 const dateStr = String(it.pubDate ?? it.published ?? it.updated ?? "");
-                if (!title || !link) continue;
+                if (!title || !link || !isMarketRelevant(title, desc)) continue;
                 const published = safeDate(dateStr);
                 const hash = await sha1(link);
                 items.push({

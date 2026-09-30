@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PolicyTracker } from "@/components/policy-tracker";
+import { MarketNewsSection } from "@/components/market-news-section";
 
 export const Route = createFileRoute("/policies")({
   head: () => ({
@@ -38,7 +38,8 @@ function PoliciesPage() {
         Policies, schemes, budget lines and regulator decisions — ranked by current heat and market impact, with the
         listed companies most likely to benefit.
       </p>
-      <PolicyTracker />
+       <p className="text-xs text-muted-foreground mb-3">Latest policy-related reporting. Source links and publication dates are shown on each story; possible beneficiaries require verification.</p>
+       <MarketNewsSection title="Policy updates" keywords={["government policy", "cabinet", "rbi", "sebi", "ministry", "budget", "regulation", "scheme", "repo rate"]} />
     </section>
   );
 }

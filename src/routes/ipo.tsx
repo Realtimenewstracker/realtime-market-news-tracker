@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { IpoTracker } from "@/components/ipo-tracker";
+import { LiveIpoTracker } from "@/components/live-ipo-tracker";
 
 export const Route = createFileRoute("/ipo")({
   head: () => ({
@@ -30,7 +30,7 @@ function IpoPage() {
       <p className="mt-2 mb-5 text-sm md:text-base text-muted-foreground max-w-2xl">
         Mainboard and SME issues — price band, lot size, GMP, subscription and listing performance.
       </p>
-      <IpoTracker />
+       <LiveIpoTracker />
     </section>
   );
 }

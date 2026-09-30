@@ -10,18 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as IpoRouteImport } from './routes/ipo'
 import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as CryptoRouteImport } from './routes/crypto'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CommoditiesRouteImport } from './routes/commodities'
 import { Route as CancellationRouteImport } from './routes/cancellation'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MarketSymbolRouteImport } from './routes/market.$symbol'
 import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
 import { Route as ApiPublicIpoAlertsRouteImport } from './routes/api/public/ipo-alerts'
 import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
@@ -31,6 +36,11 @@ import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
 const WatchlistRoute = WatchlistRouteImport.update({
   id: '/watchlist',
   path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -63,9 +73,24 @@ const GeopoliticsRoute = GeopoliticsRouteImport.update({
   path: '/geopolitics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CryptoRoute = CryptoRouteImport.update({
+  id: '/crypto',
+  path: '/crypto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommoditiesRoute = CommoditiesRouteImport.update({
+  id: '/commodities',
+  path: '/commodities',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CancellationRoute = CancellationRouteImport.update({
@@ -91,6 +116,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketSymbolRoute = MarketSymbolRouteImport.update({
+  id: '/market/$symbol',
+  path: '/market/$symbol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
@@ -125,14 +155,19 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/commodities': typeof CommoditiesRoute
   '/contact': typeof ContactRoute
+  '/crypto': typeof CryptoRoute
+  '/events': typeof EventsRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/watchlist': typeof WatchlistRoute
+  '/market/$symbol': typeof MarketSymbolRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
@@ -145,14 +180,19 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/commodities': typeof CommoditiesRoute
   '/contact': typeof ContactRoute
+  '/crypto': typeof CryptoRoute
+  '/events': typeof EventsRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/watchlist': typeof WatchlistRoute
+  '/market/$symbol': typeof MarketSymbolRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
@@ -166,14 +206,19 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/auth': typeof AuthRoute
   '/cancellation': typeof CancellationRoute
+  '/commodities': typeof CommoditiesRoute
   '/contact': typeof ContactRoute
+  '/crypto': typeof CryptoRoute
+  '/events': typeof EventsRoute
   '/geopolitics': typeof GeopoliticsRoute
   '/ipo': typeof IpoRoute
   '/policies': typeof PoliciesRoute
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/search': typeof SearchRoute
   '/watchlist': typeof WatchlistRoute
+  '/market/$symbol': typeof MarketSymbolRoute
   '/api/public/ask-ai': typeof ApiPublicAskAiRoute
   '/api/public/backfill-ai': typeof ApiPublicBackfillAiRoute
   '/api/public/ingest-rss': typeof ApiPublicIngestRssRoute
@@ -188,14 +233,19 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/commodities'
     | '/contact'
+    | '/crypto'
+    | '/events'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
     | '/portfolio'
     | '/pricing'
     | '/privacy'
+    | '/search'
     | '/watchlist'
+    | '/market/$symbol'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
@@ -208,14 +258,19 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/commodities'
     | '/contact'
+    | '/crypto'
+    | '/events'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
     | '/portfolio'
     | '/pricing'
     | '/privacy'
+    | '/search'
     | '/watchlist'
+    | '/market/$symbol'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
@@ -228,14 +283,19 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cancellation'
+    | '/commodities'
     | '/contact'
+    | '/crypto'
+    | '/events'
     | '/geopolitics'
     | '/ipo'
     | '/policies'
     | '/portfolio'
     | '/pricing'
     | '/privacy'
+    | '/search'
     | '/watchlist'
+    | '/market/$symbol'
     | '/api/public/ask-ai'
     | '/api/public/backfill-ai'
     | '/api/public/ingest-rss'
@@ -249,14 +309,19 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   AuthRoute: typeof AuthRoute
   CancellationRoute: typeof CancellationRoute
+  CommoditiesRoute: typeof CommoditiesRoute
   ContactRoute: typeof ContactRoute
+  CryptoRoute: typeof CryptoRoute
+  EventsRoute: typeof EventsRoute
   GeopoliticsRoute: typeof GeopoliticsRoute
   IpoRoute: typeof IpoRoute
   PoliciesRoute: typeof PoliciesRoute
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  SearchRoute: typeof SearchRoute
   WatchlistRoute: typeof WatchlistRoute
+  MarketSymbolRoute: typeof MarketSymbolRoute
   ApiPublicAskAiRoute: typeof ApiPublicAskAiRoute
   ApiPublicBackfillAiRoute: typeof ApiPublicBackfillAiRoute
   ApiPublicIngestRssRoute: typeof ApiPublicIngestRssRoute
@@ -271,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/watchlist'
       fullPath: '/watchlist'
       preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -315,11 +387,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GeopoliticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crypto': {
+      id: '/crypto'
+      path: '/crypto'
+      fullPath: '/crypto'
+      preLoaderRoute: typeof CryptoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commodities': {
+      id: '/commodities'
+      path: '/commodities'
+      fullPath: '/commodities'
+      preLoaderRoute: typeof CommoditiesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cancellation': {
@@ -355,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market/$symbol': {
+      id: '/market/$symbol'
+      path: '/market/$symbol'
+      fullPath: '/market/$symbol'
+      preLoaderRoute: typeof MarketSymbolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/refresh-tickers': {
@@ -401,14 +501,19 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AuthRoute: AuthRoute,
   CancellationRoute: CancellationRoute,
+  CommoditiesRoute: CommoditiesRoute,
   ContactRoute: ContactRoute,
+  CryptoRoute: CryptoRoute,
+  EventsRoute: EventsRoute,
   GeopoliticsRoute: GeopoliticsRoute,
   IpoRoute: IpoRoute,
   PoliciesRoute: PoliciesRoute,
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  SearchRoute: SearchRoute,
   WatchlistRoute: WatchlistRoute,
+  MarketSymbolRoute: MarketSymbolRoute,
   ApiPublicAskAiRoute: ApiPublicAskAiRoute,
   ApiPublicBackfillAiRoute: ApiPublicBackfillAiRoute,
   ApiPublicIngestRssRoute: ApiPublicIngestRssRoute,

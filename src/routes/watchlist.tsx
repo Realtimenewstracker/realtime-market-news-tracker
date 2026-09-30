@@ -19,6 +19,10 @@ export const Route = createFileRoute("/watchlist")({
     meta: [
       { title: "Watchlist — TrackIndia" },
       { name: "description", content: "Follow the symbols and themes that matter to you across the live news tape." },
+      { property: "og:title", content: "Watchlist — TrackIndia" },
+      { property: "og:description", content: "Follow symbols and themes on your market watchlist." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: WatchlistPage,
