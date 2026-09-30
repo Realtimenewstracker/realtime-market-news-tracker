@@ -23,7 +23,7 @@ export function SubscriptionGate({ children }: { children: ReactNode }) {
 
 export function TrialBanner() {
   const { subscription } = useSubscription();
-  if (!subscription?.in_trial || subscription.days_left > 3) return null;
+  if (!subscription?.in_trial) return null;
   return (
     <div className="px-3 md:px-8 pt-3">
       <div className="glass rounded-2xl px-4 py-2 text-center text-xs text-foreground/80">

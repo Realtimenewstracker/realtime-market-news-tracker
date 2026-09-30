@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 type Ticker = {
   symbol: string;
@@ -43,7 +44,7 @@ function TickerPill({ t }: { t: Ticker }) {
   const pct = t.change_pct ?? 0;
   const up = pct >= 0;
   return (
-    <div className="mx-1.5 md:mx-3 flex items-center gap-2 md:gap-2.5 px-3 md:px-4 py-1.5 rounded-full glass shrink-0 whitespace-nowrap">
+    <Link to="/market/$symbol" params={{ symbol: t.symbol }} className="mx-1.5 md:mx-3 flex items-center gap-2 md:gap-2.5 px-3 md:px-4 py-1.5 rounded-full glass shrink-0 whitespace-nowrap">
       <span className="font-display font-semibold tracking-tight text-foreground text-sm">
         {t.label || t.alias}
       </span>
@@ -53,7 +54,7 @@ function TickerPill({ t }: { t: Ticker }) {
         {up ? "+" : ""}
         {pct.toFixed(2)}%
       </span>
-    </div>
+    </Link>
   );
 }
 

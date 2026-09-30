@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,6 +23,7 @@ function AccountPage() {
   const { user, loading } = useSession();
   const { subscription } = useSubscription();
   const router = useRouter();
+  const navigate = useNavigate();
 
   if (loading) return null;
   if (!user)
@@ -62,8 +63,9 @@ function AccountPage() {
         <Button
           onClick={async () => {
             await supabase.auth.signOut();
-            toast.success("Signed out");
-             router.navigate({ to: "/auth" });
+             await router.invalidate();
+             toast.success("Signed out");
+             navigate({ to: "/auth", replace: true });
           }}
           className="mt-6 w-full rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold"
         >

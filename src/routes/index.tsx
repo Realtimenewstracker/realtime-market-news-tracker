@@ -24,16 +24,6 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.prefetchQuery({ queryKey: ["tickers"], queryFn: () => listTickers() }),
-      context.queryClient.prefetchQuery({
-        queryKey: ["news", "all", "all", 0, "", "all"],
-        queryFn: () => listNews({ data: { limit: 60 } }),
-      }),
-    ]);
-    return null;
-  },
   component: FeedPage,
   errorComponent: () => <p role="alert" className="p-8">Market feed unavailable. Please refresh.</p>,
   notFoundComponent: () => <p className="p-8">Market feed not found.</p>,
