@@ -9,7 +9,7 @@ export const Route = createFileRoute("/events")({ head: () => ({ meta: [
   { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
 ] }), component: EventsPage });
 
-export function EventsPage() {
+function EventsPage() {
   const fn = useServerFn(getUpcomingEvents);
   const { data, isPending, isError } = useQuery({ queryKey: ["nse-events"], queryFn: () => fn(), refetchInterval: 300_000, staleTime: 120_000 });
   return <section className="max-w-5xl mx-auto px-3 md:px-8 py-7">
