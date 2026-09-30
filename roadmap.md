@@ -1,10 +1,12 @@
 # TrackIndia 1.1
-- [ ] Make login first, preserve trial/paywall and account subscription access.
-- [ ] Smooth scrolling and interactions; make fresh news appear automatically.
-- [ ] Exclude off-topic news at ingestion and from existing feed.
-- [ ] Replace static IPO view with sourced current issues; make policy updates current without presenting archival rows as live.
-- [ ] Add dated corporate events, geopolitical, crypto/currency and commodity views.
-- [ ] Add market search and stock/index details with chart, available financial context, news and events.
-- [ ] Replace mobile navigation with Home, Search, Watchlist, Notifications, Account.
-- [ ] Add installable web-app icon and manifest.
-- [ ] Verify real signed-in flows and live-source failures honestly; payment remains deferred.
+- [x] Require login before the market screens; start and show a seven-day trial, then gate expired access.
+- [x] Remove heavy feed animations and visitor-triggered ingestion; refresh feed automatically while visible.
+- [x] Exclude obvious non-market topics during ingestion and from historical feed searches.
+- [x] Replace dated IPO seeds with sourced current exchange issues; show policy-related sourced news instead of old seeds.
+- [x] Add exchange-dated events and sourced geopolitics, crypto/FX, and commodity sections.
+- [x] Add search and stock/index quotes, chart, headlines, events; mark unavailable company financials honestly.
+- [x] Mobile dock: Home, Search, Watchlist, Notifications, Account; add installable app icon.
+- [x] Free-source-only market data; Cashfree is planned, not connected; plan preference does not grant access.
+- [ ] Authenticated trial, live market-source and expiration checks: blocked until a preview session is available.
+- [ ] Cashfree checkout and verified subscription activation: blocked until merchant credentials and account onboarding.
+- [ ] Full financial statements and verified policy/beneficiary rankings: unavailable from the selected free sources.
