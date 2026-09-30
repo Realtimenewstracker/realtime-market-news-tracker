@@ -65,8 +65,8 @@ export const getMySubscription = createServerFn({ method: "GET" })
   });
 
 /**
- * Placeholder checkout. A payment gateway (Razorpay) will be wired in here:
- * this records the plan the user picked so we can resume checkout later.
+ * Cashfree is planned but not connected. This only records a preference;
+ * never grant paid access until a verified provider notification is processed.
  */
 export const startCheckout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

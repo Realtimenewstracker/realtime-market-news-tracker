@@ -19,7 +19,7 @@ function MarketPage() {
   const { data: news } = useQuery({ queryKey: ["symbol-news", alias], queryFn: () => newsFn({ data: { q: alias, limit: 12 } }) });
   const { data: events } = useQuery({ queryKey: ["nse-events"], queryFn: () => eventsFn(), retry: 1 });
   const filteredEvents = events?.filter((e) => e.symbol === alias) ?? [];
-  return <section className="max-w-5xl mx-auto px-3 md:px-8 py-7"><Link to="/search" className="text-sm text-accent">← Search</Link>
+   return <section className="max-w-5xl mx-auto px-3 md:px-8 py-7"><Link to="/search" search={{ q: "" }} className="text-sm text-accent">← Search</Link>
     {isPending ? <p className="mt-6">Loading quote…</p> : isError || !quote ? <p role="alert" className="mt-6 text-destructive">This symbol has no available market quote.</p> : <>
       <h1 className="font-display text-3xl font-semibold mt-5">{quote.name}</h1><p className="font-mono text-xs text-muted-foreground">{alias} · {quote.source} · quotes may be delayed</p>
       <div className="mt-6 flex items-baseline gap-3"><strong className="font-mono text-3xl">{quote.last?.toLocaleString("en-IN", { maximumFractionDigits: 2 }) ?? "—"} {quote.currency}</strong>{quote.last != null && quote.previous != null && <span className={`font-mono text-sm ${quote.last >= quote.previous ? "text-bull" : "text-bear"}`}>{((quote.last - quote.previous) / quote.previous * 100).toFixed(2)}%</span>}</div>

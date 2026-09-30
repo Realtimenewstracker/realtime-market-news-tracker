@@ -49,9 +49,9 @@ function PricingPage() {
     setBusy(plan);
     try {
       await checkout({ data: { plan } });
-      toast.success("Plan saved", {
-        description: "Online payment opens soon — we'll email you the payment link.",
-      });
+       toast.success("Plan preference saved", {
+         description: "Payment is not available yet. This does not activate a subscription.",
+       });
     } catch {
       toast.error("Could not save your plan. Try again.");
     } finally {
@@ -69,7 +69,7 @@ function PricingPage() {
           Simple membership
         </h1>
         <p className="mt-2 text-sm md:text-base text-muted-foreground">
-          Every new account gets 7 days free. After that, pick a plan to keep the tape running.
+           Every new account gets 7 days free. Payment is not available yet; these are the planned subscription prices.
         </p>
         {subscription && (
           <p className="mt-3 text-xs text-muted-foreground">
@@ -113,7 +113,7 @@ function PricingPage() {
                 disabled={busy === id}
                 className="mt-6 w-full rounded-full glass-btn-primary px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
               >
-                {busy === id ? "…" : signedIn ? `Choose ${p.label.toLowerCase()}` : "Start free trial"}
+                 {busy === id ? "…" : signedIn ? `Save ${p.label.toLowerCase()} preference` : "Start free trial"}
               </button>
             </div>
           );
@@ -121,7 +121,7 @@ function PricingPage() {
       </div>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-        Online card and UPI payment is being connected. Pick a plan now and we'll send you the payment link.
+         Cashfree payment is planned but not connected. Saving a plan does not charge you or extend access after the trial.
       </p>
       <div className="mt-6 text-center">
         <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
