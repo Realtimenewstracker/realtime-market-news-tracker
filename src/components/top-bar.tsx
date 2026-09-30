@@ -40,7 +40,7 @@ export function TopBar() {
 
 
       <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
-        <Link to="/search" aria-label="Search markets" title="Search markets" className="hidden md:flex glass rounded-full w-9 h-9 items-center justify-center"><Search size={16} /></Link>
+         <Link to="/search" search={{ q: "" }} aria-label="Search markets" title="Search markets" className="hidden md:flex glass rounded-full w-9 h-9 items-center justify-center"><Search size={16} /></Link>
         <div className="hidden md:block">
           <AlertsBell />
         </div>
@@ -96,7 +96,7 @@ export function BottomDock() {
       style={{ bottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
       <DockItem to="/" label="Home" icon={<House size={18} />} />
-      <DockItem to="/search" label="Search" icon={<Search size={18} />} />
+       <DockItem to="/search" label="Search" icon={<Search size={18} />} />
       <DockItem to="/watchlist" label="Watchlist" icon={<Star size={18} />} />
       <MobileAlertsDockItem />
       <DockItem to="/account" label="Account" icon={<UserRound size={18} />} />
@@ -109,7 +109,8 @@ function DockItem({ to, label, icon }: { to: string; label: string; icon?: React
     "min-h-12 w-full px-1 py-1 rounded-xl text-[10px] font-medium text-foreground/70 flex flex-col items-center justify-center gap-0.5 leading-none";
   return (
     <Link
-      to={to}
+       to={to}
+       search={to === "/search" ? { q: "" } : undefined}
       className={base}
       activeProps={{ className: `${base} glass-chip text-foreground font-semibold` }}
     >
