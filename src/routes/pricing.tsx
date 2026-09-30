@@ -113,7 +113,7 @@ function PricingPage() {
                 disabled={busy === id}
                 className="mt-6 w-full rounded-full glass-btn-primary px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
               >
-                {busy === id ? "…" : signedIn ? `Choose ${p.label.toLowerCase()}` : "Start free trial"}
+                 {busy === id ? "…" : signedIn ? `Save ${p.label.toLowerCase()} preference` : "Start free trial"}
               </button>
             </div>
           );
