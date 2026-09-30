@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { motion } from "framer-motion";
 import { Landmark, ExternalLink, Flame, CalendarDays, Building2 } from "lucide-react";
 import { listPolicies } from "@/lib/data.functions";
 import { FilterMenu } from "@/components/filter-bar";
@@ -86,10 +85,7 @@ function PolicyCard({ policy }: { policy: Policy }) {
   const [open, setOpen] = useState(false);
   const shown = open ? policy.beneficiaries : policy.beneficiaries.slice(0, 3);
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className="glass glass-hover rounded-3xl p-5 flex flex-col gap-3"
     >
       <div className="flex items-start justify-between gap-2 min-w-0">
@@ -163,7 +159,7 @@ function PolicyCard({ policy }: { policy: Policy }) {
           Official source <ExternalLink size={11} />
         </a>
       )}
-    </motion.div>
+    </div>
   );
 }
 

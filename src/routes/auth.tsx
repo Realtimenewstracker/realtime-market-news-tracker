@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AtSign, KeyRound, Mail, User } from "lucide-react";
@@ -68,7 +68,7 @@ function AuthPage() {
     });
     if (error) throw error;
     if (!data.session) {
-      toast.success("Account created. Confirm your email, then sign in.");
+      toast.success("Account created. Confirm your email, then sign in to start your 7-day free trial.");
       setMode("signin");
       setIdentifier(email.trim());
       return;
@@ -80,7 +80,7 @@ function AuthPage() {
         toast("Signed up, but that username was taken — set another in Account.");
       }
     }
-    toast.success("Account created. You're signed in.");
+    toast.success("Your 7-day free trial has started.");
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -90,7 +90,7 @@ function AuthPage() {
     try {
       if (mode === "signup") await signUp();
       else await signIn();
-      router.navigate({ to: "/" });
+      if (mode === "signin" || (await supabase.auth.getSession()).data.session) router.navigate({ to: "/" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Auth failed";
       toast.error(
@@ -141,7 +141,7 @@ function AuthPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signin"
             ? "Use your username or email with your password."
-            : "Pick a username, register with email — or continue with Google."}
+            : "Pick a username, register with email — or continue with Google. Your 7-day free trial starts when you create your account."}
         </p>
 
         <button
@@ -221,11 +221,6 @@ function AuthPage() {
           </button>
         </div>
 
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">
-            ← Back to the tape
-          </Link>
-        </div>
       </div>
     </section>
   );

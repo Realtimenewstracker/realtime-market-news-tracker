@@ -1,19 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PolicyTracker } from "@/components/policy-tracker";
+import { MarketNewsSection } from "@/components/market-news-section";
 
 export const Route = createFileRoute("/policies")({
   head: () => ({
     meta: [
-      { title: "Govt Policy Tracker — Beneficiary stocks ranked | TrackIndia" },
+       { title: "Government policy news — TrackIndia" },
       {
         name: "description",
         content:
-          "Track Indian government policies, budget announcements and regulator decisions, ranked by heat and market impact, with the listed companies likely to benefit.",
+           "Track sourced government policy news, budget announcements and regulator decisions relevant to Indian markets.",
       },
-      { property: "og:title", content: "Govt Policy Tracker — Beneficiary stocks ranked" },
+       { property: "og:title", content: "Government policy news — TrackIndia" },
       {
         property: "og:description",
-        content: "Policies, schemes and regulator moves ranked by heat and impact, with possible beneficiary companies.",
+         content: "Recent sourced policy and regulator headlines for Indian markets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -35,10 +35,10 @@ function PoliciesPage() {
         </span>
       </h1>
       <p className="mt-2 mb-5 text-sm md:text-base text-muted-foreground max-w-2xl">
-        Policies, schemes, budget lines and regulator decisions — ranked by current heat and market impact, with the
-        listed companies most likely to benefit.
+         Latest sourced policies, budget news and regulator decisions affecting Indian markets.
       </p>
-      <PolicyTracker />
+        <p className="text-xs text-muted-foreground mb-3">Source links and publication dates are shown on each story; possible beneficiaries require verification.</p>
+       <MarketNewsSection title="Policy updates" keywords={["government policy", "cabinet", "rbi", "sebi", "ministry", "budget", "regulation", "scheme", "repo rate"]} />
     </section>
   );
 }

@@ -14,6 +14,10 @@ export const Route = createFileRoute("/portfolio")({
     meta: [
       { title: "Portfolio — TrackIndia" },
       { name: "description", content: "Track your Indian stock portfolio and P&L against live market data." },
+      { property: "og:title", content: "Portfolio — TrackIndia" },
+      { property: "og:description", content: "Track your Indian stock portfolio against market quotes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: PortfolioPage,

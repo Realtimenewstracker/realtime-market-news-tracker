@@ -86,7 +86,7 @@
     radial-gradient(circle at 25% 88%, rgba(205, 250, 232, 0.78) 0%, transparent 55%),
     radial-gradient(circle at 55% 45%, rgba(255, 240, 210, 0.55) 0%, transparent 55%),
     linear-gradient(135deg, #f3f6ff 0%, #ffeef6 40%, #f0e7ff 70%, #e6f7ff 100%);
-  filter: saturate(115%);
+  filter: saturate(105%);
 }
 .iridescent-bg::before {
   content: ''; position: absolute; inset: 0;
@@ -98,7 +98,7 @@
     rgba(220, 200, 255, 0.15) 280deg,
     rgba(255,255,255,0) 360deg);
   mix-blend-mode: screen; opacity: 0.7;
-  animation: iridescent-rotate 40s linear infinite;
+  /* A static background avoids full-screen repainting while scrolling. */
 }
 @keyframes iridescent-rotate {
   from { transform: rotate(0deg) scale(1.4); }
@@ -112,7 +112,6 @@
 
 @utility glass {
   background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.9),
@@ -121,7 +120,7 @@
 }
 @utility glass-strong {
   background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(40px) saturate(200%);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,1),
@@ -139,7 +138,6 @@
 /* Shared frosted-glass primitives (match the header) */
 @utility glass-card {
   background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: var(--radius-3xl);
   box-shadow:
@@ -149,7 +147,6 @@
 }
 @utility glass-btn {
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.9),
@@ -164,7 +161,6 @@
 @utility glass-btn-primary {
   background: color-mix(in oklab, var(--primary) 82%, transparent);
   color: var(--primary-foreground);
-  backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,0.28),
@@ -174,14 +170,12 @@
 }
 @utility glass-chip {
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(18px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 9999px;
   box-shadow: inset 0 1px 1px rgba(255,255,255,0.85);
 }
 @utility glass-input {
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(18px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: inset 0 1px 2px rgba(120,140,180,0.10);
   transition: border-color 200ms, background-color 200ms;
@@ -212,6 +206,7 @@
   animation: marquee-scroll 48s linear infinite;
 }
 .marquee-track:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.25); border-radius: 8px; }

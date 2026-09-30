@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { dedupeByTitle } from "@/lib/dedupe";
+import { isMarketRelevant } from "@/lib/news-relevance";
 
 
 function serverPublicClient() {
@@ -61,7 +62,7 @@ export const listNews = createServerFn({ method: "POST" })
       const kws = data.keywords.map((k) => k.toLowerCase());
       list = list.filter((r) => kws.some((k) => (r.title + " " + (r.ai_summary ?? r.summary ?? "")).toLowerCase().includes(k)));
     }
-    return dedupeByTitle(list).slice(0, data.limit);
+    return dedupeByTitle(list.filter((r) => isMarketRelevant(r.title, r.summary ?? ""))).slice(0, data.limit);
   });
 
 
