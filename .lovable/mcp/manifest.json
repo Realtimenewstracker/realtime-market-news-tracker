@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "sdk_version": "3.0.4",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://dtbowxnpnvuxquixjltt.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "stock-pulse-tracker",
+      "version": "0.1.0",
+      "title": "Stock Pulse Tracker"
+    },
+    "tools": [
+      {
+        "name": "search_market_news",
+        "title": "Search market news",
+        "description": "Find sourced India-relevant market headlines with publication dates and impact tags.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "query": {
+              "description": "Optional company, ticker, or market topic.",
+              "type": "string",
+              "maxLength": 80
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_watchlist",
+        "title": "List watchlist",
+        "description": "Read the connected account's saved stock symbols and news keywords.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": null,
+        "outputSchema": null
+      },
+      {
+        "name": "add_watchlist_item",
+        "title": "Add to watchlist",
+        "description": "Save a stock symbol or news keyword to the connected account's watchlist.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "symbol",
+                "keyword"
+              ],
+              "description": "Type of item to watch."
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "description": "Stock symbol or news keyword."
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
