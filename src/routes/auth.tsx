@@ -22,7 +22,7 @@ export const Route = createFileRoute("/auth")({
       { property: "og:title", content: "Sign in or register — TrackIndia" },
       {
         property: "og:description",
-        content: "Username or email login, plus Google and Apple sign-in, for TrackIndia markets.",
+        content: "Username or email login, plus Google, Apple and Microsoft sign-in, for TrackIndia markets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -107,7 +107,7 @@ function AuthPage() {
     }
   };
 
-  const socialSignIn = async (provider: "google" | "apple") => {
+  const socialSignIn = async (provider: "google" | "apple" | "microsoft") => {
     if (loading) return;
     setLoading(true);
     try {
@@ -117,7 +117,7 @@ function AuthPage() {
       if (res.error) throw res.error;
       if (!("redirected" in res && res.redirected)) router.navigate({ to: "/" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : `${provider === "apple" ? "Apple" : "Google"} sign-in failed`);
+      toast.error(err instanceof Error ? err.message : `${provider === "apple" ? "Apple" : provider === "microsoft" ? "Microsoft" : "Google"} sign-in failed`);
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ function AuthPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signin"
             ? "Use your username or email with your password."
-            : "Pick a username, register with email — or continue with Google or Apple. Your 7-day free trial starts when you create your account."}
+            : "Pick a username, register with email — or continue with Google, Apple or Microsoft. Your 7-day free trial starts when you create your account."}
         </p>
 
         <div className="mt-5 space-y-2.5">
@@ -154,6 +154,9 @@ function AuthPage() {
           </Button>
           <Button onClick={() => socialSignIn("apple")} type="button" variant="outline" disabled={loading} className="w-full h-11 font-semibold">
             <AppleMark /> Continue with Apple
+          </Button>
+          <Button onClick={() => socialSignIn("microsoft")} type="button" variant="outline" disabled={loading} className="w-full h-11 font-semibold">
+            <MicrosoftMark /> Continue with Microsoft
           </Button>
         </div>
 
@@ -271,6 +274,14 @@ function AppleMark() {
   return (
     <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true">
       <path d="M318.7 268.7c-.2-44.3 36.2-65.9 37.9-67-20.6-30-52.6-34.1-63.9-34.4-26.9-2.8-53 16.1-66.7 16.1-13.9 0-34.9-15.8-57.6-15.4-29.6.4-57.3 17.6-72.6 44.2-31.4 54.5-8 134.6 22.1 178.5 15 21.6 32.7 45.8 55.8 44.9 22.4-.9 30.8-14.5 57.9-14.5 26.9 0 34.4 14.5 58.1 14 24.1-.4 39.3-21.7 53.8-43.5 17.3-25.3 24.4-50.1 24.8-51.4-.5-.2-47-18-47.5-71.9ZM270.4 138.8c12.1-14.7 20.5-35.2 18.2-55.7-17.5.7-38.6 11.7-51.2 26.4-11.3 13-21.2 34.6-18.6 54.4 19.6 1.5 39.6-9.9 51.6-25.1Z" />
+    </svg>
+  );
+}
+
+function MicrosoftMark() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M2 2h9.5v9.5H2zM12.5 2H22v9.5h-9.5zM2 12.5h9.5V22H2zM12.5 12.5H22V22h-9.5z" />
     </svg>
   );
 }
