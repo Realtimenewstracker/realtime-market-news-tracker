@@ -22,7 +22,7 @@ export const Route = createFileRoute("/auth")({
       { property: "og:title", content: "Sign in or register — TrackIndia" },
       {
         property: "og:description",
-        content: "Username or email login, plus Google sign-in, for the TrackIndia live market tape.",
+        content: "Username or email login, plus Google and Apple sign-in, for TrackIndia markets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -107,15 +107,19 @@ function AuthPage() {
     }
   };
 
-  const google = async () => {
+  const socialSignIn = async (provider: "google" | "apple") => {
+    if (loading) return;
+    setLoading(true);
     try {
-      const res = await lovable.auth.signInWithOAuth("google", {
+      const res = await lovable.auth.signInWithOAuth(provider, {
         redirect_uri: window.location.origin,
       });
       if (res.error) throw res.error;
       if (!("redirected" in res && res.redirected)) router.navigate({ to: "/" });
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Google sign-in failed");
+      toast.error(err instanceof Error ? err.message : `${provider === "apple" ? "Apple" : "Google"} sign-in failed`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -141,16 +145,17 @@ function AuthPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signin"
             ? "Use your username or email with your password."
-            : "Pick a username, register with email — or continue with Google. Your 7-day free trial starts when you create your account."}
+            : "Pick a username, register with email — or continue with Google or Apple. Your 7-day free trial starts when you create your account."}
         </p>
 
-        <button
-          onClick={google}
-          type="button"
-          className="mt-5 w-full glass glass-hover rounded-full h-11 flex items-center justify-center gap-2 text-sm font-semibold text-foreground"
-        >
-          <GoogleMark /> Continue with Google
-        </button>
+        <div className="mt-5 space-y-2.5">
+          <Button onClick={() => socialSignIn("google")} type="button" variant="outline" disabled={loading} className="w-full h-11 font-semibold">
+            <GoogleMark /> Continue with Google
+          </Button>
+          <Button onClick={() => socialSignIn("apple")} type="button" variant="outline" disabled={loading} className="w-full h-11 font-semibold">
+            <AppleMark /> Continue with Apple
+          </Button>
+        </div>
 
         <div className="my-5 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
           <span className="h-px flex-1 bg-white/70" /> or
@@ -258,6 +263,14 @@ function GoogleMark() {
       <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.9 7.2l7.6 5.9c4.4-4.1 7.1-10.2 7.1-17.6z" />
       <path fill="#FBBC05" d="M10.3 28.7a14.6 14.6 0 0 1 0-9.4l-7.8-6.1a24 24 0 0 0 0 21.6l7.8-6.1z" />
       <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.9l-7.6-5.9c-2.1 1.4-4.8 2.3-8.3 2.3-6.4 0-11.8-3.7-13.7-9.8l-7.8 6.1C6.4 42.6 14.6 48 24 48z" />
+    </svg>
+  );
+}
+
+function AppleMark() {
+  return (
+    <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true">
+      <path d="M318.7 268.7c-.2-44.3 36.2-65.9 37.9-67-20.6-30-52.6-34.1-63.9-34.4-26.9-2.8-53 16.1-66.7 16.1-13.9 0-34.9-15.8-57.6-15.4-29.6.4-57.3 17.6-72.6 44.2-31.4 54.5-8 134.6 22.1 178.5 15 21.6 32.7 45.8 55.8 44.9 22.4-.9 30.8-14.5 57.9-14.5 26.9 0 34.4 14.5 58.1 14 24.1-.4 39.3-21.7 53.8-43.5 17.3-25.3 24.4-50.1 24.8-51.4-.5-.2-47-18-47.5-71.9ZM270.4 138.8c12.1-14.7 20.5-35.2 18.2-55.7-17.5.7-38.6 11.7-51.2 26.4-11.3 13-21.2 34.6-18.6 54.4 19.6 1.5 39.6-9.9 51.6-25.1Z" />
     </svg>
   );
 }
