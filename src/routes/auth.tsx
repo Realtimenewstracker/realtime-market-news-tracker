@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    next: typeof search.next === "string" && search.next.startsWith("/") && !search.next.startsWith("//") && !search.next.includes("\\") && !/[\r\n]/.test(search.next) ? search.next : "/",
+  }),
   head: () => ({
     meta: [
       { title: "Sign in or register — TrackIndia" },
@@ -32,6 +35,8 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
+  const { next } = Route.useSearch();
+  const returnTo = () => `${window.location.origin}/auth?next=${encodeURIComponent(next)}`;
   const router = useRouter();
   const { user } = useSession();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -42,8 +47,8 @@ function AuthPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) router.navigate({ to: "/" });
-  }, [user, router]);
+    if (user) window.location.assign(next);
+  }, [user, router, next]);
 
   const signIn = async () => {
     const tokens = await signInWithIdentifier({
@@ -62,7 +67,7 @@ function AuthPage() {
       email: email.trim(),
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: returnTo(),
         data: { display_name: username.trim() || email.split("@")[0] },
       },
     });
@@ -90,7 +95,7 @@ function AuthPage() {
     try {
       if (mode === "signup") await signUp();
       else await signIn();
-      if (mode === "signin" || (await supabase.auth.getSession()).data.session) router.navigate({ to: "/" });
+      if (mode === "signin" || (await supabase.auth.getSession()).data.session) window.location.assign(next);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Auth failed";
       toast.error(
@@ -112,10 +117,10 @@ function AuthPage() {
     setLoading(true);
     try {
       const res = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: window.location.origin,
+        redirect_uri: returnTo(),
       });
       if (res.error) throw res.error;
-      if (!("redirected" in res && res.redirected)) router.navigate({ to: "/" });
+      if (!("redirected" in res && res.redirected)) window.location.assign(next);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : `${provider === "apple" ? "Apple" : provider === "microsoft" ? "Microsoft" : "Google"} sign-in failed`);
     } finally {

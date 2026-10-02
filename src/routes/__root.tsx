@@ -127,7 +127,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const isAuth = useRouterState({ select: (s) => s.location.pathname === "/auth" });
+  const isAuth = useRouterState({ select: (s) => s.location.pathname === "/auth" || s.location.pathname === "/.lovable/oauth/consent" });
   return (
     <QueryClientProvider client={queryClient}>
       <div className="iridescent-bg" aria-hidden />

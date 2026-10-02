@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSubscription } from "@/hooks/use-subscription";
 import { Paywall } from "@/components/paywall";
 
-const OPEN_PATHS = ["/auth", "/pricing"];
+const OPEN_PATHS = ["/auth", "/pricing", "/.lovable/oauth/consent"];
 
 export function SubscriptionGate({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
