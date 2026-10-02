@@ -9,11 +9,10 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "Stock Pulse Tracker"
+const SITE_NAME = "TrackIndia"
 const SENDER_DOMAIN = "notify.trackmarket.live"
 const ROOT_DOMAIN = "trackmarket.live"
-const FROM_DOMAIN = "trackmarket.live"
-const SITE_URL = `https://${ROOT_DOMAIN}`
+const SITE_URL = `https://www.${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
 // owns only the email decisions: subjects, templates, and per-type props.
@@ -23,7 +22,7 @@ export const Route = createFileRoute("/lovable/email/auth/webhook")({
       POST: ({ request }) => {
         const handler = createAuthEmailHandler({
           apiKey: process.env['LOVABLE_API_KEY']!,
-          from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+          from: `${SITE_NAME} <noreply@${SENDER_DOMAIN}>`,
           senderDomain: SENDER_DOMAIN,
           sendUrl: process.env['LOVABLE_SEND_URL'],
           emails: {
