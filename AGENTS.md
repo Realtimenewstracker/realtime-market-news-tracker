@@ -12,3 +12,4 @@
 - Market event and IPO views read the exchange's current public feeds through server functions, not static seed rows, because date-sensitive facts must carry their source and cannot be invented.
 - Market research screens share the existing news and quote functions and degrade to explicit unavailability rather than showing fabricated live numbers.
 - Cashfree is the planned payment provider; plan selection only records intent and must never activate paid access without verified payment confirmation.
+- Account emails use the managed auth email handler and templates on the verified sender subdomain, because delivery and retries belong to Lovable rather than app-owned jobs.
