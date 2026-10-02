@@ -9,113 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as AccountRouteImport } from './routes/account'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as CancellationRouteImport } from './routes/cancellation'
-import { Route as CommoditiesRouteImport } from './routes/commodities'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CryptoRouteImport } from './routes/crypto'
-import { Route as EventsRouteImport } from './routes/events'
-import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
-import { Route as IpoRouteImport } from './routes/ipo'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as PoliciesRouteImport } from './routes/policies'
-import { Route as PortfolioRouteImport } from './routes/portfolio'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as SearchRouteImport } from './routes/search'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as PoliciesRouteImport } from './routes/policies'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as IpoRouteImport } from './routes/ipo'
+import { Route as GeopoliticsRouteImport } from './routes/geopolitics'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as CryptoRouteImport } from './routes/crypto'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CommoditiesRouteImport } from './routes/commodities'
+import { Route as CancellationRouteImport } from './routes/cancellation'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as MarketSymbolRouteImport } from './routes/market.$symbol'
-import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
-import { Route as ApiPublicBackfillAiRouteImport } from './routes/api/public/backfill-ai'
-import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
-import { Route as ApiPublicIpoAlertsRouteImport } from './routes/api/public/ipo-alerts'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as ApiPublicRefreshTickersRouteImport } from './routes/api/public/refresh-tickers'
-import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicIpoAlertsRouteImport } from './routes/api/public/ipo-alerts'
+import { Route as ApiPublicIngestRssRouteImport } from './routes/api/public/ingest-rss'
+import { Route as ApiPublicBackfillAiRouteImport } from './routes/api/public/backfill-ai'
+import { Route as ApiPublicAskAiRouteImport } from './routes/api/public/ask-ai'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccountRoute = AccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CancellationRoute = CancellationRouteImport.update({
-  id: '/cancellation',
-  path: '/cancellation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommoditiesRoute = CommoditiesRouteImport.update({
-  id: '/commodities',
-  path: '/commodities',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CryptoRoute = CryptoRouteImport.update({
-  id: '/crypto',
-  path: '/crypto',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EventsRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GeopoliticsRoute = GeopoliticsRouteImport.update({
-  id: '/geopolitics',
-  path: '/geopolitics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IpoRoute = IpoRouteImport.update({
-  id: '/ipo',
-  path: '/ipo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PoliciesRoute = PoliciesRouteImport.update({
-  id: '/policies',
-  path: '/policies',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortfolioRoute = PortfolioRouteImport.update({
-  id: '/portfolio',
-  path: '/portfolio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
+const WatchlistRoute = WatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -123,9 +48,89 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WatchlistRoute = WatchlistRouteImport.update({
-  id: '/watchlist',
-  path: '/watchlist',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliciesRoute = PoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IpoRoute = IpoRouteImport.update({
+  id: '/ipo',
+  path: '/ipo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GeopoliticsRoute = GeopoliticsRouteImport.update({
+  id: '/geopolitics',
+  path: '/geopolitics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CryptoRoute = CryptoRouteImport.update({
+  id: '/crypto',
+  path: '/crypto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommoditiesRoute = CommoditiesRouteImport.update({
+  id: '/commodities',
+  path: '/commodities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CancellationRoute = CancellationRouteImport.update({
+  id: '/cancellation',
+  path: '/cancellation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketSymbolRoute = MarketSymbolRouteImport.update({
+  id: '/market/$symbol',
+  path: '/market/$symbol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
@@ -134,29 +139,9 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
-const MarketSymbolRoute = MarketSymbolRouteImport.update({
-  id: '/market/$symbol',
-  path: '/market/$symbol',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
-  id: '/api/public/ask-ai',
-  path: '/api/public/ask-ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicBackfillAiRoute = ApiPublicBackfillAiRouteImport.update({
-  id: '/api/public/backfill-ai',
-  path: '/api/public/backfill-ai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
-  id: '/api/public/ingest-rss',
-  path: '/api/public/ingest-rss',
+const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
+  id: '/api/public/refresh-tickers',
+  path: '/api/public/refresh-tickers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicIpoAlertsRoute = ApiPublicIpoAlertsRouteImport.update({
@@ -164,19 +149,34 @@ const ApiPublicIpoAlertsRoute = ApiPublicIpoAlertsRouteImport.update({
   path: '/api/public/ipo-alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicRefreshTickersRoute = ApiPublicRefreshTickersRouteImport.update({
-  id: '/api/public/refresh-tickers',
-  path: '/api/public/refresh-tickers',
+const ApiPublicIngestRssRoute = ApiPublicIngestRssRouteImport.update({
+  id: '/api/public/ingest-rss',
+  path: '/api/public/ingest-rss',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
-  id: '/lovable/email/auth/preview',
-  path: '/lovable/email/auth/preview',
+const ApiPublicBackfillAiRoute = ApiPublicBackfillAiRouteImport.update({
+  id: '/api/public/backfill-ai',
+  path: '/api/public/backfill-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAskAiRoute = ApiPublicAskAiRouteImport.update({
+  id: '/api/public/ask-ai',
+  path: '/api/public/ask-ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
   id: '/lovable/email/auth/webhook',
   path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -397,116 +397,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account': {
-      id: '/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cancellation': {
-      id: '/cancellation'
-      path: '/cancellation'
-      fullPath: '/cancellation'
-      preLoaderRoute: typeof CancellationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/commodities': {
-      id: '/commodities'
-      path: '/commodities'
-      fullPath: '/commodities'
-      preLoaderRoute: typeof CommoditiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/crypto': {
-      id: '/crypto'
-      path: '/crypto'
-      fullPath: '/crypto'
-      preLoaderRoute: typeof CryptoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/geopolitics': {
-      id: '/geopolitics'
-      path: '/geopolitics'
-      fullPath: '/geopolitics'
-      preLoaderRoute: typeof GeopoliticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ipo': {
-      id: '/ipo'
-      path: '/ipo'
-      fullPath: '/ipo'
-      preLoaderRoute: typeof IpoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/policies': {
-      id: '/policies'
-      path: '/policies'
-      fullPath: '/policies'
-      preLoaderRoute: typeof PoliciesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portfolio': {
-      id: '/portfolio'
-      path: '/portfolio'
-      fullPath: '/portfolio'
-      preLoaderRoute: typeof PortfolioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
+    '/watchlist': {
+      id: '/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof WatchlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -516,18 +411,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/watchlist': {
-      id: '/watchlist'
-      path: '/watchlist'
-      fullPath: '/watchlist'
-      preLoaderRoute: typeof WatchlistRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/policies': {
+      id: '/policies'
+      path: '/policies'
+      fullPath: '/policies'
+      preLoaderRoute: typeof PoliciesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ipo': {
+      id: '/ipo'
+      path: '/ipo'
+      fullPath: '/ipo'
+      preLoaderRoute: typeof IpoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/geopolitics': {
+      id: '/geopolitics'
+      path: '/geopolitics'
+      fullPath: '/geopolitics'
+      preLoaderRoute: typeof GeopoliticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crypto': {
+      id: '/crypto'
+      path: '/crypto'
+      fullPath: '/crypto'
+      preLoaderRoute: typeof CryptoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/commodities': {
+      id: '/commodities'
+      path: '/commodities'
+      fullPath: '/commodities'
+      preLoaderRoute: typeof CommoditiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cancellation': {
+      id: '/cancellation'
+      path: '/cancellation'
+      fullPath: '/cancellation'
+      preLoaderRoute: typeof CancellationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market/$symbol': {
@@ -537,39 +530,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketSymbolRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/ask-ai': {
-      id: '/api/public/ask-ai'
-      path: '/api/public/ask-ai'
-      fullPath: '/api/public/ask-ai'
-      preLoaderRoute: typeof ApiPublicAskAiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/backfill-ai': {
-      id: '/api/public/backfill-ai'
-      path: '/api/public/backfill-ai'
-      fullPath: '/api/public/backfill-ai'
-      preLoaderRoute: typeof ApiPublicBackfillAiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/ingest-rss': {
-      id: '/api/public/ingest-rss'
-      path: '/api/public/ingest-rss'
-      fullPath: '/api/public/ingest-rss'
-      preLoaderRoute: typeof ApiPublicIngestRssRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/ipo-alerts': {
-      id: '/api/public/ipo-alerts'
-      path: '/api/public/ipo-alerts'
-      fullPath: '/api/public/ipo-alerts'
-      preLoaderRoute: typeof ApiPublicIpoAlertsRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/refresh-tickers': {
@@ -579,11 +544,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicRefreshTickersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/auth/preview': {
-      id: '/lovable/email/auth/preview'
-      path: '/lovable/email/auth/preview'
-      fullPath: '/lovable/email/auth/preview'
-      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+    '/api/public/ipo-alerts': {
+      id: '/api/public/ipo-alerts'
+      path: '/api/public/ipo-alerts'
+      fullPath: '/api/public/ipo-alerts'
+      preLoaderRoute: typeof ApiPublicIpoAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ingest-rss': {
+      id: '/api/public/ingest-rss'
+      path: '/api/public/ingest-rss'
+      fullPath: '/api/public/ingest-rss'
+      preLoaderRoute: typeof ApiPublicIngestRssRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/backfill-ai': {
+      id: '/api/public/backfill-ai'
+      path: '/api/public/backfill-ai'
+      fullPath: '/api/public/backfill-ai'
+      preLoaderRoute: typeof ApiPublicBackfillAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ask-ai': {
+      id: '/api/public/ask-ai'
+      path: '/api/public/ask-ai'
+      fullPath: '/api/public/ask-ai'
+      preLoaderRoute: typeof ApiPublicAskAiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lovable/email/auth/webhook': {
@@ -591,6 +584,13 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/auth/webhook'
       fullPath: '/lovable/email/auth/webhook'
       preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
