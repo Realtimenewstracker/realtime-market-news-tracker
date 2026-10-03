@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>) => ({
-    next: typeof search.next === "string" && search.next.startsWith("/") && !search.next.startsWith("//") && !search.next.includes("\\") && !/[\r\n]/.test(search.next) ? search.next : "/",
+    next: typeof search.next === "string" && search.next.startsWith("/") && !search.next.startsWith("//") && !search.next.includes("\\") && !/[\r\n]/.test(search.next) ? search.next : undefined,
   }),
   head: () => ({
     meta: [
@@ -35,7 +35,8 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { next } = Route.useSearch();
+  const { next: requestedNext } = Route.useSearch();
+  const next = requestedNext ?? "/";
   const returnTo = () => `${window.location.origin}/auth?next=${encodeURIComponent(next)}`;
   const router = useRouter();
   const { user } = useSession();

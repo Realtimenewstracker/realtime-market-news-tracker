@@ -12,10 +12,10 @@ export default defineTool({
   },
   annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   handler: async ({ kind, value }, ctx) => {
-    const db = await requireActiveMember(ctx);
+    const { db, userId } = await requireActiveMember(ctx);
     const normalized = kind === "symbol" ? value.trim().toUpperCase() : value.trim().toLowerCase();
     const { error } = await db.from("watchlist_items").upsert(
-      { user_id: ctx.getUserId(), kind, value: normalized }, { onConflict: "user_id,kind,value" },
+      { user_id: userId, kind, value: normalized }, { onConflict: "user_id,kind,value" },
     );
     if (error) throw new Error("Could not save the watchlist item.");
     return { content: [{ type: "text", text: `Watching ${normalized}.` }], structuredContent: { kind, value: normalized } };
