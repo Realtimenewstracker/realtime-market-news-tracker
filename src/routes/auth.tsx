@@ -139,7 +139,7 @@ function AuthPage() {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(target, {
-      redirectTo: window.location.origin,
+      redirectTo: returnTo(),
     });
     if (error) toast.error(error.message);
     else toast.success("Reset link sent — check your inbox.");
