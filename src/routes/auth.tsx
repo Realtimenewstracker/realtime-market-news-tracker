@@ -11,9 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    next: typeof search.next === "string" && search.next.startsWith("/") && !search.next.startsWith("//") && !search.next.includes("\\") && !/[\r\n]/.test(search.next) ? search.next : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>): { next?: string } => {
+    const candidate = search.next;
+    return typeof candidate === "string" && candidate.startsWith("/") && !candidate.startsWith("//") && !candidate.includes("\\") && !/[\r\n]/.test(candidate)
+      ? { next: candidate }
+      : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in or register — TrackIndia" },
