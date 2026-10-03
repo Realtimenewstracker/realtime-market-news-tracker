@@ -11,9 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    next: typeof search.next === "string" && search.next.startsWith("/") && !search.next.startsWith("//") && !search.next.includes("\\") && !/[\r\n]/.test(search.next) ? search.next : "/",
-  }),
+  validateSearch: (search: Record<string, unknown>): { next?: string } => {
+    const candidate = search.next;
+    return typeof candidate === "string" && candidate.startsWith("/") && !candidate.startsWith("//") && !candidate.includes("\\") && !/[\r\n]/.test(candidate)
+      ? { next: candidate }
+      : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in or register — TrackIndia" },
@@ -35,7 +38,8 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { next } = Route.useSearch();
+  const { next: requestedNext } = Route.useSearch();
+  const next = requestedNext ?? "/";
   const returnTo = () => `${window.location.origin}/auth?next=${encodeURIComponent(next)}`;
   const router = useRouter();
   const { user } = useSession();
@@ -135,7 +139,7 @@ function AuthPage() {
       return;
     }
     const { error } = await supabase.auth.resetPasswordForEmail(target, {
-      redirectTo: window.location.origin,
+      redirectTo: returnTo(),
     });
     if (error) toast.error(error.message);
     else toast.success("Reset link sent — check your inbox.");

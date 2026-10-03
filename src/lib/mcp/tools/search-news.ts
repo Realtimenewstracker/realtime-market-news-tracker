@@ -13,7 +13,7 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ query, limit }, ctx) => {
-    const db = await requireActiveMember(ctx);
+    const { db } = await requireActiveMember(ctx);
     let request = db.from("news_articles")
       .select("title,source,url,published_at,ai_summary,summary,impact,sentiment,tickers")
       .order("published_at", { ascending: false }).limit(Math.min(100, limit * 5));

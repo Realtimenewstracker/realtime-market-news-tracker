@@ -7,9 +7,9 @@ export default defineTool({
   description: "Read the connected account's saved stock symbols and news keywords.",
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_args, ctx) => {
-    const db = await requireActiveMember(ctx);
+    const { db, userId } = await requireActiveMember(ctx);
     const { data, error } = await db.from("watchlist_items")
-      .select("kind,value,created_at").eq("user_id", ctx.getUserId())
+      .select("kind,value,created_at").eq("user_id", userId)
       .order("created_at", { ascending: false }).limit(100);
     if (error) throw new Error("Watchlist is temporarily unavailable.");
     const items = (data ?? []).map(({ kind, value, created_at }) => ({ kind, value, created_at }));

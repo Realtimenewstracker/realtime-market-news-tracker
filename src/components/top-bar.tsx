@@ -66,6 +66,7 @@ export function TopBar() {
         ) : (
           <Link
             to="/auth"
+            search={{}}
             className="glass glass-hover rounded-full h-9 md:h-10 px-3 md:px-4 text-foreground text-sm font-semibold flex items-center gap-1.5"
           >
             <LogIn size={14} /> <span className="hidden sm:inline">Sign in</span>

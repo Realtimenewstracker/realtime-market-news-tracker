@@ -1,4 +1,6 @@
 # TrackIndia 1.1
+- [x] Add account-approved MCP access to sourced market news and each user's watchlist, gated by active membership.
+- [ ] Verify complete assistant authorization and watchlist read/write: blocked until a real external assistant starts an OAuth authorization request (a fabricated request is rejected).
 - [x] Require login before the market screens; start and show a seven-day trial, then gate expired access.
 - [x] Remove heavy feed animations and visitor-triggered ingestion; refresh feed automatically while visible.
 - [x] Exclude obvious non-market topics during ingestion and from historical feed searches.

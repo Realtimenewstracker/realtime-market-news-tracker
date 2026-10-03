@@ -13,7 +13,7 @@ export function SubscriptionGate({ children }: { children: ReactNode }) {
 
   const open = OPEN_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   const account = pathname === "/account";
-  useEffect(() => { if (!open && !loading && !signedIn) navigate({ to: "/auth", replace: true }); }, [open, loading, signedIn, navigate]);
+  useEffect(() => { if (!open && !loading && !signedIn) navigate({ to: "/auth", search: {}, replace: true }); }, [open, loading, signedIn, navigate]);
   if (open) return <>{children}</>;
   if (loading) return <div className="min-h-[60vh] grid place-items-center text-muted-foreground">Loading account…</div>;
   if (!signedIn) return null;
