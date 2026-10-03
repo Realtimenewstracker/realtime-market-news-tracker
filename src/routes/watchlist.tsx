@@ -67,7 +67,7 @@ function WatchlistPage() {
     return (
       <section className="max-w-md mx-auto mt-16 px-4 text-center glass-strong rounded-3xl p-8">
         <h1 className="font-display text-2xl">Sign in to build a watchlist</h1>
-        <Link to="/auth" className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
+        <Link to="/auth" search={{}} className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
       </section>
     );
 

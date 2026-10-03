@@ -56,7 +56,7 @@ function PortfolioPage() {
     <PageBox>
       <h1 className="font-display text-2xl">Sign in to build your book</h1>
       <p className="text-muted-foreground text-sm mt-1">Positions are saved to your account.</p>
-      <Link to="/auth" className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
+      <Link to="/auth" search={{}} className="inline-block mt-4 rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold">Sign in</Link>
     </PageBox>
   );
 

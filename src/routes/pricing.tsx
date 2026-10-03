@@ -43,7 +43,7 @@ function PricingPage() {
 
   const choose = async (plan: PlanId) => {
     if (!signedIn) {
-      router.navigate({ to: "/auth" });
+      router.navigate({ to: "/auth", search: {} });
       return;
     }
     setBusy(plan);
