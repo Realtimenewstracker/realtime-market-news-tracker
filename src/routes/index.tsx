@@ -71,9 +71,24 @@ function FeedPage() {
     };
   }, [news]);
 
+  const { topNews, orderedNews } = useMemo(() => {
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" });
+    const dayKey = (date: Date) => today.format(date);
+    const currentDay = dayKey(new Date());
+    const top = (news ?? [])
+      .filter((item) => {
+        const published = new Date(item.published_at);
+        return !Number.isNaN(published.getTime()) && dayKey(published) === currentDay;
+      })
+      .sort((a, b) => (b.impact ?? 0) - (a.impact ?? 0) || Date.parse(b.published_at) - Date.parse(a.published_at))
+      .slice(0, 5);
+    const topIds = new Set(top.map((item) => item.id));
+    return { topNews: top, orderedNews: [...top, ...(news ?? []).filter((item) => !topIds.has(item.id))] };
+  }, [news]);
+
   return (
     <>
-      <TickerBar tickers={tickers ?? []} />
+      <TickerBar tickers={tickers ?? []} headlines={topNews as NewsItem[]} onHeadlineClick={setSelected} />
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-6 md:pt-8 pb-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 min-w-0">
           <div className="min-w-0">
@@ -127,7 +142,7 @@ function FeedPage() {
           <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
         ) : (
           <div className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {news?.map((item) => <NewsCard key={item.id} item={item as NewsItem} onClick={() => setSelected(item as NewsItem)} />)}
+            {orderedNews.map((item) => <NewsCard key={item.id} item={item as NewsItem} onClick={() => setSelected(item as NewsItem)} />)}
           </div>
         )}
       </section>
