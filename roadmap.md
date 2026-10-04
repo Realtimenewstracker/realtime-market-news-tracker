@@ -3,7 +3,7 @@
 - [x] Prompt for home-screen installation on each eligible visit until installed.
 - [x] Keep signed-in access free without trial expiry until the owner changes it; update all membership copy.
 - [x] Lead today's news tape with the five most impactful sourced headlines, then continue normally.
-- [x] Add account-approved MCP access to sourced market news and each user's watchlist, gated by active membership.
+- [x] Add account-approved MCP access to sourced market news and each user's watchlist, gated by signed-in account access.
 - [ ] Verify complete assistant authorization and watchlist read/write: blocked until a real external assistant starts an OAuth authorization request (a fabricated request is rejected).
 - [x] Require login before the market screens; keep account access free without trial expiry until the owner changes it.
 - [x] Remove heavy feed animations and visitor-triggered ingestion; refresh feed automatically while visible.
@@ -13,6 +13,6 @@
 - [x] Add search and stock/index quotes, chart, headlines, events; mark unavailable company financials honestly.
 - [x] Mobile dock: Home, Search, Watchlist, Notifications, Account; add installable app icon.
 - [x] Free-source-only market data; Cashfree is planned, not connected; plan preference does not grant access.
-- [ ] Authenticated trial, live market-source and expiration checks: blocked until a preview session is available.
+- [x] Verify signed-in market feed, daily tape headlines, account free status, and mobile layout in preview.
 - [ ] Cashfree checkout and verified subscription activation: blocked until merchant credentials and account onboarding.
 - [ ] Full financial statements and verified policy/beneficiary rankings: unavailable from the selected free sources.
