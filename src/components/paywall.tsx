@@ -11,8 +11,8 @@ export function Paywall() {
         </div>
         <h1 className="mt-4 font-display text-2xl font-semibold text-foreground">Membership information</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Keep the live tape, IPO tracker, policy tracker and alerts running for ₹{PLANS.monthly.amount}/month
-          or ₹{PLANS.yearly.amount}/year.
+          TrackIndia is free for registered users until further notice. Planned prices of ₹{PLANS.monthly.amount}/month
+          or ₹{PLANS.yearly.amount}/year are not in effect.
         </p>
         <Link
           to="/pricing"

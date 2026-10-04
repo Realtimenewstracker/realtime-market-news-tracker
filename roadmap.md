@@ -1,11 +1,11 @@
 # TrackIndia 1.1
-- [ ] Use the uploaded official logo across the site and app icons.
-- [ ] Prompt for home-screen installation on each eligible visit until installed.
-- [ ] Keep signed-in access free without trial expiry until the owner changes it; update all membership copy.
-- [ ] Lead today's news tape with the five most impactful sourced headlines, then continue normally.
+- [x] Use the uploaded official logo across the site and app icons.
+- [x] Prompt for home-screen installation on each eligible visit until installed.
+- [x] Keep signed-in access free without trial expiry until the owner changes it; update all membership copy.
+- [x] Lead today's news tape with the five most impactful sourced headlines, then continue normally.
 - [x] Add account-approved MCP access to sourced market news and each user's watchlist, gated by active membership.
 - [ ] Verify complete assistant authorization and watchlist read/write: blocked until a real external assistant starts an OAuth authorization request (a fabricated request is rejected).
-- [x] Require login before the market screens; start and show a seven-day trial, then gate expired access.
+- [x] Require login before the market screens; keep account access free without trial expiry until the owner changes it.
 - [x] Remove heavy feed animations and visitor-triggered ingestion; refresh feed automatically while visible.
 - [x] Exclude obvious non-market topics during ingestion and from historical feed searches.
 - [x] Replace dated IPO seeds with sourced current exchange issues; show policy-related sourced news instead of old seeds.

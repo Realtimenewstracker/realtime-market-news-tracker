@@ -13,5 +13,7 @@
 - Market research screens share the existing news and quote functions and degrade to explicit unavailability rather than showing fabricated live numbers.
 - Cashfree is the planned payment provider; plan selection only records intent and must never activate paid access without verified payment confirmation.
 - Account emails use the managed auth email handler and templates on the verified sender subdomain, because delivery and retries belong to Lovable rather than app-owned jobs.
-- The MCP server uses account OAuth and forwards verified user tokens to row-level policies; this keeps private watchlists and paid access scoped to their owner.
+- The MCP server uses account OAuth and forwards verified user tokens to row-level policies; this keeps private watchlists scoped to their owner.
+- The five leading tape headlines come from a separate India-calendar-day impact-ranked market-news query; this avoids choosing only from the feed's latest page while retaining its regular chronological order afterward.
+- The home-screen prompt uses browser install eligibility or iOS Share instructions without cross-visit dismissal storage; this reoffers installation on future visits but respects installed display mode.
 - Membership remains account-scoped but never blocks on trial expiration while free access is enabled; keep payment activation tied to verified provider confirmation so planned prices cannot silently charge users.
