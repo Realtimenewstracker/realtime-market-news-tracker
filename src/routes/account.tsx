@@ -44,13 +44,7 @@ function AccountPage() {
           <Row
             label="Membership"
             value={
-              !subscription
-                ? "—"
-                : subscription.in_trial
-                  ? `Free trial · ${subscription.days_left} day${subscription.days_left === 1 ? "" : "s"} left`
-                  : subscription.active
-                    ? `${subscription.plan} · active`
-                    : "Expired"
+              "Free access · no end date announced"
             }
           />
         </div>
@@ -58,7 +52,7 @@ function AccountPage() {
           to="/pricing"
           className="mt-4 block w-full rounded-full glass-btn px-4 py-2 text-center text-sm font-semibold"
         >
-          Manage plan
+          View future plans
         </Link>
         <Button
           onClick={async () => {

@@ -14,3 +14,4 @@
 - Cashfree is the planned payment provider; plan selection only records intent and must never activate paid access without verified payment confirmation.
 - Account emails use the managed auth email handler and templates on the verified sender subdomain, because delivery and retries belong to Lovable rather than app-owned jobs.
 - The MCP server uses account OAuth and forwards verified user tokens to row-level policies; this keeps private watchlists and paid access scoped to their owner.
+- Membership remains account-scoped but never blocks on trial expiration while free access is enabled; keep payment activation tied to verified provider confirmation so planned prices cannot silently charge users.

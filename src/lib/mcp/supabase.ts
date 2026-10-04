@@ -27,14 +27,6 @@ export async function requireActiveMember(ctx: ToolContext) {
   const userId = ctx.getUserId();
   if (!userId) throw new Error("An account connection is required.");
   const db = supabaseForUser(ctx);
-  const { data, error } = await db.from("subscriptions")
-    .select("status,trial_ends_at,current_period_end")
-    .eq("user_id", userId).maybeSingle();
-  if (error) throw new Error("Membership status is unavailable.");
-  const now = Date.now();
-  if (!data || !(
-    (data.status === "trialing" && new Date(data.trial_ends_at).getTime() > now) ||
-    (data.status === "active" && data.current_period_end && new Date(data.current_period_end).getTime() > now)
-  )) throw new Error("An active trial or subscription is required.");
+  // Access remains account-scoped through RLS, but is free regardless of the old trial date.
   return { db, userId };
 }

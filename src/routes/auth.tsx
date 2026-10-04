@@ -77,7 +77,7 @@ function AuthPage() {
     });
     if (error) throw error;
     if (!data.session) {
-      toast.success("Account created. Confirm your email, then sign in to start your 7-day free trial.");
+      toast.success("Account created. Confirm your email, then sign in for free access.");
       setMode("signin");
       setIdentifier(email.trim());
       return;
@@ -89,7 +89,7 @@ function AuthPage() {
         toast("Signed up, but that username was taken — set another in Account.");
       }
     }
-    toast.success("Your 7-day free trial has started.");
+    toast.success("Your free access is ready.");
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -154,7 +154,7 @@ function AuthPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {mode === "signin"
             ? "Use your username or email with your password."
-            : "Pick a username, register with email — or continue with Google, Apple or Microsoft. Your 7-day free trial starts when you create your account."}
+            : "Pick a username, register with email — or continue with Google, Apple or Microsoft. Access is currently free."}
         </p>
 
         <div className="mt-5 space-y-2.5">
