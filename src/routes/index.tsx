@@ -22,6 +22,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "google-site-verification", content: "442eRMWlAUeXj6bwTQBQnoVnFFxHyOxzj5l4G06ylh8" },
     ],
   }),
   component: FeedPage,
@@ -195,5 +196,4 @@ function EmptyState({ filtered, onReset }: { filtered?: boolean; onReset?: () =>
       )}
     </div>
   );
-
 }
