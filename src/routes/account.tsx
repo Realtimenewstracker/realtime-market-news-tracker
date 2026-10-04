@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useSubscription } from "@/hooks/use-subscription";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -21,7 +20,6 @@ export const Route = createFileRoute("/account")({
 
 function AccountPage() {
   const { user, loading } = useSession();
-  const { subscription } = useSubscription();
   const router = useRouter();
   const navigate = useNavigate();
 

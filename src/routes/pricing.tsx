@@ -37,7 +37,7 @@ const FEATURES = [
 
 function PricingPage() {
   const router = useRouter();
-  const { subscription, signedIn } = useSubscription();
+  const { signedIn } = useSubscription();
   const checkout = useServerFn(startCheckout);
   const [busy, setBusy] = useState<PlanId | null>(null);
 
@@ -71,11 +71,7 @@ function PricingPage() {
         <p className="mt-2 text-sm md:text-base text-muted-foreground">
            TrackIndia is free for registered users until further notice. Payment is not available yet; these are future planned prices.
         </p>
-        {subscription && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            Your account has free access, with no end date announced.
-          </p>
-        )}
+        {signedIn && <p className="mt-3 text-xs text-muted-foreground">Your account has free access, with no end date announced.</p>}
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">

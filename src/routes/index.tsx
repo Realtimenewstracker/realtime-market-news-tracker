@@ -10,7 +10,7 @@ import { NewsDetail } from "@/components/news-detail";
 import { MarketNewsSection } from "@/components/market-news-section";
 import { LiveIpoTracker } from "@/components/live-ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
-import { listNews, listTickers } from "@/lib/data.functions";
+import { listNews, listTickers, listTodayTopNews } from "@/lib/data.functions";
 
 
 export const Route = createFileRoute("/")({
@@ -32,6 +32,7 @@ export const Route = createFileRoute("/")({
 function FeedPage() {
   const listNewsFn = useServerFn(listNews);
   const listTickersFn = useServerFn(listTickers);
+  const listTodayTopNewsFn = useServerFn(listTodayTopNews);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
   const [view, setView] = useState<"news" | "ipo" | "policy">("news");
@@ -60,6 +61,13 @@ function FeedPage() {
     refetchIntervalInBackground: false,
   });
 
+  const { data: dailyTop } = useQuery({
+    queryKey: ["today-top-news"],
+    queryFn: () => listTodayTopNewsFn(),
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
+  });
+
 
   const stats = useMemo(() => {
     const list = news ?? [];
@@ -72,19 +80,12 @@ function FeedPage() {
   }, [news]);
 
   const { topNews, orderedNews } = useMemo(() => {
-    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" });
-    const dayKey = (date: Date) => today.format(date);
-    const currentDay = dayKey(new Date());
-    const top = (news ?? [])
-      .filter((item) => {
-        const published = new Date(item.published_at);
-        return !Number.isNaN(published.getTime()) && dayKey(published) === currentDay;
-      })
-      .sort((a, b) => (b.impact ?? 0) - (a.impact ?? 0) || Date.parse(b.published_at) - Date.parse(a.published_at))
-      .slice(0, 5);
+    const top = isFiltered(filters)
+      ? (news ?? []).filter((item) => dailyTop?.some((candidate) => candidate.id === item.id)).slice(0, 5)
+      : (dailyTop ?? []);
     const topIds = new Set(top.map((item) => item.id));
     return { topNews: top, orderedNews: [...top, ...(news ?? []).filter((item) => !topIds.has(item.id))] };
-  }, [news]);
+  }, [news, dailyTop, filters]);
 
   return (
     <>

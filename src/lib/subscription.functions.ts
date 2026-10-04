@@ -61,7 +61,7 @@ export const getMySubscription = createServerFn({ method: "GET" })
       .insert({ user_id: context.userId })
       .select("plan,status,trial_ends_at,current_period_end")
       .single();
-    if (error || !created) throw new Error(error?.message ?? "Could not start trial");
+    if (error || !created) throw new Error(error?.message ?? "Could not load membership");
     return shape(created);
   });
 
