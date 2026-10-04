@@ -1,19 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { LogIn, Waves, House, Search, Star, UserRound, Settings } from "lucide-react";
+import { LogIn, House, Search, Star, UserRound, Settings } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { AlertsBell } from "@/components/alerts-bell";
 import { MobileAlertsDockItem } from "@/components/mobile-alerts-sheet";
+import logo from "@/assets/trackindia-official-logo.jpg.asset.json";
 
 export function TopBar() {
   const { user } = useSession();
 
   return (
     <header className="px-3 md:px-8 pt-3 md:pt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between md:gap-3">
-      <Link to="/" className="flex min-w-0 items-center gap-2 group">
-        <div className="w-8 h-8 md:w-9 md:h-9 shrink-0 rounded-2xl glass flex items-center justify-center">
-          <Waves size={15} className="text-primary" />
-        </div>
-        <span className="font-display font-semibold text-foreground text-base md:text-lg tracking-tight truncate">
+      <Link to="/" className="flex min-w-0 md:shrink-0 items-center gap-2 group">
+        <img src={logo.url} alt="TrackIndia logo" className="w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full object-contain bg-card" />
+        <span className="font-display font-semibold text-foreground text-base md:text-lg tracking-tight truncate md:whitespace-nowrap">
           Track{" "}
           <span
             className="text-transparent bg-clip-text"
@@ -24,7 +23,7 @@ export function TopBar() {
         </span>
       </Link>
 
-      <nav className="hidden md:flex items-center gap-1 text-xs overflow-x-auto min-w-0 whitespace-nowrap">
+      <nav className="hidden md:flex flex-1 items-center gap-1 text-xs overflow-x-auto min-w-0 whitespace-nowrap">
         <NavLink to="/">Feed</NavLink>
         <NavLink to="/ipo">IPO</NavLink>
         <NavLink to="/events">Events</NavLink>

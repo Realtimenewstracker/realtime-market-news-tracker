@@ -65,6 +65,24 @@ export const listNews = createServerFn({ method: "POST" })
     return dedupeByTitle(list.filter((r) => isMarketRelevant(r.title, r.summary ?? ""))).slice(0, data.limit);
   });
 
+/** India's current calendar day, ordered by the recorded market impact and recency. */
+export const listTodayTopNews = createServerFn({ method: "GET" }).handler(async () => {
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+  const start = new Date(`${today}T00:00:00+05:30`);
+  const end = new Date(start.getTime() + 86_400_000);
+  const { data, error } = await serverPublicClient().from("news_articles")
+    .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
+    .gte("published_at", start.toISOString())
+    .lt("published_at", end.toISOString())
+    .order("impact", { ascending: false, nullsFirst: false })
+    .order("published_at", { ascending: false })
+    .limit(150);
+  if (error) throw new Error(error.message);
+  return dedupeByTitle((data ?? []).filter((item) => isMarketRelevant(item.title, item.summary ?? ""))).slice(0, 5);
+});
+
 
 
 export const listTickers = createServerFn({ method: "GET" }).handler(async () => {

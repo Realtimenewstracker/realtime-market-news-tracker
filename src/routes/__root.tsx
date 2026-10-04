@@ -17,6 +17,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TopBar, BottomDock } from "@/components/top-bar";
 import { SubscriptionGate, TrialBanner } from "@/components/subscription-gate";
 import { SiteFooter } from "@/components/site-footer";
+import { InstallPrompt } from "@/components/install-prompt";
 
 
 function NotFoundComponent() {
@@ -92,13 +93,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "TrackIndia — Live market news for Indian traders" },
       { name: "twitter:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hwHi1LOKvjbbjgnmDnO8mGHDvGF2/social-images/social-1785259456000-1000246663.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/hwHi1LOKvjbbjgnmDnO8mGHDvGF2/social-images/social-1785259456000-1000246663.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "apple-touch-icon", href: "/icon-192.png" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
@@ -143,6 +142,7 @@ function RootComponent() {
           <SiteFooter />
         </div>}
         {!isAuth && <BottomDock />}
+        <InstallPrompt />
       </div>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>

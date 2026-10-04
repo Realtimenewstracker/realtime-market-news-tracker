@@ -25,11 +25,10 @@ function CancellationPage() {
       title="Cancellation & Refund Policy"
       intro="Plain rules for cancelling your TrackIndia membership and when money comes back."
     >
-      <Section title="Free trial">
+      <Section title="Free access">
         <p>
-          Every new account gets 7 days of full access free from the day you sign up. No payment is taken during the
-          trial. If you do nothing, the trial simply ends and access pauses until you choose a plan — you are never
-          charged automatically for the trial.
+          Registered users currently have free access with no announced end date. No payment is taken and there is
+          no automatic charge. If paid plans are introduced later, we will announce the change before requiring payment.
         </p>
       </Section>
       <Section title="Plans and billing">
@@ -49,7 +48,7 @@ function CancellationPage() {
       <Section title="Refunds">
         <ul>
           <li>
-            Monthly plan: charges already made are non-refundable, because the trial lets you evaluate the product
+            Monthly plan: charges already made are non-refundable, because free access lets you evaluate the product
             before paying.
           </li>
           <li>

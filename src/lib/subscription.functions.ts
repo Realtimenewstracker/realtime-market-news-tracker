@@ -36,7 +36,8 @@ function shape(row: {
     status: row.status,
     trial_ends_at: row.trial_ends_at,
     current_period_end: row.current_period_end,
-    active: in_trial || paid,
+    // Free access is enabled until paid membership is explicitly launched.
+    active: true,
     in_trial,
     days_left: Math.max(0, Math.ceil((end - now) / 86_400_000)),
   };
@@ -60,7 +61,7 @@ export const getMySubscription = createServerFn({ method: "GET" })
       .insert({ user_id: context.userId })
       .select("plan,status,trial_ends_at,current_period_end")
       .single();
-    if (error || !created) throw new Error(error?.message ?? "Could not start trial");
+    if (error || !created) throw new Error(error?.message ?? "Could not load membership");
     return shape(created);
   });
 

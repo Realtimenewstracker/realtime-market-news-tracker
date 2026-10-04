@@ -13,12 +13,12 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "Start with 7 days free, then ₹199 per month or ₹1800 per year for live Indian market news, IPO tracking, policy tracking and alerts.",
+          "TrackIndia is currently free for registered users. Future membership plans are not available for purchase yet.",
       },
       { property: "og:title", content: "Pricing — TrackIndia membership" },
       {
         property: "og:description",
-        content: "7 days free, then ₹199/month or ₹1800/year for the TrackIndia live market tape.",
+        content: "TrackIndia is free for registered users until further notice. Future plans are not yet available for purchase.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -37,7 +37,7 @@ const FEATURES = [
 
 function PricingPage() {
   const router = useRouter();
-  const { subscription, signedIn } = useSubscription();
+  const { signedIn } = useSubscription();
   const checkout = useServerFn(startCheckout);
   const [busy, setBusy] = useState<PlanId | null>(null);
 
@@ -63,23 +63,15 @@ function PricingPage() {
     <section className="max-w-4xl mx-auto px-3 md:px-8 pt-8 pb-28">
       <div className="text-center">
         <span className="glass-chip inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-widest">
-          <Sparkles size={12} /> 7 days free
+          <Sparkles size={12} /> Free access for now
         </span>
         <h1 className="mt-4 font-display text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
           Simple membership
         </h1>
         <p className="mt-2 text-sm md:text-base text-muted-foreground">
-           Every new account gets 7 days free. Payment is not available yet; these are the planned subscription prices.
+           TrackIndia is free for registered users until further notice. Payment is not available yet; these are future planned prices.
         </p>
-        {subscription && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            {subscription.in_trial
-              ? `Your free trial ends in ${subscription.days_left} day${subscription.days_left === 1 ? "" : "s"}.`
-              : subscription.active
-                ? `Your ${subscription.plan} plan is active.`
-                : "Your free trial has ended."}
-          </p>
-        )}
+        {signedIn && <p className="mt-3 text-xs text-muted-foreground">Your account has free access, with no end date announced.</p>}
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -113,7 +105,7 @@ function PricingPage() {
                 disabled={busy === id}
                 className="mt-6 w-full rounded-full glass-btn-primary px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
               >
-                 {busy === id ? "…" : signedIn ? `Save ${p.label.toLowerCase()} preference` : "Start free trial"}
+                 {busy === id ? "…" : signedIn ? `Save ${p.label.toLowerCase()} preference` : "Create free account"}
               </button>
             </div>
           );
@@ -121,7 +113,7 @@ function PricingPage() {
       </div>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
-         Cashfree payment is planned but not connected. Saving a plan does not charge you or extend access after the trial.
+         Cashfree payment is planned but not connected. Saving a plan does not charge you or change your free access.
       </p>
       <div className="mt-6 text-center">
         <Link to="/" className="text-xs text-muted-foreground hover:text-foreground">

@@ -10,7 +10,7 @@ import { NewsDetail } from "@/components/news-detail";
 import { MarketNewsSection } from "@/components/market-news-section";
 import { LiveIpoTracker } from "@/components/live-ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
-import { listNews, listTickers } from "@/lib/data.functions";
+import { listNews, listTickers, listTodayTopNews } from "@/lib/data.functions";
 
 
 export const Route = createFileRoute("/")({
@@ -32,6 +32,7 @@ export const Route = createFileRoute("/")({
 function FeedPage() {
   const listNewsFn = useServerFn(listNews);
   const listTickersFn = useServerFn(listTickers);
+  const listTodayTopNewsFn = useServerFn(listTodayTopNews);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [selected, setSelected] = useState<NewsItem | null>(null);
   const [view, setView] = useState<"news" | "ipo" | "policy">("news");
@@ -60,6 +61,13 @@ function FeedPage() {
     refetchIntervalInBackground: false,
   });
 
+  const { data: dailyTop } = useQuery({
+    queryKey: ["today-top-news"],
+    queryFn: () => listTodayTopNewsFn(),
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false,
+  });
+
 
   const stats = useMemo(() => {
     const list = news ?? [];
@@ -71,9 +79,17 @@ function FeedPage() {
     };
   }, [news]);
 
+  const { topNews, orderedNews } = useMemo(() => {
+    const top = isFiltered(filters)
+      ? (news ?? []).filter((item) => dailyTop?.some((candidate) => candidate.id === item.id)).slice(0, 5)
+      : (dailyTop ?? []);
+    const topIds = new Set(top.map((item) => item.id));
+    return { topNews: top, orderedNews: [...top, ...(news ?? []).filter((item) => !topIds.has(item.id))] };
+  }, [news, dailyTop, filters]);
+
   return (
     <>
-      <TickerBar tickers={tickers ?? []} />
+      <TickerBar tickers={tickers ?? []} headlines={topNews as NewsItem[]} onHeadlineClick={setSelected} />
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-6 md:pt-8 pb-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 min-w-0">
           <div className="min-w-0">
@@ -127,7 +143,7 @@ function FeedPage() {
           <EmptyState filtered={isFiltered(filters)} onReset={() => setFilters(DEFAULT_FILTERS)} />
         ) : (
           <div className="grid gap-4 md:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {news?.map((item) => <NewsCard key={item.id} item={item as NewsItem} onClick={() => setSelected(item as NewsItem)} />)}
+            {orderedNews.map((item) => <NewsCard key={item.id} item={item as NewsItem} onClick={() => setSelected(item as NewsItem)} />)}
           </div>
         )}
       </section>
