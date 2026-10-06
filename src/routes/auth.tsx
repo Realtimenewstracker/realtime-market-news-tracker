@@ -48,11 +48,46 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [recoveryPassword, setRecoveryPassword] = useState("");
+  const [confirmRecoveryPassword, setConfirmRecoveryPassword] = useState("");
+  const [recovering, setRecovering] = useState(false);
+  const [recoveryChecked, setRecoveryChecked] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) window.location.assign(next);
-  }, [user, router, next]);
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    if (params.get("type") === "recovery") setRecovering(true);
+
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setRecovering(true);
+    });
+    setRecoveryChecked(true);
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (recoveryChecked && user && !recovering) window.location.assign(next);
+  }, [user, router, next, recovering, recoveryChecked]);
+
+  const setNewPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loading) return;
+    if (recoveryPassword !== confirmRecoveryPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: recoveryPassword });
+      if (error) throw error;
+      toast.success("Password updated.");
+      window.location.assign(next);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not update password");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const signIn = async () => {
     const tokens = await signInWithIdentifier({
@@ -144,6 +179,44 @@ function AuthPage() {
     if (error) toast.error(error.message);
     else toast.success("Reset link sent — check your inbox.");
   };
+
+  if (recovering) {
+    return (
+      <section className="max-w-md mx-auto mt-10 md:mt-16 px-3 md:px-4 pb-24">
+        <div className="glass-strong rounded-3xl p-6 md:p-8">
+          <h1 className="font-display text-2xl font-semibold text-foreground">Choose a new password</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Enter a new password for your TrackIndia account.</p>
+          <form onSubmit={setNewPassword} className="mt-5 space-y-4">
+            <Field
+              id="recovery-password"
+              label="New password"
+              type="password"
+              icon={<KeyRound size={14} />}
+              value={recoveryPassword}
+              onChange={setRecoveryPassword}
+              autoComplete="new-password"
+              minLength={6}
+              required
+            />
+            <Field
+              id="confirm-recovery-password"
+              label="Confirm new password"
+              type="password"
+              icon={<KeyRound size={14} />}
+              value={confirmRecoveryPassword}
+              onChange={setConfirmRecoveryPassword}
+              autoComplete="new-password"
+              minLength={6}
+              required
+            />
+            <Button type="submit" className="w-full rounded-full h-11" disabled={loading}>
+              {loading ? "…" : "Update password"}
+            </Button>
+          </form>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="max-w-md mx-auto mt-10 md:mt-16 px-3 md:px-4 pb-24">
