@@ -56,13 +56,16 @@ export const Route = createFileRoute("/api/public/ingest-rss")({
         }
 
         // Filter to only new (hash not present)
-        const hashes = items.map((i) => i.hash);
+        const uniqueItems = Array.from(
+          new Map(items.map((item) => [item.hash, item])).values(),
+        );
+        const hashes = uniqueItems.map((i) => i.hash);
         const { data: existing } = await supabaseAdmin
           .from("news_articles")
           .select("hash")
           .in("hash", hashes);
         const existingSet = new Set((existing ?? []).map((r) => r.hash));
-        const fresh = items.filter((i) => !existingSet.has(i.hash)).slice(0, 30);
+        const fresh = uniqueItems.filter((i) => !existingSet.has(i.hash)).slice(0, 30);
 
         // AI enrich (best-effort)
         const provider = safeCreateAI();
@@ -110,7 +113,7 @@ Body: ${it.summary}`,
 
         const { data: insertedRows, error } = await supabaseAdmin
           .from("news_articles")
-          .insert(enriched)
+          .upsert(enriched, { onConflict: "hash", ignoreDuplicates: true })
           .select("id,title,summary,ai_summary,impact,tickers");
         if (error) {
           console.error("[ingest] insert failed", error);
@@ -120,7 +123,7 @@ Body: ${it.summary}`,
         const { scanNewsAlerts } = await import("@/lib/alert-scan.server");
         const alerts = await scanNewsAlerts(insertedRows ?? []);
 
-        return Response.json({ ok: true, fetched: items.length, inserted: enriched.length, alerts });
+        return Response.json({ ok: true, fetched: items.length, inserted: insertedRows?.length ?? 0, alerts });
       },
     },
   },

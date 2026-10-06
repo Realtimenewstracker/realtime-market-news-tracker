@@ -1,4 +1,6 @@
 # TrackIndia 1.1
+- [x] Make RSS imports tolerate duplicate links and overlapping scheduled runs.
+- [x] Let password-recovery links open a new-password form before returning users to the app.
 - [x] Use the uploaded official logo across the site and app icons.
 - [x] Prompt for home-screen installation on each eligible visit until installed.
 - [x] Keep signed-in access free without trial expiry until the owner changes it; update all membership copy.
