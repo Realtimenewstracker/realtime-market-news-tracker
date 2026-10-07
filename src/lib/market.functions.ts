@@ -7,19 +7,9 @@ export const getLiveIpos = createServerFn({ method: "GET" }).handler(async () =>
   return loadLiveIpos();
 });
 
-type Action = { symbol?: string; comp?: string; subject?: string; exDate?: string; recDate?: string };
-type Meeting = { bm_symbol?: string; bm_date?: string; bm_purpose?: string; bm_desc?: string; sm_name?: string; attachment?: string };
 export const getUpcomingEvents = createServerFn({ method: "GET" }).handler(async () => {
-  const { exchange, dateOf } = await import("@/lib/exchange.server");
-  const [actions, meetings] = await Promise.all([
-    exchange<Action[]>("corporates-corporateActions?index=equities"),
-    exchange<Meeting[]>("corporate-board-meetings?index=equities"),
-  ]);
-  const today = new Date().toISOString().slice(0, 10);
-  return [
-    ...actions.map((a) => ({ symbol: a.symbol ?? "—", company: a.comp ?? a.symbol ?? "Company", date: dateOf(a.exDate), kind: /dividend/i.test(a.subject ?? "") ? "Dividend" : /bonus/i.test(a.subject ?? "") ? "Bonus" : /split|sub-division/i.test(a.subject ?? "") ? "Split" : "Corporate action", detail: a.subject ?? "Corporate action", url: "https://www.nseindia.com/companies-listing/corporate-filings-actions" })),
-    ...meetings.map((m) => ({ symbol: m.bm_symbol ?? "—", company: m.sm_name ?? m.bm_symbol ?? "Company", date: dateOf(m.bm_date), kind: /result|financial/i.test(m.bm_desc ?? "") ? "Results" : "Board meeting", detail: m.bm_desc ?? m.bm_purpose ?? "Board meeting", url: m.attachment?.startsWith("https://nsearchives.nseindia.com/") ? m.attachment : "https://www.nseindia.com/companies-listing/corporate-filings-board-meetings" })),
-  ].filter((e) => e.date && e.date >= today).sort((a, b) => (a.date ?? "").localeCompare(b.date ?? "")).slice(0, 80);
+  const { loadUpcomingEvents } = await import("@/lib/exchange.server");
+  return loadUpcomingEvents();
 });
 
 const symbolSchema = z.object({ symbol: z.string().regex(/^[A-Z0-9^=.\-]{1,24}$/) });
