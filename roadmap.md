@@ -1,4 +1,7 @@
 # TrackIndia 1.1
+- [ ] Expand important-news, watchlist, membership and IPO notifications.
+- [ ] Order news by market impact across news pages.
+- [ ] Show sourced upcoming IPOs with detail views and AI summaries.
 - [x] Make RSS imports tolerate duplicate links and overlapping scheduled runs.
 - [x] Let password-recovery links open a new-password form before returning users to the app.
 - [x] Use the uploaded official logo across the site and app icons.

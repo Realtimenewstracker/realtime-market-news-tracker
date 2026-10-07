@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_feature_state: {
+        Row: {
+          blocked: boolean
+          feature: string
+          message: string | null
+          updated_at: string
+        }
+        Insert: {
+          blocked?: boolean
+          feature: string
+          message?: string | null
+          updated_at?: string
+        }
+        Update: {
+          blocked?: boolean
+          feature?: string
+          message?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       alert_settings: {
         Row: {
           created_at: string
@@ -133,6 +154,24 @@ export type Database = {
           severity?: number
           summary?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      ipo_ai_summaries: {
+        Row: {
+          created_at: string
+          source_hash: string
+          summary: string
+        }
+        Insert: {
+          created_at?: string
+          source_hash: string
+          summary: string
+        }
+        Update: {
+          created_at?: string
+          source_hash?: string
+          summary?: string
         }
         Relationships: []
       }
