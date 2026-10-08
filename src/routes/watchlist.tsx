@@ -183,9 +183,21 @@ function AlertSettingsCard() {
           </div>
         </div>
       </div>
+      <label className="mt-4 flex items-center justify-between gap-3 text-sm">
+        <span className="min-w-0">
+          New IPO announcements
+          <span className="block text-[11px] text-muted-foreground">
+            Alert me when NSE lists a new upcoming IPO. Off by default.
+          </span>
+        </span>
+        <Switch
+          checked={data.ipo_announce_enabled}
+          onCheckedChange={(v) => patch({ ipo_announce_enabled: v })}
+        />
+      </label>
       <p className="text-[11px] text-muted-foreground mt-3">
-        Prices are checked every 2 minutes and the news tape every 5 minutes. Alerts land in the bell
-        in the header the moment they fire.
+        Prices are checked every 2 minutes and the news tape every 5 minutes. IPO alerts are checked
+        every 15 minutes. Alerts land in the bell in the header the moment they fire.
       </p>
     </div>
   );
