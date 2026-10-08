@@ -41,25 +41,37 @@ export const clearAlerts = createServerFn({ method: "POST" })
 const settingsSchema = z.object({
   price_enabled: z.boolean(),
   news_enabled: z.boolean(),
+  ipo_announce_enabled: z.boolean(),
   price_threshold_pct: z.number().min(0.1).max(25),
   min_impact: z.number().int().min(0).max(3),
 });
 
 export type AlertSettings = z.infer<typeof settingsSchema>;
 
+// The generated database types may not list ipo_announce_enabled yet, so read it loosely.
+type SettingsRow = {
+  price_enabled: boolean;
+  news_enabled: boolean;
+  price_threshold_pct: number | string;
+  min_impact: number;
+  ipo_announce_enabled?: boolean | null;
+};
+
 export const getAlertSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AlertSettings> => {
     const { data, error } = await context.supabase
       .from("alert_settings")
-      .select("price_enabled,news_enabled,price_threshold_pct,min_impact")
+      .select("*")
       .maybeSingle();
     if (error) throw new Error(error.message);
+    const row = data as unknown as SettingsRow | null;
     return {
-      price_enabled: data?.price_enabled ?? true,
-      news_enabled: data?.news_enabled ?? true,
-      price_threshold_pct: Number(data?.price_threshold_pct ?? 2),
-      min_impact: data?.min_impact ?? 3,
+      price_enabled: row?.price_enabled ?? true,
+      news_enabled: row?.news_enabled ?? true,
+      ipo_announce_enabled: row?.ipo_announce_enabled ?? false,
+      price_threshold_pct: Number(row?.price_threshold_pct ?? 2),
+      min_impact: row?.min_impact ?? 3,
     };
   });
 
