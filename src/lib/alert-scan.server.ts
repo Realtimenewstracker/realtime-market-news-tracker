@@ -165,11 +165,13 @@ export async function scanNewsAlerts(articles: NewsHit[]) {
   }
 }
 
-// ---- IPO alerts (live NSE feed + the user's watchlist) ----
+// ---- IPO alerts (live NSE feed) ----
 
 type LiveIpo = Awaited<ReturnType<typeof loadLiveIpos>>["issues"][number];
 
 const IPO_SCAN_MIN_GAP_MS = 60_000;
+/** Most "new IPO announced" alerts one user can receive from a single scan. */
+const MAX_ANNOUNCEMENTS_PER_SCAN = 10;
 let lastIpoScanAt = 0;
 
 const istDay = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" });
@@ -187,7 +189,20 @@ function ipoKey(ipo: LiveIpo) {
     .slice(0, 40);
 }
 
-/** Which alert-worthy moments apply to this IPO today (India time). */
+/** Users who switched on "New IPO announcements" in their alert settings. */
+async function loadAnnounceSubscribers(): Promise<string[]> {
+  const { data, error } = await supabaseAdmin
+    .from("alert_settings")
+    .select("user_id")
+    .eq("ipo_announce_enabled", true);
+  if (error) {
+    console.warn("[alerts] could not load IPO announcement subscribers", error.message);
+    return [];
+  }
+  return (data ?? []).map((row) => row.user_id);
+}
+
+/** Which watchlist alert moments apply to this IPO today (India time). */
 function ipoEvents(ipo: LiveIpo, today: string, tomorrow: string) {
   const events: Array<{ title: string; dedupe: string }> = [];
   const open = ipo.openDate;
@@ -213,9 +228,12 @@ function ipoEvents(ipo: LiveIpo, today: string, tomorrow: string) {
 }
 
 /**
- * Alerts users who watch an IPO's symbol (or a keyword in its name) when it
- * opens tomorrow, is open, or is about to close. Uses the same live NSE feed
- * as the IPO tracker page. Safe to call repeatedly: alerts are de-duplicated.
+ * 1. Watchlist alerts: users who watch an IPO's symbol (or a keyword in its
+ *    name) hear when it opens tomorrow, is open, or is about to close.
+ * 2. Announcements: users who opted in hear once about each newly listed
+ *    upcoming IPO.
+ * Uses the same live NSE feed as the IPO tracker page. Safe to call
+ * repeatedly: alerts are de-duplicated per user.
  */
 export async function scanIpoAlerts() {
   try {
@@ -224,13 +242,18 @@ export async function scanIpoAlerts() {
     if (now - lastIpoScanAt < IPO_SCAN_MIN_GAP_MS) return 0;
     lastIpoScanAt = now;
 
-    const [watchers, live] = await Promise.all([loadWatchers(), loadLiveIpos()]);
-    if (watchers.size === 0 || live.issues.length === 0) return 0;
+    const [watchers, subscribers, live] = await Promise.all([
+      loadWatchers(),
+      loadAnnounceSubscribers(),
+      loadLiveIpos(),
+    ]);
+    if (live.issues.length === 0 || (watchers.size === 0 && subscribers.length === 0)) return 0;
 
     const today = istDay.format(new Date());
     const tomorrow = addDays(today, 1);
     const rows: AlertRow[] = [];
 
+    // 1. Watchlist alerts
     for (const ipo of live.issues) {
       const events = ipoEvents(ipo, today, tomorrow);
       if (events.length === 0) continue;
@@ -267,9 +290,44 @@ export async function scanIpoAlerts() {
         }
       }
     }
+
+    // 2. New IPO announcements (opt-in). The feed is sorted by opening date,
+    // so the cap keeps the nearest upcoming issues.
+    if (subscribers.length > 0) {
+      const upcoming = live.issues
+        .filter((ipo) => ipo.openDate != null && ipo.openDate > today)
+        .slice(0, MAX_ANNOUNCEMENTS_PER_SCAN);
+      for (const ipo of upcoming) {
+        const id = ipoKey(ipo);
+        const body =
+          [
+            ipo.board,
+            `Opens ${ipo.openDate}`,
+            ipo.closeDate ? `Closes ${ipo.closeDate}` : null,
+            ipo.priceBand && ipo.priceBand !== "Not announced" ? `Price band ${ipo.priceBand}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ") || null;
+        for (const userId of subscribers) {
+          rows.push({
+            user_id: userId,
+            kind: "ipo",
+            subject: (ipo.symbol ?? ipo.name).toUpperCase().slice(0, 24),
+            title: `New IPO announced: ${ipo.name}`.slice(0, 240),
+            body,
+            direction: null,
+            change_pct: null,
+            article_id: null,
+            dedupe_key: `ipo:${id}:announced`,
+          });
+        }
+      }
+    }
+
     return await insertAlerts(rows);
   } catch (e) {
     console.warn("[alerts] ipo scan failed", e);
     return 0;
   }
-}
+  }
+                                  
