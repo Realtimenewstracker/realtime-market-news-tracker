@@ -28,14 +28,14 @@ function PrivacyPage() {
       <Section title="Information we collect">
         <ul>
           <li>Account details you give us: email address, username and password (stored encrypted).</li>
-          <li>Product data you create: watchlist symbols, IPO watchlist, portfolio entries and alert settings.</li>
+          <li>Product data you create: named watchlists and their symbols or topics, IPO watchlist, portfolio entries and alert settings.</li>
           <li>Subscription data: plan, status, trial dates and payment reference IDs from our payment partner.</li>
           <li>Technical data: device type, browser, approximate location from IP, and basic usage logs.</li>
         </ul>
       </Section>
       <Section title="How we use it">
         <ul>
-          <li>To run your account, show your feed, and deliver price, news and IPO alerts.</li>
+          <li>To run your account, show your feed, and deliver price, news and IPO alerts in the app.</li>
           <li>To process subscription payments and manage free trials.</li>
           <li>To keep the service secure, detect abuse and fix bugs.</li>
           <li>To send service emails. We only send marketing email if you opt in.</li>
@@ -58,7 +58,8 @@ function PrivacyPage() {
       <Section title="Cookies and storage">
         <p>
           We use essential cookies and browser storage to keep you signed in and remember your preferences. We do not
-          use third-party advertising trackers.
+          use third-party advertising trackers. If you opt in, TrackIndia stores a browser notification preference on
+          this device and uses the browser permission to show new alerts while the app is open.
         </p>
       </Section>
       <Section title="Data retention and security">

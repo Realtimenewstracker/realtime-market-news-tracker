@@ -31,15 +31,17 @@ export const Route = createFileRoute("/pricing")({
 const FREE_FEATURES = [
   "Browse market headlines with links to their sources",
   "Explore IPO, policy, geopolitics, crypto and commodities coverage",
-  "Create a watchlist and receive in-app price, news and IPO alerts after sign-in",
+  "Create multiple named watchlists and receive in-app price, news and IPO alerts after sign-in",
+  "Import portfolio holdings from a CSV file",
+  "Opt in to browser notifications for new alerts while TrackIndia is open",
   "Read AI summaries with clearly marked sentiment and impact estimates",
 ];
 
 const PRO_FEATURES = [
-  "A personal morning briefing based on the symbols and topics you follow",
-  "More flexible news, price and IPO alert controls",
-  "Source-backed event cards showing what changed and which companies or sectors are mentioned",
-  "Save and revisit the stories behind market moves",
+  "A scheduled daily briefing with more control over timing and topics",
+  "Advanced price, news and event alert rules with background push delivery",
+  "Broader company and fundamentals coverage after data access is confirmed",
+  "Saved research collections with source links and change history",
 ];
 
 function PricingPage() {
