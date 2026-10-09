@@ -112,6 +112,12 @@ function FeedPage() {
                 Create a free account to save watchlists and alerts
               </Link>
             )}
+            <Link
+              to="/pricing"
+              className="mt-3 inline-flex min-h-8 items-center text-xs font-semibold text-primary hover:underline"
+            >
+              Explore the planned Pro briefing →
+            </Link>
           </div>
           <div className="flex items-center gap-2 overflow-x-auto -mx-3 px-3 pb-1 md:mx-0 md:px-0 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Stat label="Stories" value={stats.total} />

@@ -66,17 +66,20 @@ export const getMySubscription = createServerFn({ method: "GET" })
   });
 
 /**
- * Cashfree is planned but not connected. This only records a preference;
- * never grant paid access until a verified provider notification is processed.
+ * Payments are not connected. Save a member's planned launch-price preference
+ * for demand research; this must never grant paid access.
  */
-export const startCheckout = createServerFn({ method: "POST" })
+export const savePlanInterest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ plan: z.enum(["monthly", "yearly"]) }).parse(input))
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    await supabaseAdmin
+    const { error } = await supabaseAdmin
       .from("subscriptions")
-      .update({ plan: data.plan, amount_inr: PLANS[data.plan].amount })
-      .eq("user_id", context.userId);
+      .upsert(
+        { user_id: context.userId, plan: data.plan, amount_inr: PLANS[data.plan].amount },
+        { onConflict: "user_id" },
+      );
+    if (error) throw new Error(error.message);
     return { ok: true, pending: true as const, plan: data.plan, amount: PLANS[data.plan].amount };
   });
