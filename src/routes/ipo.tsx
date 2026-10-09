@@ -5,9 +5,9 @@ export const Route = createFileRoute("/ipo")({
   head: () => ({
     meta: [
       { title: "IPO Tracker — Live mainboard & SME IPOs | TrackIndia" },
-      { name: "description", content: "Track open, upcoming, closed and listed Indian IPOs with price band, lot size, GMP, subscription and listing gains." },
+      { name: "description", content: "See current and upcoming Indian IPOs reported by NSE, with issue dates, price band and subscription when available." },
       { property: "og:title", content: "IPO Tracker — Live mainboard & SME IPOs" },
-      { property: "og:description", content: "Open, upcoming and listed Indian IPOs with price band, lot size, GMP and subscription data." },
+      { property: "og:description", content: "Current and upcoming Indian IPOs reported by NSE, with issue dates, price band and subscription when available." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -28,7 +28,7 @@ function IpoPage() {
         </span>
       </h1>
       <p className="mt-2 mb-5 text-sm md:text-base text-muted-foreground max-w-2xl">
-        Mainboard and SME issues — price band, lot size, GMP, subscription and listing performance.
+        Current and upcoming mainboard and SME issues from NSE, with dates, price band and subscription when available. Open the exchange disclosure for official details.
       </p>
        <LiveIpoTracker />
     </section>

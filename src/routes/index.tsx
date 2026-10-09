@@ -86,8 +86,8 @@ function FeedPage() {
     const top = isFiltered(filters)
       ? (news ?? []).filter((item) => dailyTop?.some((candidate) => candidate.id === item.id)).slice(0, 5)
       : (dailyTop ?? []);
-    const topIds = new Set(top.map((item) => item.id));
-    return { topNews: top, orderedNews: [...top, ...(news ?? []).filter((item) => !topIds.has(item.id))].sort((a, b) => (b.impact ?? 0) - (a.impact ?? 0) || b.published_at.localeCompare(a.published_at)) };
+    const ordered = [...(news ?? [])].sort((a, b) => b.published_at.localeCompare(a.published_at));
+    return { topNews: top, orderedNews: ordered };
   }, [news, dailyTop, filters]);
 
   return (
@@ -101,7 +101,7 @@ function FeedPage() {
               Browse market headlines from India and the world. Open a story to read its source and summary, then decide what matters to you.
             </p>
             <p className="mt-2 text-xs text-muted-foreground max-w-2xl">
-              AI-generated summaries and impact or sentiment tags can be wrong. They are estimates, not forecasts or investment recommendations.
+              AI summaries, estimated headline tone and story-impact tags can be wrong. They describe the story, not a forecast or investment recommendation.
             </p>
             {!user && !sessionLoading && (
               <Link
@@ -121,8 +121,8 @@ function FeedPage() {
           </div>
           <div className="flex items-center gap-2 overflow-x-auto -mx-3 px-3 pb-1 md:mx-0 md:px-0 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Stat label="Stories" value={stats.total} />
-            <Stat label="Bull" value={stats.bull} tone="bull" />
-            <Stat label="Bear" value={stats.bear} tone="bear" />
+            <Stat label="Positive tone" value={stats.bull} tone="bull" />
+            <Stat label="Negative tone" value={stats.bear} tone="bear" />
             <Stat label="High-impact" value={stats.high} tone="accent" />
           </div>
         </div>

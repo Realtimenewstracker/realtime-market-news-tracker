@@ -13,7 +13,7 @@ export const getUpcomingEvents = createServerFn({ method: "GET" }).handler(async
 });
 
 const symbolSchema = z.object({ symbol: z.string().regex(/^[A-Z0-9^=.\-]{1,24}$/) });
-type Chart = { chart?: { result?: Array<{ meta?: { shortName?: string; longName?: string; regularMarketPrice?: number; previousClose?: number; regularMarketVolume?: number; currency?: string; fiftyTwoWeekHigh?: number; fiftyTwoWeekLow?: number }; timestamp?: number[]; indicators?: { quote?: Array<{ close?: Array<number | null> }> } }> } };
+type Chart = { chart?: { result?: Array<{ meta?: { shortName?: string; longName?: string; regularMarketPrice?: number; regularMarketTime?: number; previousClose?: number; regularMarketVolume?: number; currency?: string; fiftyTwoWeekHigh?: number; fiftyTwoWeekLow?: number }; timestamp?: number[]; indicators?: { quote?: Array<{ close?: Array<number | null> }> } }> } };
 export const getMarketQuote = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => symbolSchema.parse(input))
   .handler(async ({ data }) => {
@@ -25,6 +25,7 @@ export const getMarketQuote = createServerFn({ method: "POST" })
     if (!chart?.meta) throw new Error("Quote unavailable for this symbol");
     return { symbol: data.symbol, name: chart.meta.longName ?? chart.meta.shortName ?? data.symbol,
       last: chart.meta.regularMarketPrice ?? null, previous: chart.meta.previousClose ?? null,
+      updatedAt: chart.meta.regularMarketTime ?? chart.timestamp?.at(-1) ?? null,
       volume: chart.meta.regularMarketVolume ?? null, currency: chart.meta.currency ?? "INR",
       high52: chart.meta.fiftyTwoWeekHigh ?? null, low52: chart.meta.fiftyTwoWeekLow ?? null,
       points: (chart.timestamp ?? []).map((at, i) => ({ at, close: chart.indicators?.quote?.[0]?.close?.[i] ?? null })).filter((p) => p.close != null),

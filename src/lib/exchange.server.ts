@@ -48,10 +48,26 @@ export async function loadUpcomingEvents() {
     exchange<Action[]>("corporates-corporateActions?index=equities"),
     exchange<Meeting[]>("corporate-board-meetings?index=equities"),
   ]);
-  const today = new Date().toISOString().slice(0, 10);
-  return [
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+  const candidates = [
     ...actions.map((a) => ({ symbol: a.symbol ?? "—", company: a.comp ?? a.symbol ?? "Company", date: dateOf(a.exDate), kind: /dividend/i.test(a.subject ?? "") ? "Dividend" : /bonus/i.test(a.subject ?? "") ? "Bonus" : /split|sub-division/i.test(a.subject ?? "") ? "Split" : "Corporate action", detail: a.subject ?? "Corporate action", url: "https://www.nseindia.com/companies-listing/corporate-filings-actions" })),
     ...meetings.map((m) => ({ symbol: m.bm_symbol ?? "—", company: m.sm_name ?? m.bm_symbol ?? "Company", date: dateOf(m.bm_date), kind: /result|financial/i.test(m.bm_desc ?? "") ? "Results" : "Board meeting", detail: m.bm_desc ?? m.bm_purpose ?? "Board meeting", url: m.attachment?.startsWith("https://nsearchives.nseindia.com/") ? m.attachment : "https://www.nseindia.com/companies-listing/corporate-filings-board-meetings" })),
-  ].filter((e) => e.date && e.date >= today).sort((a, b) => (a.date ?? "").localeCompare(b.date ?? "")).slice(0, 80);
+  ].filter((event) => event.date && event.date >= today);
+  const unique = new Map<string, (typeof candidates)[number]>();
+  for (const event of candidates) {
+    const eventIdentity = event.symbol === "—" ? event.detail.toLowerCase() : event.symbol.toUpperCase();
+    const key = `${eventIdentity}|${event.date}|${event.kind}`;
+    const current = unique.get(key);
+    if (!current) {
+      unique.set(key, event);
+      continue;
+    }
+    const eventHasOfficialAttachment = event.url.startsWith("https://nsearchives.nseindia.gov.in/");
+    const currentHasOfficialAttachment = current.url.startsWith("https://nsearchives.nseindia.gov.in/");
+    if ((eventHasOfficialAttachment && !currentHasOfficialAttachment) || event.detail.length > current.detail.length) {
+      unique.set(key, { ...event, url: eventHasOfficialAttachment ? event.url : current.url });
+    }
+  }
+  return [...unique.values()].sort((a, b) => (a.date ?? "").localeCompare(b.date ?? "")).slice(0, 80);
 }
 

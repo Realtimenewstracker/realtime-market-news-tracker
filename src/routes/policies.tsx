@@ -31,13 +31,13 @@ function PoliciesPage() {
           className="text-transparent bg-clip-text"
           style={{ backgroundImage: "linear-gradient(120deg,#EA580C,#0EA5E9,#059669)" }}
         >
-          Policy Tracker
+          Policy News
         </span>
       </h1>
       <p className="mt-2 mb-5 text-sm md:text-base text-muted-foreground max-w-2xl">
-         Latest sourced policies, budget news and regulator decisions affecting Indian markets.
+        Recent headlines about government policy, budgets and regulators. This is a keyword-filtered news feed, not a structured tracker of policy status or company impact.
       </p>
-        <p className="text-xs text-muted-foreground mb-3">Source links and publication dates are shown on each story; possible beneficiaries require verification.</p>
+        <p className="text-xs text-muted-foreground mb-3">Each story links to its source. Headline relevance and possible market effects need independent verification.</p>
        <MarketNewsSection title="Policy updates" keywords={["government policy", "cabinet", "rbi", "sebi", "ministry", "budget", "regulation", "scheme", "repo rate"]} />
     </section>
   );

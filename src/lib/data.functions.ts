@@ -44,8 +44,8 @@ export const listNews = createServerFn({ method: "POST" })
     let query = supabase.from("news_articles")
       .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
       .gte("published_at", new Date(Date.now() - 7 * 86_400_000).toISOString())
-      .order("impact", { ascending: false, nullsFirst: false })
       .order("published_at", { ascending: false })
+      .order("impact", { ascending: false, nullsFirst: false })
       .limit(fetchLimit);
     // Region tags are stored on every row (indexed), so filter in the database.
     if (needsRegion && data.region) query = query.contains("regions", [data.region]);

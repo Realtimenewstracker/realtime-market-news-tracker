@@ -31,8 +31,8 @@ function PortfolioPage() {
   const tickersFn = useServerFn(listTickers);
   const qc = useQueryClient();
 
-  const { data: tickers } = useQuery({ queryKey: ["tickers"], queryFn: () => tickersFn(), enabled: !!user });
-  const { data: positions } = useQuery({
+  const { data: tickers, isPending: tickersPending, isError: tickersError } = useQuery({ queryKey: ["tickers"], queryFn: () => tickersFn(), enabled: !!user });
+  const { data: positions, isPending: positionsPending, isError: positionsError } = useQuery({
     queryKey: ["portfolio"], queryFn: () => listFn(), enabled: !!user,
   });
 
@@ -61,28 +61,39 @@ function PortfolioPage() {
   );
 
   const tMap = new Map((tickers ?? []).map((t) => [t.alias, t]));
-  let totalMv = 0, totalCost = 0;
+  let totalMv = 0, totalCost = 0, totalPnl = 0;
   const rows = (positions ?? []).map((p) => {
     const t = tMap.get(p.symbol);
     const last = t?.last ?? null;
-    const mv = last ? last * Number(p.quantity) : 0;
+    const mv = last == null ? null : last * Number(p.quantity);
     const cost = Number(p.avg_price) * Number(p.quantity);
-    totalMv += mv; totalCost += cost;
-    const pnl = mv - cost;
+    totalMv += mv ?? 0;
+    totalCost += cost;
+    const pnl = mv == null ? null : mv - cost;
+    if (pnl != null) totalPnl += pnl;
     return { ...p, last, mv, cost, pnl };
   });
-  const pnl = totalMv - totalCost;
+  const unquotedSymbols = rows.filter((row) => row.last == null).map((row) => row.symbol);
+  const totalsLoading = positionsPending || tickersPending;
+  const totalsComplete = !totalsLoading && !positionsError && !tickersError && unquotedSymbols.length === 0;
 
   return (
     <section className="max-w-5xl mx-auto px-3 md:px-8 pt-6 md:pt-8">
       <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight">Portfolio</h1>
-      <p className="text-sm text-muted-foreground mt-1">Live P&amp;L against the latest quotes.</p>
+      <p className="text-sm text-muted-foreground mt-1">Portfolio values use the latest available quotes.</p>
 
       <div className="mt-6 grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-3">
-        <StatCard label="Market value" value={inr(totalMv)} />
-        <StatCard label="Cost basis" value={inr(totalCost)} />
-        <StatCard label="Unrealized P&amp;L" value={inr(pnl)} tone={pnl >= 0 ? "bull" : "bear"} />
+        <StatCard label="Market value" value={totalsLoading ? "Loading…" : totalsComplete ? inr(totalMv) : "Unavailable"} />
+        <StatCard label="Cost basis" value={positionsPending ? "Loading…" : positionsError ? "Unavailable" : inr(totalCost)} />
+        <StatCard label="Unrealized P&amp;L" value={totalsLoading ? "Loading…" : totalsComplete ? inr(totalPnl) : "Unavailable"} tone={totalsComplete ? (totalPnl >= 0 ? "bull" : "bear") : undefined} />
       </div>
+      {positionsError && <p role="alert" className="mt-3 text-sm text-destructive">Portfolio positions could not be loaded. Refresh the page to try again.</p>}
+      {tickersError && <p role="status" className="mt-3 text-sm text-muted-foreground">Market quotes are unavailable right now. Portfolio market value and P&amp;L are hidden until quotes load.</p>}
+      {!totalsLoading && !positionsError && !tickersError && unquotedSymbols.length > 0 && (
+        <p role="status" className="mt-3 text-sm text-muted-foreground">
+          Market value and P&amp;L are unavailable until quotes load for {unquotedSymbols.join(", ")}. These positions are not counted as ₹0.
+        </p>
+      )}
 
       <form
         onSubmit={(e) => {
@@ -112,19 +123,25 @@ function PortfolioPage() {
             <tr><Th>Symbol</Th><Th>Qty</Th><Th>Avg</Th><Th>Last</Th><Th>MV</Th><Th>P&amp;L</Th><Th /></tr>
           </thead>
           <tbody>
-            {rows.length === 0 && (
+            {positionsPending && (
+              <tr><td colSpan={7} className="text-center text-muted-foreground py-8">Loading positions…</td></tr>
+            )}
+            {positionsError && (
+              <tr><td colSpan={7} className="text-center text-muted-foreground py-8">Positions could not be loaded.</td></tr>
+            )}
+            {!positionsPending && !positionsError && rows.length === 0 && (
               <tr><td colSpan={7} className="text-center text-muted-foreground py-8">No positions yet.</td></tr>
             )}
-            {rows.map((r) => (
+            {!positionsPending && !positionsError && rows.map((r) => (
               <tr key={r.id} className="border-t border-white/60">
                 <Td className="font-mono font-semibold">{r.symbol}</Td>
                 <Td>{Number(r.quantity)}</Td>
                 <Td>{Number(r.avg_price).toFixed(2)}</Td>
                 <Td>{r.last?.toFixed(2) ?? "—"}</Td>
-                <Td>{inr(r.mv)}</Td>
-                <Td className={r.pnl >= 0 ? "text-bull" : "text-bear"}>{inr(r.pnl)}</Td>
+                <Td>{r.mv == null ? "—" : inr(r.mv)}</Td>
+                <Td className={r.pnl == null ? "text-muted-foreground" : r.pnl >= 0 ? "text-bull" : "text-bear"}>{r.pnl == null ? "—" : inr(r.pnl)}</Td>
                 <Td className="text-right">
-                  <button onClick={() => remove.mutate(r.id)} className="text-muted-foreground hover:text-bear"><Trash2 size={14} /></button>
+                  <button onClick={() => remove.mutate(r.id)} aria-label={`Remove ${r.symbol} from portfolio`} className="text-muted-foreground hover:text-bear"><Trash2 size={14} /></button>
                 </Td>
               </tr>
             ))}
