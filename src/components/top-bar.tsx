@@ -3,12 +3,15 @@ import { LogIn, House, Search, Star, UserRound, Settings } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
 import { AlertsBell } from "@/components/alerts-bell";
 import { MobileAlertsDockItem } from "@/components/mobile-alerts-sheet";
+import { AlertRealtimeBridge } from "@/components/alert-realtime-bridge";
 import logo from "@/assets/trackindia-official-logo.jpg.asset.json";
 
 export function TopBar() {
   const { user } = useSession();
 
   return (
+    <>
+    {user && <AlertRealtimeBridge />}
     <header className="px-3 md:px-8 pt-3 md:pt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 md:flex md:justify-between md:gap-3">
       <Link to="/" className="flex min-w-0 md:shrink-0 items-center gap-2 group">
         <img src={logo.url} alt="TrackIndia logo" className="w-9 h-9 md:w-10 md:h-10 shrink-0 rounded-full object-contain bg-card" />
@@ -76,6 +79,7 @@ export function TopBar() {
       </div>
 
     </header>
+    </>
   );
 }
 

@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Bell, TrendingUp, TrendingDown, Newspaper, Check, Trash2, Rocket } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { listAlerts, markAlertsRead, clearAlerts } from "@/lib/alerts.functions";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { IpoAlertSwipe } from "@/components/ipo-alert-swipe";
+import { BrowserNotificationControl } from "@/components/browser-notification-control";
 
 export function AlertsBell() {
   const { user } = useSession();
@@ -23,26 +22,6 @@ export function AlertsBell() {
     enabled: !!user,
     refetchInterval: 60_000,
   });
-
-  // Live push: new alert rows arrive over realtime
-  useEffect(() => {
-    if (!user) return;
-    const channel = supabase
-      .channel("alerts-stream")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "alerts", filter: `user_id=eq.${user.id}` },
-        (payload) => {
-          const row = payload.new as { kind: string; title: string; body: string | null };
-          toast(row.title, { description: row.body ?? undefined });
-          qc.invalidateQueries({ queryKey: ["alerts"] });
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user, qc]);
 
   const markRead = useMutation({
     mutationFn: () => readFn({ data: { ids: null } }),
@@ -106,6 +85,7 @@ export function AlertsBell() {
             alerts!.map((a) => <AlertRow key={a.id} a={a} />)
           )}
         </div>
+        <BrowserNotificationControl />
       </PopoverContent>
     </Popover>
   );

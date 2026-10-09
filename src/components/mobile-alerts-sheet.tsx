@@ -8,6 +8,7 @@ import { AlertRow } from "@/components/alerts-bell";
 import { IpoAlertSwipe } from "@/components/ipo-alert-swipe";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { BrowserNotificationControl } from "@/components/browser-notification-control";
 
 export function MobileAlertsDockItem() {
   const { user } = useSession();
@@ -75,6 +76,7 @@ export function MobileAlertsDockItem() {
           alerts={(alerts ?? []).filter((a) => a.kind === "ipo")}
           onOpen={() => setOpen(false)}
         />
+        {user && <BrowserNotificationControl />}
         <div className="overflow-y-auto max-h-[62dvh] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
           {!user ? (
             <div className="px-4 py-8 text-center text-xs text-muted-foreground">

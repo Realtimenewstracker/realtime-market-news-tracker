@@ -12,14 +12,15 @@ export const getUpcomingEvents = createServerFn({ method: "GET" }).handler(async
   return loadUpcomingEvents();
 });
 
-const symbolSchema = z.object({ symbol: z.string().regex(/^[A-Z0-9^=.\-]{1,24}$/) });
+const symbolSchema = z.object({ symbol: z.string().regex(/^[A-Z0-9^=.\-]{1,24}$/), range: z.enum(["1mo", "3mo", "6mo", "1y", "5y"]).default("1mo") });
 type Chart = { chart?: { result?: Array<{ meta?: { shortName?: string; longName?: string; regularMarketPrice?: number; regularMarketTime?: number; previousClose?: number; regularMarketVolume?: number; currency?: string; fiftyTwoWeekHigh?: number; fiftyTwoWeekLow?: number }; timestamp?: number[]; indicators?: { quote?: Array<{ close?: Array<number | null> }> } }> } };
 export const getMarketQuote = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => symbolSchema.parse(input))
   .handler(async ({ data }) => {
     const { headers } = await import("@/lib/exchange.server");
     const symbol = data.symbol.startsWith("^") || data.symbol.includes("=") || data.symbol.endsWith("-USD") ? data.symbol : `${data.symbol.replace(/\.NS$/, "")}.NS`;
-    const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1mo&interval=1d`, { headers, signal: AbortSignal.timeout(8000) });
+    const interval = data.range === "5y" ? "1wk" : "1d";
+    const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=${data.range}&interval=${interval}`, { headers, signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error("Quote unavailable for this symbol");
     const chart = (await response.json() as Chart).chart?.result?.[0];
     if (!chart?.meta) throw new Error("Quote unavailable for this symbol");

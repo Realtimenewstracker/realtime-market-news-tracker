@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { X, Plus, Bell } from "lucide-react";
+import { X, Plus, Bell, FolderPlus } from "lucide-react";
 import { useSession } from "@/hooks/use-session";
-import { listWatchlist, addWatch, removeWatch, listNews } from "@/lib/data.functions";
+import { listWatchlists, createWatchlist, listWatchlist, addWatch, removeWatch, listNews } from "@/lib/data.functions";
 import { getAlertSettings, saveAlertSettings, type AlertSettings } from "@/lib/alerts.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,33 +30,63 @@ export const Route = createFileRoute("/watchlist")({
 
 function WatchlistPage() {
   const { user, loading } = useSession();
+  const listsFn = useServerFn(listWatchlists);
+  const createListFn = useServerFn(createWatchlist);
   const listFn = useServerFn(listWatchlist);
   const addFn = useServerFn(addWatch);
   const removeFn = useServerFn(removeWatch);
   const newsFn = useServerFn(listNews);
   const qc = useQueryClient();
   const [selected, setSelected] = useState<NewsItem | null>(null);
+  const [activeWatchlistId, setActiveWatchlistId] = useState("");
+  const [newListName, setNewListName] = useState("");
+
+  const { data: watchlists } = useQuery({ queryKey: ["watchlists", user?.id], queryFn: () => listsFn(), enabled: !!user });
+  useEffect(() => {
+    if (!watchlists?.length) return;
+    if (!watchlists.some((list) => list.id === activeWatchlistId)) setActiveWatchlistId(watchlists[0].id);
+  }, [watchlists, activeWatchlistId]);
 
   const { data: items } = useQuery({
-    queryKey: ["watchlist"], queryFn: () => listFn(), enabled: !!user,
+    queryKey: ["watchlist", activeWatchlistId],
+    queryFn: () => listFn({ data: { watchlistId: activeWatchlistId } }),
+    enabled: !!user && !!activeWatchlistId,
   });
   const symbols = (items ?? []).filter((i) => i.kind === "symbol").map((i) => i.value);
   const keywords = (items ?? []).filter((i) => i.kind === "keyword").map((i) => i.value);
 
   const { data: news } = useQuery({
     queryKey: ["watchlist-news", symbols.join(","), keywords.join(",")],
-    queryFn: () => newsFn({ data: { tickers: symbols.length ? symbols : null, keywords: keywords.length ? keywords : null, limit: 60 } }),
+    queryFn: async () => {
+      const [symbolMatches, keywordMatches] = await Promise.all([
+        symbols.length ? newsFn({ data: { tickers: symbols, limit: 60 } }) : Promise.resolve([]),
+        keywords.length ? newsFn({ data: { keywords, limit: 60 } }) : Promise.resolve([]),
+      ]);
+      return [...new Map([...symbolMatches, ...keywordMatches].map((story) => [story.id, story] as const)).values()]
+        .sort((a, b) => b.published_at.localeCompare(a.published_at));
+    },
     enabled: !!user && (symbols.length + keywords.length > 0),
     refetchInterval: 90_000,
   });
 
   const add = useMutation({
-    mutationFn: (v: { kind: "symbol" | "keyword"; value: string }) => addFn({ data: v }),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["watchlist"] }); toast.success("Added to watchlist"); },
+    mutationFn: (v: { kind: "symbol" | "keyword"; value: string }) => addFn({ data: { ...v, watchlist_id: activeWatchlistId } }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["watchlist", activeWatchlistId] }); toast.success("Added to watchlist"); },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Could not add that item"),
   });
   const remove = useMutation({
     mutationFn: (id: string) => removeFn({ data: { id } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["watchlist"] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["watchlist", activeWatchlistId] }),
+  });
+  const createList = useMutation({
+    mutationFn: (name: string) => createListFn({ data: { name } }),
+    onSuccess: (list) => {
+      qc.invalidateQueries({ queryKey: ["watchlists"] });
+      setActiveWatchlistId(list.id);
+      setNewListName("");
+      toast.success(`${list.name} created`);
+    },
+    onError: () => toast.error("Could not create that list. Check its name or try a different one."),
   });
 
   const [sym, setSym] = useState("");
@@ -77,6 +107,17 @@ function WatchlistPage() {
       <p className="text-sm text-muted-foreground mt-1">
         Filter the tape to the symbols and themes that move your book.
       </p>
+
+      <div className="mt-5 flex flex-col sm:flex-row gap-2 sm:items-center">
+        <label className="text-xs font-medium text-muted-foreground" htmlFor="watchlist-picker">Current list</label>
+        <select id="watchlist-picker" value={activeWatchlistId} onChange={(e) => setActiveWatchlistId(e.target.value)} className="min-h-10 rounded-xl border border-border bg-background px-3 text-sm sm:min-w-48">
+          {(watchlists ?? []).map((list) => <option key={list.id} value={list.id}>{list.name}</option>)}
+        </select>
+        <form onSubmit={(e) => { e.preventDefault(); const name = newListName.trim(); if (name) createList.mutate(name); }} className="flex gap-2 sm:ml-auto">
+          <Input value={newListName} onChange={(e) => setNewListName(e.target.value)} maxLength={40} placeholder="Name another list" aria-label="New watchlist name" className="min-w-0 sm:w-48" />
+          <Button type="submit" variant="outline" className="shrink-0 rounded-full" disabled={!newListName.trim() || createList.isPending}><FolderPlus size={14} /><span className="hidden sm:inline">Create list</span></Button>
+        </form>
+      </div>
 
       <div className="mt-6 grid gap-3 md:gap-4 md:grid-cols-2">
         <Card title="Symbols">

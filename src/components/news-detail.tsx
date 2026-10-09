@@ -40,6 +40,9 @@ export function NewsDetail({
             </span>
           ))}
         </div>
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          Sentiment is an estimated headline tone. Impact is a rough story-importance tag from the headline and available summary; neither predicts a share-price move or recommends an action.
+        </p>
         {item.ai_summary && (
           <div className="mt-3 p-4 glass-card rounded-2xl">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold mb-1 flex items-center gap-1">

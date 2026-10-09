@@ -8,6 +8,7 @@ import { TickerBar } from "@/components/ticker-bar";
 import { NewsCard, type NewsItem } from "@/components/news-card";
 import { NewsDetail } from "@/components/news-detail";
 import { MarketNewsSection } from "@/components/market-news-section";
+import { WatchlistBriefing } from "@/components/watchlist-briefing";
 import { LiveIpoTracker } from "@/components/live-ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers, listTodayTopNews } from "@/lib/data.functions";
@@ -127,6 +128,8 @@ function FeedPage() {
           </div>
         </div>
       </section>
+
+      <WatchlistBriefing />
 
       <section className="max-w-7xl mx-auto px-3 md:px-8">
         <div className="mb-3 flex items-center gap-1 border-b border-border max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

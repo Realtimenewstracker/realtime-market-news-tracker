@@ -551,6 +551,27 @@ export type Database = {
         }
         Relationships: []
       }
+      watchlists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       watchlist_items: {
         Row: {
           created_at: string
@@ -558,6 +579,7 @@ export type Database = {
           kind: string
           user_id: string
           value: string
+          watchlist_id: string
         }
         Insert: {
           created_at?: string
@@ -565,6 +587,7 @@ export type Database = {
           kind: string
           user_id: string
           value: string
+          watchlist_id: string
         }
         Update: {
           created_at?: string
@@ -572,8 +595,17 @@ export type Database = {
           kind?: string
           user_id?: string
           value?: string
+          watchlist_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
