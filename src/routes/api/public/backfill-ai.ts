@@ -3,6 +3,7 @@ import { generateText } from "ai";
 import { createLovableAI, DEFAULT_MODEL } from "@/lib/ai-gateway.server";
 import { REGIONS, articleRegions } from "@/lib/regions";
 import { classifyText } from "@/lib/classify";
+import { requireCronSecret } from "@/lib/cron-auth.server";
 
 /**
  * Backfills ai_summary / impact / sentiment / tickers / regions for older rows
@@ -13,6 +14,9 @@ export const Route = createFileRoute("/api/public/backfill-ai")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const unauthorized = await requireCronSecret(request);
+        if (unauthorized) return unauthorized;
+
         const url = new URL(request.url);
         const limit = Math.max(1, Math.min(50, Number(url.searchParams.get("limit")) || 25));
 

@@ -11,15 +11,16 @@ import { MarketNewsSection } from "@/components/market-news-section";
 import { LiveIpoTracker } from "@/components/live-ipo-tracker";
 import { FilterBar, DEFAULT_FILTERS, isFiltered, type Filters } from "@/components/filter-bar";
 import { listNews, listTickers, listTodayTopNews } from "@/lib/data.functions";
+import { useSession } from "@/hooks/use-session";
 
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TrackIndia — Live market news for Indian traders" },
-      { name: "description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
-      { property: "og:title", content: "TrackIndia — Live market news for Indian traders" },
-      { property: "og:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
+      { title: "TrackIndia — Indian market news and context" },
+      { name: "description", content: "Market-focused headlines from India and global sources, with AI-generated summaries, impact tags, IPO updates and policy context." },
+      { property: "og:title", content: "TrackIndia — Indian market news and context" },
+      { property: "og:description", content: "Market-focused headlines from India and global sources, with AI-generated summaries, impact tags, IPO updates and policy context." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "442eRMWlAUeXj6bwTQBQnoVnFFxHyOxzj5l4G06ylh8" },
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/")({
 });
 
 function FeedPage() {
+  const { user, loading: sessionLoading } = useSession();
   const listNewsFn = useServerFn(listNews);
   const listTickersFn = useServerFn(listTickers);
   const listTodayTopNewsFn = useServerFn(listTodayTopNews);
@@ -94,10 +96,22 @@ function FeedPage() {
       <section className="max-w-7xl mx-auto px-3 md:px-8 pt-6 md:pt-8 pb-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 min-w-0">
           <div className="min-w-0">
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">TrackIndia market news</h1>
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">See the story behind the market move</h1>
             <p className="mt-2 text-sm md:text-base text-muted-foreground max-w-2xl">
-              AI-tagged headlines from India and the world, ranked by potential impact on NSE, BSE and the rupee.
+              Browse market headlines from India and the world. Open a story to read its source and summary, then decide what matters to you.
             </p>
+            <p className="mt-2 text-xs text-muted-foreground max-w-2xl">
+              AI-generated summaries and impact or sentiment tags can be wrong. They are estimates, not forecasts or investment recommendations.
+            </p>
+            {!user && !sessionLoading && (
+              <Link
+                to="/auth"
+                search={{}}
+                className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full glass-btn-primary px-4 py-2 text-sm font-semibold"
+              >
+                Create a free account to save watchlists and alerts
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-2 overflow-x-auto -mx-3 px-3 pb-1 md:mx-0 md:px-0 md:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Stat label="Stories" value={stats.total} />

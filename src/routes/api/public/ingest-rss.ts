@@ -6,11 +6,15 @@ import { RSS_SOURCES } from "@/lib/rss-sources";
 import { REGIONS, articleRegions } from "@/lib/regions";
 import { classifyText } from "@/lib/classify";
 import { isMarketRelevant } from "@/lib/news-relevance";
+import { requireCronSecret } from "@/lib/cron-auth.server";
 
 export const Route = createFileRoute("/api/public/ingest-rss")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauthorized = await requireCronSecret(request);
+        if (unauthorized) return unauthorized;
+
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: "@_" });
 

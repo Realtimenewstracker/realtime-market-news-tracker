@@ -1,10 +1,10 @@
-# Stock Pulse Tracker
+# TrackIndia
 
-I want to create a real time news tracker. News from India and all around the world that affects the Indian stocks. For traders and investors so that they can track news in real time. I already have code from emergent I am sharing with you. You have to find any issues bugs and do changes as you want but i want to run it and go public from lovable.
+TrackIndia brings Indian-market news, IPO updates, and policy-related headlines together with source links and AI-generated summaries and tags. AI tags are estimates, not forecasts or investment recommendations.
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Live app**: https://realtime-market-news-tracker.lovable.app
+**Live app**: https://trackmarket.live
 
 ## Build with Lovable
 
@@ -24,3 +24,7 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Scheduled route secret
+
+Before applying the scheduled-job migration, configure the same high-entropy `CRON_SECRET` in the Lovable server environment and in Supabase Vault under the name `CRON_SECRET`. Do not commit the secret. Scheduled routes fail closed until both locations are configured.
