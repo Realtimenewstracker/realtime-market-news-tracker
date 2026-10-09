@@ -4,16 +4,16 @@ import { LegalPage, Section } from "@/components/legal-page";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About TrackIndia — Real-time market news for Indian traders" },
+      { title: "About TrackIndia — Indian market news and context" },
       {
         name: "description",
         content:
-          "TrackIndia tracks Indian and global news, IPOs and government policy in real time, with AI tagging that shows what may move NSE and BSE stocks.",
+          "TrackIndia brings market-focused news, IPO updates and policy-related headlines together with source links and AI-generated summaries and tags.",
       },
       { property: "og:title", content: "About TrackIndia" },
       {
         property: "og:description",
-        content: "Who we are and why we built a real-time news, IPO and policy tracker for Indian markets.",
+        content: "Who we are and why we built a source-linked news, IPO and policy tracker for Indian markets.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -24,28 +24,27 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <LegalPage title="About Us" intro="A real-time market intelligence desk built for Indian traders and investors.">
+    <LegalPage title="About TrackIndia" intro="Market news and context for Indian investors, with links back to the original sources.">
       <Section title="What we do">
         <p>
-          TrackIndia pulls headlines from Indian and global newswires around the clock, tags each story with a
-          category, sentiment, market impact and region, and puts it in one fast feed. Alongside the feed we run an IPO
-          tracker with live price bands and dates, and a government policy tracker that lists the listed companies most
-          likely to benefit from each decision.
+          TrackIndia brings headlines from public news feeds into one market-focused feed, alongside exchange-sourced
+          IPO updates and policy-related news. AI-generated summaries and tags help organise stories; they do not prove
+          that an event caused a price move or that a company will benefit.
         </p>
       </Section>
       <Section title="Why we built it">
         <p>
           Market-moving information is scattered across dozens of sites, press releases and exchange filings. Traders
-          lose the first hour of a story searching for it. We wanted a single screen that shows what happened, how
-          strongly it may hit the market, and which names are involved.
+          lose time checking multiple sources. We want to help users see what happened, open the original source, and
+          assess possible market context for themselves.
         </p>
       </Section>
       <Section title="How the data works">
         <p>
-          News is ingested continuously from public feeds and summarised with AI. IPO details come from public issue
-          documents and exchange announcements. Policy entries link to the official Government of India, PIB, RBI or
-          ministry source so you can verify everything yourself. Heat and impact scores are our own estimates, not
-          recommendations.
+          News comes from public feeds and may be summarised or tagged with AI; those summaries and tags can be
+          incomplete or wrong. IPO information is drawn from available exchange feeds and may be delayed or
+          unavailable. Company links on policy-related stories indicate possible exposure and should be checked against
+          the cited source. Impact and sentiment labels are estimates, not forecasts or recommendations.
         </p>
       </Section>
       <Section title="Important disclaimer">

@@ -8,10 +8,10 @@ export const Route = createFileRoute("/cancellation")({
       {
         name: "description",
         content:
-          "How to cancel your TrackIndia membership, what happens to your access, and when refunds are issued on monthly and annual plans.",
+          "TrackIndia currently offers free access. Billing, cancellation and refund terms will be published before paid plans are enabled.",
       },
       { property: "og:title", content: "Cancellation & Refund Policy — TrackIndia" },
-      { property: "og:description", content: "Cancellation, billing and refund rules for TrackIndia memberships." },
+      { property: "og:description", content: "TrackIndia is currently free to use. Paid billing, cancellation and refund terms will be published before checkout is enabled." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -23,52 +23,23 @@ function CancellationPage() {
   return (
     <LegalPage
       title="Cancellation & Refund Policy"
-      intro="Plain rules for cancelling your TrackIndia membership and when money comes back."
+      intro="Current access is free. This page will be updated before any paid checkout is enabled."
+      updated="10 October 2026"
     >
-      <Section title="Free access">
+      <Section title="Current access">
         <p>
-          Registered users currently have free access with no announced end date. No payment is taken and there is
-          no automatic charge. If paid plans are introduced later, we will announce the change before requiring payment.
+          Registered users currently have free access. TrackIndia does not take payment or automatically renew a paid
+          plan, so there is no current cancellation action or refund process.
         </p>
       </Section>
-      <Section title="Plans and billing">
-        <ul>
-          <li>Monthly membership: ₹199, billed every month.</li>
-          <li>Annual membership: ₹1,800, billed once a year.</li>
-          <li>All prices are in Indian rupees and include applicable taxes unless stated otherwise.</li>
-        </ul>
-      </Section>
-      <Section title="How to cancel">
+      <Section title="If paid plans are introduced">
         <p>
-          Go to your Account page and cancel your membership, or write to us from your registered email. Cancellation
-          takes effect at the end of the period you have already paid for — you keep full access until then, and no
-          further payment is taken.
-        </p>
-      </Section>
-      <Section title="Refunds">
-        <ul>
-          <li>
-            Monthly plan: charges already made are non-refundable, because free access lets you evaluate the product
-            before paying.
-          </li>
-          <li>
-            Annual plan: you may request a refund within 7 days of the charge if you have not used the service in a
-            meaningful way. After that, the year runs to its end and is non-refundable.
-          </li>
-          <li>
-            Duplicate or failed charges are refunded in full. Approved refunds are sent back to the original payment
-            method within 5-7 working days of approval.
-          </li>
-        </ul>
-      </Section>
-      <Section title="Service interruptions">
-        <p>
-          If TrackIndia is unavailable for an extended period due to a fault on our side, write to us and we will
-          extend your membership or refund the affected days at our discretion.
+          Before checkout is enabled, we will publish the plan prices, billing frequency, renewal and cancellation
+          steps, and refund terms here and in the checkout flow. No paid plan will start from saving a plan preference.
         </p>
       </Section>
       <Section title="Questions">
-        <p>Billing questions can be sent through our Contact page; we reply within 2 working days.</p>
+        <p>For account questions, use the contact details on our Contact page.</p>
       </Section>
     </LegalPage>
   );

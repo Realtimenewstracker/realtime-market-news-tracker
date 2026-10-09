@@ -28,8 +28,10 @@ export function TopBar() {
         <NavLink to="/ipo">IPO</NavLink>
         <NavLink to="/events">Events</NavLink>
         <NavLink to="/policies">Policies</NavLink>
-        <NavLink to="/portfolio">Portfolio</NavLink>
-        <NavLink to="/watchlist">Watchlist</NavLink>
+        {user && <>
+          <NavLink to="/portfolio">Portfolio</NavLink>
+          <NavLink to="/watchlist">Watchlist</NavLink>
+        </>}
         <NavLink to="/geopolitics">Geopolitics</NavLink>
         <NavLink to="/crypto">Crypto & FX</NavLink>
         <NavLink to="/commodities">Commodities</NavLink>

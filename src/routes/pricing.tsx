@@ -28,9 +28,9 @@ export const Route = createFileRoute("/pricing")({
 });
 
 const FEATURES = [
-  "Real-time AI-tagged news for NSE, BSE and global markets",
-  "IPO tracker with heat scores and watchlist",
-  "Government policy tracker with beneficiary companies",
+  "Market news feed with AI-generated summaries and impact tags",
+  "IPO tracker with issue status, price band, subscription and dates",
+  "Policy headlines with possible company exposure to review",
   "Price and news alerts for your watchlist",
   "Geopolitics board and portfolio tracking",
 ];
