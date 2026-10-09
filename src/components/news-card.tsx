@@ -1,5 +1,5 @@
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { TrendingUp, TrendingDown, Minus, ArrowUpRight } from "lucide-react";
+import { Minus, ArrowUpRight } from "lucide-react";
 
 export type NewsItem = {
   id: string;
@@ -86,18 +86,18 @@ export function NewsCard({ item, onClick }: { item: NewsItem; onClick: () => voi
 export function SentimentBadge({ sentiment }: { sentiment: string | null }) {
   if (sentiment === "bullish")
     return (
-      <span className="bg-bull-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
-        <TrendingUp size={11} /> BULL
+      <span title="Estimated positive headline tone; not a price forecast" aria-label="Estimated positive headline tone, not a price forecast" className="bg-bull-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
+        POSITIVE TONE
       </span>
     );
   if (sentiment === "bearish")
     return (
-      <span className="bg-bear-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
-        <TrendingDown size={11} /> BEAR
+      <span title="Estimated negative headline tone; not a price forecast" aria-label="Estimated negative headline tone, not a price forecast" className="bg-bear-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
+        NEGATIVE TONE
       </span>
     );
   return (
-    <span className="bg-neu-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
+    <span title="Estimated neutral headline tone; not a price forecast" aria-label="Estimated neutral headline tone, not a price forecast" className="bg-neu-tint rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex items-center gap-1">
       <Minus size={11} /> NEUTRAL
     </span>
   );
@@ -107,7 +107,7 @@ export function ImpactBadge({ impact }: { impact: number }) {
   const label = impact >= 3 ? "HIGH" : impact === 2 ? "MED" : impact === 1 ? "LOW" : "OBS";
   const tone = impact >= 3 ? "bg-accent-tint" : "glass-chip text-foreground";
   return (
-    <span className={`${tone} rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono`}>
+    <span title="Estimated editorial story impact, not a predicted price move" aria-label={`Estimated editorial story impact: ${label}; not a predicted price move`} className={`${tone} rounded-full px-2.5 py-0.5 text-[10px] font-semibold font-mono`}>
       {label}
     </span>
   );

@@ -25,9 +25,9 @@ const CATEGORIES = [
 ];
 const SENTIMENTS = [
   { id: "all", label: "All" },
-  { id: "bullish", label: "Bullish" },
-  { id: "bearish", label: "Bearish" },
-  { id: "neutral", label: "Neutral" },
+  { id: "bullish", label: "Positive tone" },
+  { id: "bearish", label: "Negative tone" },
+  { id: "neutral", label: "Neutral tone" },
 ];
 const IMPACTS = [
   { id: 0, label: "Any" },
@@ -62,11 +62,11 @@ export function FilterBar({ value, onChange }: { value: Filters; onChange: (f: F
         )}
       </div>
 
-      <div className="glass rounded-full p-1.5 flex items-center gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="glass rounded-3xl p-2 flex flex-wrap items-center gap-1.5">
         <FilterMenu label="Category" options={CATEGORIES} value={value.category} onChange={(v) => update({ category: String(v) })} />
         <FilterMenu label="Geography" options={GEOS} value={value.region} onChange={(v) => update({ region: String(v) })} />
         <FilterMenu label="Impact" options={IMPACTS} value={value.impact} onChange={(v) => update({ impact: Number(v) })} />
-        <FilterMenu label="Mood" options={SENTIMENTS} value={value.sentiment} onChange={(v) => update({ sentiment: String(v) })} />
+        <FilterMenu label="Tone" options={SENTIMENTS} value={value.sentiment} onChange={(v) => update({ sentiment: String(v) })} />
         <button
           onClick={() => update({ region: "India", impact: 2 })}
           className={`min-h-9 px-3 rounded-full text-xs font-semibold shrink-0 whitespace-nowrap border ${

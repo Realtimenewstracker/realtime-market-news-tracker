@@ -133,7 +133,7 @@ function RootComponent() {
       <div className="relative min-h-screen flex flex-col">
         {!isAuth && <TopBar />}
         {!isAuth && <TrialBanner />}
-        <main className="flex-1">
+        <main className="flex-1 pb-20 md:pb-0">
           <SubscriptionGate>
             <Outlet />
           </SubscriptionGate>
