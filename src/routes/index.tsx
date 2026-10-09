@@ -86,8 +86,8 @@ function FeedPage() {
     const top = isFiltered(filters)
       ? (news ?? []).filter((item) => dailyTop?.some((candidate) => candidate.id === item.id)).slice(0, 5)
       : (dailyTop ?? []);
-    const topIds = new Set(top.map((item) => item.id));
-    return { topNews: top, orderedNews: [...top, ...(news ?? []).filter((item) => !topIds.has(item.id))].sort((a, b) => (b.impact ?? 0) - (a.impact ?? 0) || b.published_at.localeCompare(a.published_at)) };
+    const ordered = [...(news ?? [])].sort((a, b) => b.published_at.localeCompare(a.published_at));
+    return { topNews: top, orderedNews: ordered };
   }, [news, dailyTop, filters]);
 
   return (
