@@ -85,18 +85,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "TrackIndia — Indian market news and context" },
-      { name: "description", content: "Market-focused headlines from India and global sources, with AI-generated summaries, impact tags, IPO updates and policy context." },
-      { property: "og:title", content: "TrackIndia — Indian market news and context" },
-      { property: "og:description", content: "Market-focused headlines from India and global sources, with AI-generated summaries, impact tags, IPO updates and policy context." },
+      { title: "TrackIndia — Live market news for Indian traders" },
+      { name: "description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
+      { property: "og:title", content: "TrackIndia — Live market news for Indian traders" },
+      { property: "og:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "TrackIndia — Indian market news and context" },
-      { name: "twitter:description", content: "Market-focused headlines from India and global sources, with AI-generated summaries, impact tags, IPO updates and policy context." },
+      { name: "twitter:title", content: "TrackIndia — Live market news for Indian traders" },
+      { name: "twitter:description", content: "AI-tagged real-time news feed for NSE, BSE, macro, commodities and crypto — built for Indian traders and investors." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "96x96" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -133,7 +133,7 @@ function RootComponent() {
       <div className="relative min-h-screen flex flex-col">
         {!isAuth && <TopBar />}
         {!isAuth && <TrialBanner />}
-        <main className="flex-1 pb-20 md:pb-0">
+        <main className="flex-1">
           <SubscriptionGate>
             <Outlet />
           </SubscriptionGate>

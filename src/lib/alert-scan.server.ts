@@ -1,5 +1,4 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { loadLiveIpos } from "@/lib/exchange.server";
 
 type AlertRow = {
   user_id: string;
@@ -165,169 +164,49 @@ export async function scanNewsAlerts(articles: NewsHit[]) {
   }
 }
 
-// ---- IPO alerts (live NSE feed) ----
-
-type LiveIpo = Awaited<ReturnType<typeof loadLiveIpos>>["issues"][number];
-
-const IPO_SCAN_MIN_GAP_MS = 60_000;
-/** Most "new IPO announced" alerts one user can receive from a single scan. */
-const MAX_ANNOUNCEMENTS_PER_SCAN = 10;
-let lastIpoScanAt = 0;
-
-const istDay = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" });
-
-function addDays(day: string, days: number) {
-  const midnight = new Date(`${day}T00:00:00+05:30`).getTime();
-  return istDay.format(new Date(midnight + days * 86_400_000));
-}
-
-function ipoKey(ipo: LiveIpo) {
-  return (ipo.symbol ?? ipo.name)
-    .toUpperCase()
-    .replace(/[^A-Z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 40);
-}
-
-/** Users who switched on "New IPO announcements" in their alert settings. */
-async function loadAnnounceSubscribers(): Promise<string[]> {
-  const { data, error } = await supabaseAdmin
-    .from("alert_settings")
-    .select("user_id")
-    .eq("ipo_announce_enabled", true);
-  if (error) {
-    console.warn("[alerts] could not load IPO announcement subscribers", error.message);
-    return [];
-  }
-  return (data ?? []).map((row) => row.user_id);
-}
-
-/** Which watchlist alert moments apply to this IPO today (India time). */
-function ipoEvents(ipo: LiveIpo, today: string, tomorrow: string) {
-  const events: Array<{ title: string; dedupe: string }> = [];
-  const open = ipo.openDate;
-  const close = ipo.closeDate;
-  if (!open) return events;
-
-  if (open === tomorrow) {
-    events.push({ title: `${ipo.name} IPO opens tomorrow`, dedupe: `opens-soon:${open}` });
-  }
-
-  const isOpen = open <= today && (!close || close >= today);
-  if (isOpen) {
-    if (close === today) {
-      events.push({ title: `${ipo.name} IPO closes today`, dedupe: `closing-0:${close}` });
-    } else {
-      events.push({ title: `${ipo.name} IPO is now open`, dedupe: `open:${open}` });
-      if (close === tomorrow) {
-        events.push({ title: `${ipo.name} IPO closes tomorrow`, dedupe: `closing-1:${close}` });
-      }
-    }
-  }
-  return events;
-}
-
-/**
- * 1. Watchlist alerts: users who watch an IPO's symbol (or a keyword in its
- *    name) hear when it opens tomorrow, is open, or is about to close.
- * 2. Announcements: users who opted in hear once about each newly listed
- *    upcoming IPO.
- * Uses the same live NSE feed as the IPO tracker page. Safe to call
- * repeatedly: alerts are de-duplicated per user.
- */
 export async function scanIpoAlerts() {
   try {
-    // The endpoint is public, so avoid hammering the exchange feed.
-    const now = Date.now();
-    if (now - lastIpoScanAt < IPO_SCAN_MIN_GAP_MS) return 0;
-    lastIpoScanAt = now;
-
-    const [watchers, subscribers, live] = await Promise.all([
-      loadWatchers(),
-      loadAnnounceSubscribers(),
-      loadLiveIpos(),
+    const [{ data: watch }, { data: ipos }] = await Promise.all([
+      supabaseAdmin.from("ipo_watchlist").select("user_id,ipo_id"),
+      supabaseAdmin
+        .from("ipos")
+        .select("id,name,symbol,status,open_date,close_date,price_min,price_max,gmp,subscription_x")
+        .eq("status", "open"),
     ]);
-    if (live.issues.length === 0 || (watchers.size === 0 && subscribers.length === 0)) return 0;
+    if (!watch?.length || !ipos?.length) return 0;
 
-    const today = istDay.format(new Date());
-    const tomorrow = addDays(today, 1);
+    const byId = new Map(ipos.map((i) => [i.id, i]));
     const rows: AlertRow[] = [];
-
-    // 1. Watchlist alerts
-    for (const ipo of live.issues) {
-      const events = ipoEvents(ipo, today, tomorrow);
-      if (events.length === 0) continue;
-
-      const id = ipoKey(ipo);
-      const symbol = ipo.symbol?.toUpperCase() ?? null;
-      const name = ipo.name.toLowerCase();
-      const details =
-        [
-          ipo.priceBand && ipo.priceBand !== "Not announced" ? `Price band ${ipo.priceBand}` : null,
-          ipo.subscription != null ? `${ipo.subscription.toFixed(2)}x subscribed` : null,
-          ipo.closeDate ? `Closes ${ipo.closeDate}` : null,
-        ]
-          .filter(Boolean)
-          .join(" · ") || null;
-
-      for (const [userId, w] of watchers) {
-        const watching =
-          (symbol != null && w.symbols.includes(symbol)) ||
-          w.keywords.some((k) => k.length >= 3 && name.includes(k));
-        if (!watching) continue;
-        for (const event of events) {
-          rows.push({
-            user_id: userId,
-            kind: "ipo",
-            subject: (ipo.symbol ?? ipo.name).toUpperCase().slice(0, 24),
-            title: event.title.slice(0, 240),
-            body: details,
-            direction: null,
-            change_pct: null,
-            article_id: null,
-            dedupe_key: `ipo:${id}:${event.dedupe}`,
-          });
-        }
-      }
+    for (const w of watch) {
+      const ipo = byId.get(w.ipo_id);
+      if (!ipo) continue;
+      const band =
+        ipo.price_min != null && ipo.price_max != null
+          ? `Band Rs.${ipo.price_min}-${ipo.price_max}`
+          : null;
+      const extra = [
+        band,
+        ipo.gmp != null ? `GMP Rs.${ipo.gmp}` : null,
+        ipo.subscription_x != null ? `${ipo.subscription_x}x subscribed` : null,
+        ipo.close_date ? `Closes ${ipo.close_date}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      rows.push({
+        user_id: w.user_id,
+        kind: "ipo",
+        subject: (ipo.symbol ?? ipo.name).toUpperCase().slice(0, 24),
+        title: `${ipo.name} IPO is now open`,
+        body: extra || null,
+        direction: null,
+        change_pct: null,
+        article_id: null,
+        dedupe_key: `ipo:${ipo.id}:open`,
+      });
     }
-
-    // 2. New IPO announcements (opt-in). The feed is sorted by opening date,
-    // so the cap keeps the nearest upcoming issues.
-    if (subscribers.length > 0) {
-      const upcoming = live.issues
-        .filter((ipo) => ipo.openDate != null && ipo.openDate > today)
-        .slice(0, MAX_ANNOUNCEMENTS_PER_SCAN);
-      for (const ipo of upcoming) {
-        const id = ipoKey(ipo);
-        const body =
-          [
-            ipo.board,
-            `Opens ${ipo.openDate}`,
-            ipo.closeDate ? `Closes ${ipo.closeDate}` : null,
-            ipo.priceBand && ipo.priceBand !== "Not announced" ? `Price band ${ipo.priceBand}` : null,
-          ]
-            .filter(Boolean)
-            .join(" · ") || null;
-        for (const userId of subscribers) {
-          rows.push({
-            user_id: userId,
-            kind: "ipo",
-            subject: (ipo.symbol ?? ipo.name).toUpperCase().slice(0, 24),
-            title: `New IPO announced: ${ipo.name}`.slice(0, 240),
-            body,
-            direction: null,
-            change_pct: null,
-            article_id: null,
-            dedupe_key: `ipo:${id}:announced`,
-          });
-        }
-      }
-    }
-
     return await insertAlerts(rows);
   } catch (e) {
     console.warn("[alerts] ipo scan failed", e);
     return 0;
   }
-  }
-                                  
+}

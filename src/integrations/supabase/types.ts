@@ -14,27 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      ai_feature_state: {
-        Row: {
-          blocked: boolean
-          feature: string
-          message: string | null
-          updated_at: string
-        }
-        Insert: {
-          blocked?: boolean
-          feature: string
-          message?: string | null
-          updated_at?: string
-        }
-        Update: {
-          blocked?: boolean
-          feature?: string
-          message?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
       alert_settings: {
         Row: {
           created_at: string
@@ -154,24 +133,6 @@ export type Database = {
           severity?: number
           summary?: string
           updated_at?: string
-        }
-        Relationships: []
-      }
-      ipo_ai_summaries: {
-        Row: {
-          created_at: string
-          source_hash: string
-          summary: string
-        }
-        Insert: {
-          created_at?: string
-          source_hash: string
-          summary: string
-        }
-        Update: {
-          created_at?: string
-          source_hash?: string
-          summary?: string
         }
         Relationships: []
       }
@@ -551,27 +512,6 @@ export type Database = {
         }
         Relationships: []
       }
-      watchlists: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       watchlist_items: {
         Row: {
           created_at: string
@@ -579,7 +519,6 @@ export type Database = {
           kind: string
           user_id: string
           value: string
-          watchlist_id: string
         }
         Insert: {
           created_at?: string
@@ -587,7 +526,6 @@ export type Database = {
           kind: string
           user_id: string
           value: string
-          watchlist_id: string
         }
         Update: {
           created_at?: string
@@ -595,17 +533,8 @@ export type Database = {
           kind?: string
           user_id?: string
           value?: string
-          watchlist_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "watchlist_items_watchlist_id_fkey"
-            columns: ["watchlist_id"]
-            isOneToOne: false
-            referencedRelation: "watchlists"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {

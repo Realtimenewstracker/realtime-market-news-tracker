@@ -43,12 +43,10 @@ export const listNews = createServerFn({ method: "POST" })
     const fetchLimit = Math.min(200, data.limit * 3);
     let query = supabase.from("news_articles")
       .select("id,source,category,title,url,summary,ai_summary,impact,sentiment,tickers,regions,published_at")
-      .gte("published_at", new Date(Date.now() - 7 * 86_400_000).toISOString())
       .order("published_at", { ascending: false })
-      .order("impact", { ascending: false, nullsFirst: false })
       .limit(fetchLimit);
     // Region tags are stored on every row (indexed), so filter in the database.
-    if (needsRegion && data.region) query = query.contains("regions", [data.region]);
+    if (needsRegion) query = query.contains("regions", [data.region!]);
     if (data.category && data.category !== "all") query = query.eq("category", data.category);
     if (data.sentiment && data.sentiment !== "all") query = query.eq("sentiment", data.sentiment);
     if (typeof data.impact === "number") query = query.gte("impact", data.impact);
@@ -64,7 +62,7 @@ export const listNews = createServerFn({ method: "POST" })
       const kws = data.keywords.map((k) => k.toLowerCase());
       list = list.filter((r) => kws.some((k) => (r.title + " " + (r.ai_summary ?? r.summary ?? "")).toLowerCase().includes(k)));
     }
-    return dedupeByTitle(list.filter((r) => isMarketRelevant(r.title, r.summary ?? "", r.tickers))).slice(0, data.limit);
+    return dedupeByTitle(list.filter((r) => isMarketRelevant(r.title, r.summary ?? ""))).slice(0, data.limit);
   });
 
 /** India's current calendar day, ordered by the recorded market impact and recency. */
@@ -82,7 +80,7 @@ export const listTodayTopNews = createServerFn({ method: "GET" }).handler(async 
     .order("published_at", { ascending: false })
     .limit(150);
   if (error) throw new Error(error.message);
-  return dedupeByTitle((data ?? []).filter((item) => isMarketRelevant(item.title, item.summary ?? "", item.tickers))).slice(0, 5);
+  return dedupeByTitle((data ?? []).filter((item) => isMarketRelevant(item.title, item.summary ?? ""))).slice(0, 5);
 });
 
 
@@ -141,43 +139,6 @@ export const upsertPosition = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-export const importPortfolioPositions = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({
-    positions: z.array(z.object({
-      symbol: z.string().trim().regex(/^[A-Za-z0-9^=.-]{1,24}$/),
-      quantity: z.number().positive(),
-      avg_price: z.number().nonnegative(),
-    })).min(1).max(500),
-  }).parse(input))
-  .handler(async ({ data, context }) => {
-    const merged = new Map<string, { quantity: number; avg_price: number }>();
-    for (const position of data.positions) {
-      const symbol = position.symbol.toUpperCase().replace(/\.NS$/, "");
-      const previous = merged.get(symbol);
-      if (!previous) merged.set(symbol, { quantity: position.quantity, avg_price: position.avg_price });
-      else {
-        const quantity = previous.quantity + position.quantity;
-        merged.set(symbol, {
-          quantity,
-          avg_price: (previous.quantity * previous.avg_price + position.quantity * position.avg_price) / quantity,
-        });
-      }
-    }
-    const rows = [...merged].map(([symbol, position]) => ({
-      user_id: context.userId,
-      symbol,
-      label: symbol,
-      quantity: position.quantity,
-      avg_price: position.avg_price,
-    }));
-    const { error } = await context.supabase
-      .from("portfolio_positions")
-      .upsert(rows, { onConflict: "user_id,symbol" });
-    if (error) throw new Error(error.message);
-    return { imported: rows.length };
-  });
-
 export const deletePosition = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
@@ -189,70 +150,22 @@ export const deletePosition = createServerFn({ method: "POST" })
 
 export const listWatchlist = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ watchlistId: z.string().uuid() }).parse(input))
-  .handler(async ({ data: input, context }) => {
+  .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("watchlist_items")
-      .select("id,kind,value,created_at,watchlist_id")
-      .eq("watchlist_id", input.watchlistId)
+      .select("id,kind,value,created_at")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
   });
 
-export const listWatchlists = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data: existing, error: listError } = await context.supabase
-      .from("watchlists")
-      .select("id,name,created_at")
-      .order("created_at", { ascending: true });
-    if (listError) throw new Error(listError.message);
-    if (existing?.length) return existing;
-
-    const { data, error } = await context.supabase
-      .from("watchlists")
-      .upsert({ user_id: context.userId, name: "Default" }, { onConflict: "user_id,name" })
-      .select("id,name,created_at");
-    if (error) throw new Error(error.message);
-    return data ?? [];
-  });
-
-export const listAllWatchlistItems = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("watchlist_items")
-      .select("id,kind,value,watchlist_id,watchlists(name)")
-      .order("created_at", { ascending: false })
-      .limit(500);
-    if (error) throw new Error(error.message);
-    return (data ?? []).map((item) => ({
-      ...item,
-      watchlist_name: (item.watchlists as { name?: string } | null)?.name ?? "Default",
-    }));
-  });
-
-export const createWatchlist = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ name: z.string().trim().min(1).max(40) }).parse(input))
-  .handler(async ({ data, context }) => {
-    const { data: list, error } = await context.supabase
-      .from("watchlists")
-      .insert({ user_id: context.userId, name: data.name })
-      .select("id,name,created_at")
-      .single();
-    if (error) throw new Error(error.message);
-    return list;
-  });
-
 export const addWatch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ watchlist_id: z.string().uuid(), kind: z.enum(["symbol", "keyword"]), value: z.string().trim().min(1).max(64) }).parse(input))
+  .inputValidator((input: unknown) => z.object({ kind: z.enum(["symbol", "keyword"]), value: z.string().min(1).max(64) }).parse(input))
   .handler(async ({ data, context }) => {
     const value = data.kind === "symbol" ? data.value.toUpperCase() : data.value.toLowerCase();
     const { error } = await context.supabase.from("watchlist_items").insert({
-      user_id: context.userId, watchlist_id: data.watchlist_id, kind: data.kind, value,
+      user_id: context.userId, kind: data.kind, value,
     });
     if (error && !String(error.message).includes("duplicate")) throw new Error(error.message);
     return { ok: true };

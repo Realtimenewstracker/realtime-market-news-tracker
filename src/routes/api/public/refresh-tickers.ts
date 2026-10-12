@@ -1,14 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TICKER_SYMBOLS } from "@/lib/rss-sources";
-import { requireCronSecret } from "@/lib/cron-auth.server";
 
 export const Route = createFileRoute("/api/public/refresh-tickers")({
   server: {
     handlers: {
-      POST: async ({ request }) => {
-        const unauthorized = await requireCronSecret(request);
-        if (unauthorized) return unauthorized;
-
+      POST: async () => {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const rows: Array<{ symbol: string; alias: string; label: string; kind: string; last: number | null; change: number | null; change_pct: number | null; updated_at: string }> = [];
         const now = new Date().toISOString();
