@@ -14,9 +14,49 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_feature_state: {
+        Row: {
+          blocked: boolean
+          feature: string
+          message: string | null
+          updated_at: string
+        }
+        Insert: {
+          blocked?: boolean
+          feature: string
+          message?: string | null
+          updated_at?: string
+        }
+        Update: {
+          blocked?: boolean
+          feature?: string
+          message?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_usage: {
+        Row: {
+          calls: number
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          calls?: number
+          usage_date: string
+          user_id: string
+        }
+        Update: {
+          calls?: number
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       alert_settings: {
         Row: {
           created_at: string
+          ipo_announce_enabled: boolean
           min_impact: number
           news_enabled: boolean
           price_enabled: boolean
@@ -26,6 +66,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          ipo_announce_enabled?: boolean
           min_impact?: number
           news_enabled?: boolean
           price_enabled?: boolean
@@ -35,6 +76,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          ipo_announce_enabled?: boolean
           min_impact?: number
           news_enabled?: boolean
           price_enabled?: boolean
@@ -133,6 +175,24 @@ export type Database = {
           severity?: number
           summary?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      ipo_ai_summaries: {
+        Row: {
+          created_at: string
+          source_hash: string
+          summary: string
+        }
+        Insert: {
+          created_at?: string
+          source_hash: string
+          summary: string
+        }
+        Update: {
+          created_at?: string
+          source_hash?: string
+          summary?: string
         }
         Relationships: []
       }
@@ -541,6 +601,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_ai_quota: {
+        Args: { p_date: string; p_limit: number; p_user: string }
+        Returns: number
+      }
       derive_impact: { Args: { txt: string }; Returns: number }
       derive_regions: {
         Args: {
