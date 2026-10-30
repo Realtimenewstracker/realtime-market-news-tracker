@@ -11,11 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { next?: string } => {
+  validateSearch: (search: Record<string, unknown>): { next?: string; mode?: "signup" } => {
     const candidate = search.next;
-    return typeof candidate === "string" && candidate.startsWith("/") && !candidate.startsWith("//") && !candidate.includes("\\") && !/[\r\n]/.test(candidate)
-      ? { next: candidate }
-      : {};
+    const out: { next?: string; mode?: "signup" } = {};
+    if (typeof candidate === "string" && candidate.startsWith("/") && !candidate.startsWith("//") && !candidate.includes("\\") && !/[\r\n]/.test(candidate)) out.next = candidate;
+    if (search.mode === "signup") out.mode = "signup";
+    return out;
   },
   head: () => ({
     meta: [
@@ -38,12 +39,12 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { next: requestedNext } = Route.useSearch();
+  const { next: requestedNext, mode: initialMode } = Route.useSearch();
   const next = requestedNext ?? "/";
   const returnTo = () => `${window.location.origin}/auth?next=${encodeURIComponent(next)}`;
   const router = useRouter();
   const { user } = useSession();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup">(initialMode ?? "signin");
   const [identifier, setIdentifier] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
