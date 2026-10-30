@@ -84,7 +84,7 @@ export function PublicHome() {
             <ul className="space-y-3">
               {ipos.data.slice(0, 5).map((i) => (
                 <li key={i.symbol ?? i.name} className="text-sm flex justify-between gap-3">
-                  <span className="min-w-0"><span className="font-medium block truncate">{i.name}</span><span className="text-xs text-muted-foreground">{i.board} · ₹{i.priceBand}</span></span>
+                  <span className="min-w-0"><span className="font-medium block truncate">{i.name}</span><span className="text-xs text-muted-foreground">{i.board} · {i.priceBand.replace(/Rs\.?\s*/g, "₹")}</span></span>
                   <span className="text-xs text-muted-foreground shrink-0">{fmtDate(i.openDate)}–{fmtDate(i.closeDate)}</span>
                 </li>
               ))}
