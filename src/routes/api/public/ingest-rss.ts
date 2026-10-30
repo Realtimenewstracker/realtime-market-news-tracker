@@ -80,7 +80,8 @@ export const Route = createFileRoute("/api/public/ingest-rss")({
               tickers: [] as string[],
               regions: [] as string[],
             };
-            if (!provider) return finalizeRegions(base);
+            // Cost guard: only spend AI on stories the heuristic flags as market-moving.
+            if (!provider || guess.impact < 2) return finalizeRegions(base);
             try {
               const { text } = await generateText({
                 model: provider(DEFAULT_MODEL),
